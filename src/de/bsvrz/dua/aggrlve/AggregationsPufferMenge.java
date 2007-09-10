@@ -122,26 +122,26 @@ public class AggregationsPufferMenge {
 	
 	
 	/**
-	 * Erfragt alle in dieser Puffermenge gespeicherten Datensaetze <b>eines Unterpuffers</b>,
+	 * Erfragt alle in dieser Puffermenge gespeicherten Datensaetze <b>eines</b> Unterpuffers,
 	 * deren Zeitstempel im Intervall [begin, ende[ liegen und deren Erfassungs- bzw.
-	 * Aggregationsintervall kleiner gleich dem uebergebenen Ausgangsintervall ist
+	 * Aggregationsintervall kleiner dem uebergebenen Aggregationsintervall ist<br>
+	 * <b>Achtung:</b> Sollte die Intervalllaenge des gesuchten Zeitraums und die Erfassungsdauer
+	 * der gefundenen Daten nicht ganzzahlig teilbar sein, wird eine leere Liste zurueck
+	 * geliefert (trifft nur auf messwertersetzte Fahrstreifendaten zu)
 	 * 
 	 * @param begin Begin des Intervalls
 	 * @param ende Ende des Intervalls
-	 * @param ausgangsIntervall das Intervall, von dem aus nach Daten gesucht wird
-	 * (<code>null</code> steht fuer messwertersetzte Fahrstreifendaten)
+	 * @param aggregationsIntervall das Intervall, fuer dessen Aggregation Daten gesucht werden
 	 * @return alle in diesem Puffer gespeicherten Datensaetze deren Zeitstempel
 	 * im Intervall [begin, ende[ liegen (bzw. eine leere Liste)
 	 */
 	public final Collection<AggregationsDatum> getDatenFuerZeitraum(final long begin, 
 																	final long ende,
-																	final AggregationsIntervall ausgangsIntervall){
+																	final AggregationsIntervall aggregationsIntervall){
 		Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
 		
+		AggregationsIntervall ausgangsIntervall = aggregationsIntervall.getVorgaenger(); 
 		if(ausgangsIntervall == null){
-			/**
-			 * suche messwertersetzte Daten
-			 */
 			daten = this.pufferMenge.get(MWE).getDatenFuerZeitraum(begin, ende);
 		}else{
 			int start = 0; 
@@ -150,7 +150,7 @@ public class AggregationsPufferMenge {
 					start = i;
 				}
 			}
-			
+	
 			for(int i = start; i>=0; i--){
 				AbstraktAggregationsPuffer puffer = this.pufferMenge.get(ASPEKTE_SORTIERT[i]);
 				if(puffer != null){
@@ -162,6 +162,18 @@ public class AggregationsPufferMenge {
 			}
 		}
 		
+		if(!ausgangsIntervall.equals(AggregationsIntervall.AGG_DTV_TAG) &&
+		   !ausgangsIntervall.equals(AggregationsIntervall.AGG_DTV_MONAT) &&
+		   !ausgangsIntervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
+			if(!daten.isEmpty()){
+				if((ende - begin) % daten.iterator().next().getT() != 0){
+					daten.clear();
+					LOGGER.warning("Die Laenge des gesuchten Zeitraums und die" + //$NON-NLS-1$
+							" Erfassungsdauer der (ersten) gefundenen Daten sind nicht ganzzahlig teilbar"); //$NON-NLS-1$
+				}
+			}
+		}
+				
 		return daten;
 	}
 	

@@ -3,7 +3,7 @@ package de.bsvrz.dua.aggrlve;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.Dataset;
 
 /**
  * Enthaelt alle Informationen, die mit einem <code>ResultData</code>
@@ -51,7 +51,7 @@ implements Comparable<AggregationsDatum>, Cloneable{
 	 * Fahrstreifendatums bzw. eines Aggregationsdatums fuer Fahrstreifen bzw. Messquerschnitte<br>
 	 * <b>Achtung:</b> Argument muss <code>null</code> sein und Nutzdaten besitzen
 	 */
-	public AggregationsDatum(final ResultData resultat){
+	public AggregationsDatum(final Dataset resultat){
 		this.datenZeit = resultat.getDataTime();
 		if(resultat.getObject().isOfType(AggregationLVE.TYP_FAHRSTREIFEN)){
 			this.T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$

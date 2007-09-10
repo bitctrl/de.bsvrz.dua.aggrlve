@@ -30,9 +30,25 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.Dataset;
+import de.bsvrz.dav.daf.main.archive.ArchiveData;
+import de.bsvrz.dav.daf.main.archive.ArchiveDataKind;
+import de.bsvrz.dav.daf.main.archive.ArchiveDataKindCombination;
+import de.bsvrz.dav.daf.main.archive.ArchiveDataQueryResult;
+import de.bsvrz.dav.daf.main.archive.ArchiveDataSpecification;
+import de.bsvrz.dav.daf.main.archive.ArchiveDataStream;
+import de.bsvrz.dav.daf.main.archive.ArchiveOrder;
+import de.bsvrz.dav.daf.main.archive.ArchiveQueryPriority;
+import de.bsvrz.dav.daf.main.archive.ArchiveRequestManager;
+import de.bsvrz.dav.daf.main.archive.ArchiveRequestOption;
+import de.bsvrz.dav.daf.main.archive.ArchiveTimeSpecification;
+import de.bsvrz.dav.daf.main.archive.TimingType;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Abstrakte Blaupause fuer einen Ringpuffer, der alle Daten
@@ -45,9 +61,19 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 public abstract class AbstraktAggregationsPuffer{
 	
 	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
+	
+	/**
 	 * Verbindung zum Datenverteiler
 	 */
 	private static ClientDavInterface DAV = null;
+	
+	/**
+	 * Archiv-Manager
+	 */
+	private static ArchiveRequestManager ARCHIV = null;
 	
 	/**
 	 * das Aggregationsintervall, fuer das Daten in diesem Puffer
@@ -78,8 +104,61 @@ public abstract class AbstraktAggregationsPuffer{
 	throws DUAInitialisierungsException{
 		if(DAV == null){
 			DAV = dav;
+			ARCHIV = DAV.getArchive();
 		}
-		this.aggregationsIntervall = intervall; 
+		this.aggregationsIntervall = intervall;
+		
+		if(ARCHIV != null && ARCHIV.isArchiveAvailable()){
+			final long jetzt = System.currentTimeMillis();
+			long beginArchivAnfrage = -1;
+			long endeArchivAnfrage = jetzt;
+						
+			if(intervall.equals(AggregationsIntervall.AGG_60MINUTE)){
+				/**
+				 * Zum Start der Applikation sollen moeglichst die Datensaetze
+				 * der letzten 24 Stunden bereitstehen
+				 */
+				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * intervall.getMaxPufferGroesse();
+			}else
+			if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
+				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24 * intervall.getMaxPufferGroesse();
+			}else
+			if(intervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
+				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24 * 30 * intervall.getMaxPufferGroesse();
+			}
+
+			if(beginArchivAnfrage > 0){
+				DataDescription datenBeschreibung = new DataDescription(
+						DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+						intervall.getAspekt(),
+						(short)0);
+				
+				ArchiveTimeSpecification zeit = new ArchiveTimeSpecification(
+						TimingType.DATA_TIME, false, beginArchivAnfrage, endeArchivAnfrage);
+	
+				ArchiveDataSpecification archivDatenBeschreibung = 
+					new ArchiveDataSpecification(zeit, 
+							new ArchiveDataKindCombination(ArchiveDataKind.ONLINE),
+							ArchiveOrder.BY_DATA_TIME, 
+							ArchiveRequestOption.NORMAL,
+							datenBeschreibung, 
+							obj);
+							
+				try{
+					ArchiveDataQueryResult result = ARCHIV.request(ArchiveQueryPriority.MEDIUM, archivDatenBeschreibung);
+					ArchiveDataStream[] streams = result.getStreams();
+					for(ArchiveDataStream stream:streams){
+						ArchiveData archiveDatum = stream.take();
+						if(archiveDatum != null && archiveDatum.getData() != null){
+							this.aktualisiere(archiveDatum);	
+						} 
+					}
+				} catch (Exception e) {
+					LOGGER.error(Konstante.LEERSTRING, e);
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	
@@ -89,7 +168,7 @@ public abstract class AbstraktAggregationsPuffer{
 	 * 
 	 * @param resultat ein aktuelles Datum dieses Aggregationsintervalls
 	 */
-	public void aktualisiere(ResultData resultat){
+	public void aktualisiere(Dataset resultat){
 		if(resultat.getData() != null){
 			AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
 			synchronized (this) {

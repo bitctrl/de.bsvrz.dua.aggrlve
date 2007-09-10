@@ -25,6 +25,8 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -159,6 +161,81 @@ public abstract class AbstraktAggregationsObjekt {
 		}
 	}
 	
+	
+	/**
+	 * Ausgefallene Werte werden hier durch den Mittelwert der vorhandenen Werte ersetzt. Um die
+	 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit
+	 * einem Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
+	 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen
+	 * Werten ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit
+	 * einem parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer
+	 * Kennung zu versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung
+	 * generierte) Werte verwendet wurden. 
+	 * 
+	 * @param attribut das Attribut, fuer das Daten gesucht werden
+	 * @param quellDaten die aus dem Puffer ausgelesenen Daten
+	 * @param intervall das Aggregationsintervall, fuer dass Daten aus den uebergebenen
+	 * Quelldaten errechnet werden sollen 
+	 * @return so viele Datensaetze, wie fuer dieses Intervall zur Verfuegung stehen muessen
+	 */
+	protected final Collection<AggregationsAttributWert> ersetzteAusgefalleneWerte(
+			AggregationsAttribut attribut,
+			Collection<AggregationsDatum> quellDaten,
+			AggregationsIntervall intervall){
+		Collection<AggregationsAttributWert> zielDaten = new ArrayList<AggregationsAttributWert>();
+		
+		long anzahlSoll = -1;
+		if(intervall.equals(AggregationsIntervall.AGG_1MINUTE) || 
+		   intervall.equals(AggregationsIntervall.AGG_5MINUTE) ||
+		   intervall.equals(AggregationsIntervall.AGG_15MINUTE) ||
+		   intervall.equals(AggregationsIntervall.AGG_30MINUTE) ||
+		   intervall.equals(AggregationsIntervall.AGG_60MINUTE)){
+			anzahlSoll = intervall.getIntervall() / 
+							quellDaten.iterator().next().getT();
+		}else
+		if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
+			// TODO 
+		}else
+		if(intervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
+			// TODO 
+		}else
+		if(intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
+			// TODO
+		}
+		
+		long wertSumme = 0;
+		long wertAnzahl = 0;
+		double gueteSumme = 0;
+		for(AggregationsDatum quellDatum:quellDaten){
+			AggregationsAttributWert wert = quellDatum.getWert(attribut);
+			if(wert.getWert() >= 0){
+				gueteSumme += wert.getGuete().getIndexUnskaliert() >= 0?wert.getGuete().getIndex():0;
+				wertSumme += wert.getWert();
+				wertAnzahl++;
+				zielDaten.add(wert);
+			}
+		}
+
+		long mittelWert = 0;
+		double mittelWertGuete = 0.0;
+		if(wertAnzahl > 0){
+			mittelWert = Math.round((double)wertSumme / (double)wertAnzahl);
+			mittelWertGuete = (double)gueteSumme / (double)wertAnzahl;
+		}
+
+		if(anzahlSoll - zielDaten.size() > 0){
+			for(int i = 0; i<anzahlSoll - zielDaten.size(); i++){
+				if(wertAnzahl > 0){
+					zielDaten.add(new AggregationsAttributWert(attribut, mittelWert, AggregationLVE.GUETE * mittelWertGuete));
+				}else{
+					zielDaten.add(new AggregationsAttributWert(attribut, -1, 0));
+				}
+			}
+		}
+		
+		return zielDaten;
+	}
+
 	
 	/**
 	 * Startet die Aggregation von Daten

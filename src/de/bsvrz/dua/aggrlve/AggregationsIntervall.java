@@ -107,17 +107,27 @@ implements Comparable<AggregationsIntervall>{
 	 */
 	private long intervallLaengeInMillis = -1;
 	
+	/**
+	 * die maximale Anzahl der Elemente, die in einem Puffer mit Daten dieser
+	 * Aggregationsstufe vorgehalten werden muessen
+	 */
+	private long maxPufferGroesse = 0;
+	
 
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param asp der Aggregationsaspekt
 	 * @param intervall die Laenge des Aggregationsintervalls in ms
+	 * @param maxPufferGroesse die maximale Anzahl der Elemente, die in einem Puffer mit Daten dieser
+	 * Aggregationsstufe vorgehalten werden muessen
 	 */
 	private AggregationsIntervall(final Aspect asp,
-								  final long intervall) {
+								  final long intervall,
+								  final long maxPufferGroesse) {
 		this.asp = asp;
 		this.intervallLaengeInMillis = intervall;
+		this.maxPufferGroesse = maxPufferGroesse;
 		WERTE_BEREICH.add(this);
 	}
 	
@@ -129,23 +139,23 @@ implements Comparable<AggregationsIntervall>{
 	 */
 	public static final void initialisiere(final ClientDavInterface dav){
 		AGG_1MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation1Minute"), Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregation1Minute"), Konstante.MINUTE_IN_MS, 5);  //$NON-NLS-1$
 		
 		AGG_5MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation5Minuten"), 5 * Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregation5Minuten"), 5 * Konstante.MINUTE_IN_MS, 3);  //$NON-NLS-1$
 		AGG_15MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation15Minuten"), 15 * Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregation15Minuten"), 15 * Konstante.MINUTE_IN_MS, 2);  //$NON-NLS-1$
 		AGG_30MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation30Minuten"), 30 * Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregation30Minuten"), 30 * Konstante.MINUTE_IN_MS, 2);  //$NON-NLS-1$
 		AGG_60MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation60Minuten"), 60 * Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregation60Minuten"), 60 * Konstante.MINUTE_IN_MS, 40);  //$NON-NLS-1$
 
 		AGG_DTV_TAG = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregationDtvTag"), 60 * 24 * Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregationDtvTag"), 60 * 24 * Konstante.MINUTE_IN_MS, 50);  //$NON-NLS-1$
 		AGG_DTV_MONAT = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregationDtvMonat"), 61 * 24 * Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregationDtvMonat"), 61 * 24 * Konstante.MINUTE_IN_MS, 15);  //$NON-NLS-1$
 		AGG_DTV_JAHR = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregationDtvJahr"), 62 * 24 * Konstante.MINUTE_IN_MS);  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.agregationDtvJahr"), 62 * 24 * Konstante.MINUTE_IN_MS, 0);  //$NON-NLS-1$
 	}
 	
 	
@@ -166,6 +176,18 @@ implements Comparable<AggregationsIntervall>{
 		return WERTE_BEREICH;
 	}
 
+	
+	/**
+	 * Erfragt die maximale Anzahl der Elemente, die in einem Puffer mit Daten dieser
+	 * Aggregationsstufe vorgehalten werden muessen
+	 * 
+	 * @return die maximale Anzahl der Elemente, die in einem Puffer mit Daten dieser
+	 * Aggregationsstufe vorgehalten werden muessen
+	 */
+	public final long getMaxPufferGroesse(){
+		return this.maxPufferGroesse;
+	}
+	
 
 	/**
 	 * Erfragt den Aspekt
@@ -177,6 +199,24 @@ implements Comparable<AggregationsIntervall>{
 	}
 
 
+	/**
+	 * Erfragt das naechstkleinere Aggregationsintervall
+	 * 
+	 * @return das naechstkleinere Aggregationsintervall oder <code>null</code>,
+	 * wenn vom Intervall <code>eine Minute</code> aus gesucht wird
+	 */
+	public final AggregationsIntervall getVorgaenger(){
+		AggregationsIntervall vorgaenger = null;
+		
+		for(AggregationsIntervall intervall:getInstanzen()){
+			if(intervall.equals(this))break;
+			vorgaenger = intervall;
+		}
+		
+		return vorgaenger;
+	}
+	
+	
 	/**
 	 * Erfragt den Zeitstempel des Aggregationsdatums, das zum uebergebenen
 	 * Zeitpunkt fuer dieses Aggregationsintervall berechnet werden sollte<br>

@@ -88,6 +88,12 @@ public class AggregationsAttribut {
 	 */
 	private String nameMQ = null;	
 	
+	/**
+	 * indiziert, ob es sich bei diesem Attribut um ein
+	 * Geschwindigkeitsattribut handelt
+	 */
+	private boolean geschwindigkeitsAttribut = false;
+	
 	
 	/**
 	 * Standardkonstruktor
@@ -101,7 +107,20 @@ public class AggregationsAttribut {
 								 final String nameMQ){
 		this.nameFS = nameFS;
 		this.nameMQ = nameMQ;
+		this.geschwindigkeitsAttribut = nameFS.startsWith("v"); //$NON-NLS-1$
 		WERTE_BEREICH.add(this);
+	}
+	
+	
+	/**
+	 * Erfragt, ob es sich bei diesem Attribut um ein
+	 * Geschwindigkeitsattribut handelt
+	 * 
+	 * @return ob es sich bei diesem Attribut um ein
+	 * Geschwindigkeitsattribut handelt
+	 */
+	public final boolean isGeschwindigkeitsAttribut(){
+		return this.geschwindigkeitsAttribut;
 	}
 	
 	

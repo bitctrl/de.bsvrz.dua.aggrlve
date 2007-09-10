@@ -26,9 +26,11 @@
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.Dataset;
 import de.bsvrz.dua.guete.GWert;
+import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertMarkierung;
 
 /**
@@ -65,7 +67,7 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 	 * @param datenSatz der Datensatz in dem der Attributwert steht
 	 */
 	public AggregationsAttributWert(final AggregationsAttribut attr,
-									final ResultData resultat){
+									final Dataset resultat){
 		if(attr == null){
 			throw new NullPointerException("Attribut ist <<null>>"); //$NON-NLS-1$
 		}
@@ -101,6 +103,22 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 	
 	
 	/**
+	 * Konstruktor fuer Zwischenergebnisse
+	 * 
+	 * @param attribut das Attribut
+	 * @param wert der Wert dieses Attributs
+	 * @param guete die Guete
+	 */
+	protected AggregationsAttributWert(AggregationsAttribut attribut, long wert, double guete){
+		this.attr = attribut;
+		this.wert = wert;
+		GanzZahl gueteGanzZahl = GanzZahl.getGueteIndex();
+		gueteGanzZahl.setSkaliertenWert(guete);
+		this.guete = new GWert(gueteGanzZahl, GueteVerfahren.STANDARD, false);
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public AggregationsAttributWert clone(){
@@ -114,6 +132,42 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 		}
 		
 		return kopie;
+	}
+	
+	
+	/**
+	 * Exportiert den Inhalt dieses Objektes in ein veraenderbares Nutzdatum
+	 * der Attributgruppe <code>atg.verkehrsDatenKurzZeitFs</code> oder
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>
+	 * 
+	 * @param nutzDatum ein veraenderbare Instanz einer Attributgruppe
+	 * <code>atg.verkehrsDatenKurzZeitFs</code> oder
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>
+	 * @param isFahrstreifen ob es sich um ein Fahrstreifendatum handelt
+	 */
+	public final void exportiere(Data nutzDatum, boolean isFahrstreifen){
+		
+		String attributName = attr.getAttributName(isFahrstreifen);
+
+		nutzDatum.getItem(attributName).getUnscaledValue("Wert").set(this.wert);  //$NON-NLS-1$
+		nutzDatum.getItem(attributName).getItem("Status").getItem("Erfassung").  //$NON-NLS-1$//$NON-NLS-2$
+										getUnscaledValue("NichtErfasst").set(this.isNichtErfasst()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung").  //$NON-NLS-1$//$NON-NLS-2$
+										getUnscaledValue("Implausibel").set(this.isImplausibel()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung").  //$NON-NLS-1$//$NON-NLS-2$
+										getUnscaledValue("Interpoliert").set(this.isInterpoliert()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+
+		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+										getUnscaledValue("WertMax").set(this.isFormalMax()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+										getUnscaledValue("WertMin").set(this.isFormalMin()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+
+		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+										getUnscaledValue("WertMaxLogisch").set(this.isLogischMax()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+										getUnscaledValue("WertMinLogisch").set(this.isLogischMin()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		
+		this.guete.exportiere(nutzDatum, attributName);
 	}
 	
 	

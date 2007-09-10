@@ -26,7 +26,7 @@
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.Dataset;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
@@ -61,10 +61,11 @@ extends AbstraktAggregationsPuffer{
 	}
 
 	
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void aktualisiere(ResultData resultat) {
+	public void aktualisiere(Dataset resultat) {
 		super.aktualisiere(resultat);
 		if(resultat.getData() != null){
 			/**

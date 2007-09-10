@@ -63,31 +63,7 @@ extends AbstraktAggregationsPuffer{
 	 */
 	@Override
 	protected long getMaxPufferInhalt() {
-		long maxPufferInhalt = 0;
-		
-		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_1MINUTE)){
-			maxPufferInhalt = 5;
-		}else
-		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_5MINUTE)){
-			maxPufferInhalt = 3;
-		}else	
-		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_15MINUTE)){
-			maxPufferInhalt = 2;
-		}	
-		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_30MINUTE)){
-			maxPufferInhalt = 2;
-		}else
-		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_60MINUTE)){
-			maxPufferInhalt = 25;	// zur Errechnung von TV-Tag
-		}
-		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
-			maxPufferInhalt = 35;	// zur Errechnung von DTV-Monat
-		}
-		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
-			maxPufferInhalt = 12;	// zur Errechnung von DTV-Jahr
-		}
-		
-		return maxPufferInhalt + 2;
+		return this.aggregationsIntervall.getMaxPufferGroesse() + 2;
 	}
 
 }
