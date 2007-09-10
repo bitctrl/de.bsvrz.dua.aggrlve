@@ -58,6 +58,7 @@ extends AbstraktAggregationsObjekt{
 	private HashSet<AggregationsFahrStreifen> fsMenge = new HashSet<AggregationsFahrStreifen>();
 	
 	
+	
 	/**
 	 * Standardkonstruktor
 	 * 
@@ -72,6 +73,7 @@ extends AbstraktAggregationsObjekt{
 		super(dav);
 		this.mq = mq;
 		
+		this.datenPuffer = new AggregationsPufferMenge(dav, mq.getSystemObject());
 		Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>(); 
 		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
 			try {
@@ -91,7 +93,7 @@ extends AbstraktAggregationsObjekt{
 		
 		for(FahrStreifen fs:mq.getFahrStreifen()){
 			this.fsMenge.add(new AggregationsFahrStreifen(DAV, fs));
-		}
+		}		
 	}
 
 	
@@ -108,7 +110,7 @@ extends AbstraktAggregationsObjekt{
 			fs.aggregiere(zeitStempel, intervall);
 		}
 		
-		
+		// TODO
 	}
 	
 	

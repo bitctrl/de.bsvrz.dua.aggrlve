@@ -1,5 +1,10 @@
 package de.bsvrz.dua.aggrlve;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import de.bsvrz.dav.daf.main.ResultData;
+
 /**
  * Enthaelt alle Informationen, die mit einem <code>ResultData</code>
  * der Attributgruppe <code>atg.verkehrsDatenKurzZeitIntervall</code> bzw. 
@@ -14,26 +19,80 @@ package de.bsvrz.dua.aggrlve;
 public class AggregationsDatum 
 implements Comparable<AggregationsDatum>, Cloneable{
 
+	/**
+	 * die Datenzeit dieses Datums
+	 */
 	private long datenZeit = -1;
 	
+	/**
+	 * Erfassungs- bzw. Aggregationsintervall dieses Datensatzes
+	 */
 	private long T = -1;
 
+	/**
+	 * die Werte aller innerhalb der Messwertaggregation betrachteten Attribute
+	 */
+	private Map<AggregationsAttribut, AggregationsAttributWert> werte = 
+						new HashMap<AggregationsAttribut, AggregationsAttributWert>();
+	
+	
+	/**
+	 * Standardkonstruktor
+	 */
+	private AggregationsDatum(){
+		//
+	}
+	
+	
+	/**
+	 * Standardkonstruktor
+	 * 
+	 * @param resultat ein <code>ResultData</code>-Objekt eines messwertersetzten
+	 * Fahrstreifendatums bzw. eines Aggregationsdatums fuer Fahrstreifen bzw. Messquerschnitte<br>
+	 * <b>Achtung:</b> Argument muss <code>null</code> sein und Nutzdaten besitzen
+	 */
+	public AggregationsDatum(final ResultData resultat){
+		this.datenZeit = resultat.getDataTime();
+		if(resultat.getObject().isOfType(AggregationLVE.TYP_FAHRSTREIFEN)){
+			this.T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
+		}else{
+			for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
+				if(intervall.getAspekt().equals(resultat.getDataDescription().getAspect())){
+					this.T = intervall.getIntervall();
+				}
+			}
+		}
+		for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
+			this.werte.put(attribut, new AggregationsAttributWert(attribut, resultat));
+		}
+	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public Object clone(){
-		Object a = null;
-		try {
-			a = super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+	public AggregationsDatum clone(){
+		AggregationsDatum kopie = new AggregationsDatum();
+		
+		kopie.datenZeit = this.datenZeit;
+		kopie.T = this.T;
+		for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
+			kopie.werte.put(attribut, this.getWert(attribut).clone());
 		}
-		return a;
+				
+		return kopie;
 	}
 
+	
+	/**
+	 * Erfragt den Wert eines Attributs
+	 * 
+	 * @return der Wert eines Attributs
+	 */
+	public final AggregationsAttributWert getWert(final AggregationsAttribut attribut){
+		return this.werte.get(attribut);
+	}
+	
 
 	/**
 	 * {@inheritDoc}

@@ -33,6 +33,7 @@ import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -67,6 +68,11 @@ implements IObjektWeckerListener{
 	public static double GUETE;
 	
 	/**
+	 * der Systemobjekttyp Fahrstreifen
+	 */
+	public static SystemObjectType TYP_FAHRSTREIFEN = null;
+	
+	/**
 	 * der interne Kontrollprozess dient der zeitlichen Steuerung der Aggregationsberechnungen
 	 * (1min, …, 60min). Nach dem Starten führt dieser Prozess immer 30s nach jeder vollen Minute
 	 * eine Ueberprüfung für alle Fahrstreifen bzw. Messquerschnitte
@@ -99,6 +105,7 @@ implements IObjektWeckerListener{
 		AggregationsIntervall.initialisiere(this.verbindung);
 		
 		GUETE = this.getGueteFaktor();
+		TYP_FAHRSTREIFEN = this.verbindung.getDataModel().getType(DUAKonstanten.TYP_FAHRSTREIFEN);
 
 		Collection<SystemObject> alleMqObjImKB = DUAUtensilien.getBasisInstanzen(
 				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ),

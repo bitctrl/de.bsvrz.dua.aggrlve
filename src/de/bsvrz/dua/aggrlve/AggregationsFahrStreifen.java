@@ -25,6 +25,7 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,13 +35,15 @@ import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 
 /**
- * TODO
+ * Aggregiert aus den fuer diesen Fahrstreifen gespeicherten Daten die Aggregationswerte 
+ * aller Aggregationsstufen aus der jeweils darunterliegenden Stufe
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -48,6 +51,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 public class AggregationsFahrStreifen
 extends AbstraktAggregationsObjekt
 implements ClientReceiverInterface{
+	
+	/**
+	 * Publikations-Attributgruppe
+	 */
+	private static AttributeGroup PUB_ATG = null;
 	
 	/**
 	 * der hier betrachtete Fahrstreifen
@@ -68,7 +76,11 @@ implements ClientReceiverInterface{
 	throws DUAInitialisierungsException{
 		super(dav);
 		this.fs = fs;
+		if(PUB_ATG == null){
+			PUB_ATG = DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
+		}
 		
+		this.datenPuffer = new AggregationsPufferMenge(dav, fs.getSystemObject());
 		Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>(); 
 		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
 			try {
@@ -103,7 +115,47 @@ implements ClientReceiverInterface{
 	@Override
 	public void aggregiere(long zeitStempel,
 						   AggregationsIntervall intervall) {
+		Collection<AggregationsDatum> daten = 
+			this.datenPuffer.getDatenFuerZeitraum(zeitStempel,
+												  zeitStempel + intervall.getIntervall(), intervall);
+		ResultData resultat = null;
 		
+		if(!daten.isEmpty()){
+			if(!daten.isEmpty()){
+				/**
+				 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
+				 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
+				 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit
+				 * einem Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
+				 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen
+				 * Werten ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit
+				 * einem parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer
+				 * Kennung zu versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung
+				 * generierte) Werte verwendet wurden. 
+				 */
+				
+//				long anzahlDatenSaetzeSoll = ausgangsIntervall.getIntervall() / daten.iterator().next().getT();
+//				if(anzahlDatenSaetzeSoll - daten.size() > 0){
+//					for(long i = 0; i < anzahlDatenSaetzeSoll - daten.size(); i++){
+//						
+//					}				
+//				}
+				
+				
+			}
+		}else{
+			resultat = new ResultData(
+					this.fs.getSystemObject(),
+					new DataDescription(PUB_ATG, intervall.getAspekt(), (short)0),
+					zeitStempel, null);			
+		}
+		
+		if(resultat.getData() != null){
+			this.fuelleRest(resultat);
+			this.datenPuffer.aktualisiere(resultat);
+		}
+		
+		this.sende(resultat);
 	}
 
 
@@ -114,7 +166,7 @@ implements ClientReceiverInterface{
 		if(resultate != null){
 			for(ResultData resultat:resultate){
 				if(resultat != null){
-					// TODO Daten sammeln
+					this.datenPuffer.aktualisiere(resultat);
 				}
 			}
 		}

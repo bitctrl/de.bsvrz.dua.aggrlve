@@ -26,72 +26,68 @@
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
- * Speichert alle messwerterstetzten Fahrstreifendaten eines Fahrstreifens der
- * vergangenen Stunde in einem Ringpuffer
+ * Speichert alle Aggregationsdaten eines Fahrstreifens bzw. eines Messquerschnitts
+ * in einem Ringpuffer die zur Errechnung des jeweils nächsthoeheren Intervalls notwendig
+ * sind
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class MweAggregationsPuffer
+public class AggregationsPuffer 
 extends AbstraktAggregationsPuffer{
-
-	/**
-	 * aktuelle maximale Kapazitaet des Ringpuffers
-	 */
-	private long maxPufferAktuell = 61;
-
+	
 
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Verbindung zum Datenverteiler
-	 * @param obj das Objekt (Fahrstreifen), dessen Daten gepuffert werden sollen
+	 * @param obj das Objekt, dessen Daten gepuffert werden sollen
+	 * @param intervall das Aggregationsintervall, fuer das Daten in diesem Puffer
+	 * stehen (<code>null</code> deutet auf messwertersetzte Fahstreifenwerte hin)
 	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht
 	 * vollstaendig initialisiert werden konnte
 	 */
-	public MweAggregationsPuffer(ClientDavInterface dav, SystemObject obj)
-			throws DUAInitialisierungsException {
-		super(dav, obj, null);
+	public AggregationsPuffer(ClientDavInterface dav, SystemObject obj,
+			AggregationsIntervall intervall)
+	throws DUAInitialisierungsException {
+		super(dav, obj, intervall);
 	}
 
 	
-	
-	
-	@Override
-	public void aktualisiere(ResultData resultat) {
-		super.aktualisiere(resultat);
-		if(resultat.getData() != null){
-			/**
-			 * hat sich das Erfassungsintervall geaendert?
-			 */
-			synchronized (this) {
-				if(this.ringPuffer.getLast().getT() != 
-				   this.ringPuffer.getFirst().getT()){
-					AggregationsDatum erstesDatum = this.ringPuffer.getFirst();
-					this.ringPuffer.clear();
-					this.ringPuffer.add(erstesDatum);
-				}
-			}
-			
-			double T = this.ringPuffer.getFirst().getT();
-			this.maxPufferAktuell =
-				Math.round(Math.max(1.0, (double)Konstante.STUNDE_IN_MS / T)) + 5;
-		}
-	}
-
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected long getMaxPufferInhalt() {
-		return this.maxPufferAktuell;
+		long maxPufferInhalt = 0;
+		
+		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_1MINUTE)){
+			maxPufferInhalt = 5;
+		}else
+		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_5MINUTE)){
+			maxPufferInhalt = 3;
+		}else	
+		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_15MINUTE)){
+			maxPufferInhalt = 2;
+		}	
+		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_30MINUTE)){
+			maxPufferInhalt = 2;
+		}else
+		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_60MINUTE)){
+			maxPufferInhalt = 25;	// zur Errechnung von TV-Tag
+		}
+		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
+			maxPufferInhalt = 35;	// zur Errechnung von DTV-Monat
+		}
+		if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
+			maxPufferInhalt = 12;	// zur Errechnung von DTV-Jahr
+		}
+		
+		return maxPufferInhalt + 2;
 	}
 
 }

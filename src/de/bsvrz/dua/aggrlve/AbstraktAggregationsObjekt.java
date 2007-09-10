@@ -32,6 +32,7 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVSendeAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.debug.Debug;
 
@@ -50,6 +51,24 @@ public abstract class AbstraktAggregationsObjekt {
 	protected static final Debug LOGGER = Debug.getLogger();
 	
 	/**
+	 * die restlichen auszufuellenden Attribute der Attributgruppen
+	 * <code>atg.verkehrsDatenKurzZeitFs</code> bzw <code>atg.verkehrsDatenKurzZeitMq</code>,
+	 * die innerhalb der FG1-Aggregation nicht erfasst werden
+	 */
+	private static final String[][] REST_ATTRIBUTE = new String[][]{
+		 	 new String[]{null, "BMax"},  //$NON-NLS-1$
+			 new String[]{"vgKfz", "VgKfz"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"sKfz", "SKfz"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"b", "B"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"aLkw", "ALkw"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"kKfz", "KKfz"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"kLkw", "KLkw"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"kPkw", "KPkw"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"qB", "QB"},  //$NON-NLS-1$//$NON-NLS-2$
+			 new String[]{"kB", "KB"} //$NON-NLS-1$//$NON-NLS-2$
+	};
+	
+	/**
 	 * statische Verbindung zum Datenverteiler
 	 */
 	protected static ClientDavInterface DAV = null;
@@ -63,6 +82,12 @@ public abstract class AbstraktAggregationsObjekt {
 	 * Mapt ein Systemobjekt auf sein letztes von hier aus publiziertes Datum
 	 */
 	protected Map<SystemObject, ResultData> letzteDaten = new HashMap<SystemObject, ResultData>();
+	
+	/**
+	 * speichert alle historischen Daten dieses Aggregationsobjektes aller Aggregationsintervalle 
+	 */
+	protected AggregationsPufferMenge datenPuffer = null;
+	
 	
 	
 	/**
@@ -94,6 +119,44 @@ public abstract class AbstraktAggregationsObjekt {
 			this.sender.sende(resultat);
 			this.letzteDaten.put(resultat.getObject(), resultat);
 		}	
+	}
+	
+	
+	/**
+	 * Fuellt den Rest des Datensatzes (alle Werte ausser <code>qPkw</code>, <code>qLkw</code>,
+	 *  <code>qKfz</code>, <code>vLkw</code>, <code>vKfz</code> und <code>vPkw</code>) mit Daten
+	 *  
+	 * @param ein zu versendendes Aggregationsdatum
+	 */
+	protected final void fuelleRest(ResultData resultat){
+		boolean isFahrstreifen = resultat.getObject().isOfType(AggregationLVE.TYP_FAHRSTREIFEN);
+		
+		for(int i = 0; i<REST_ATTRIBUTE.length; i++){
+			String attributName = REST_ATTRIBUTE[i][1];
+			if(isFahrstreifen){
+				attributName = REST_ATTRIBUTE[i][0];
+			}
+			
+			if(attributName != null){
+				resultat.getData().getItem(attributName).getUnscaledValue("Wert").set(DUAKonstanten.NICHT_ERMITTELBAR);  //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status").getItem("Erfassung").  //$NON-NLS-1$//$NON-NLS-2$
+												getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status").getItem("MessWertErsetzung").  //$NON-NLS-1$//$NON-NLS-2$
+												getUnscaledValue("Implausibel").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status").getItem("MessWertErsetzung").  //$NON-NLS-1$//$NON-NLS-2$
+												getUnscaledValue("Interpoliert").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+
+				resultat.getData().getItem(attributName).getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+												getUnscaledValue("WertMax").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+												getUnscaledValue("WertMin").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+
+				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+												getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+												getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$							
+			}
+		}
 	}
 	
 	
