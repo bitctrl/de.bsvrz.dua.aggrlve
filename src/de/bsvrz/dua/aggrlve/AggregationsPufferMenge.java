@@ -90,11 +90,7 @@ public class AggregationsPufferMenge {
 			}
 		}
 		
-		if(obj.getType().getPid().equals(DUAKonstanten.TYP_FAHRSTREIFEN)){
-			this.pufferMenge.put(
-					MWE,
-					new MweAggregationsPuffer(dav, obj));			
-		}
+		this.pufferMenge.put(MWE, new MweAggregationsPuffer(dav, obj));			
 		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
 			this.pufferMenge.put(intervall.getAspekt(), new AggregationsPuffer(dav, obj, intervall));
 		}
@@ -155,26 +151,36 @@ public class AggregationsPufferMenge {
 				AbstraktAggregationsPuffer puffer = this.pufferMenge.get(ASPEKTE_SORTIERT[i]);
 				if(puffer != null){
 					daten = puffer.getDatenFuerZeitraum(begin, ende);
-					if(!daten.isEmpty()){
+					if(aggregationsIntervall.isDTVorTV() || !daten.isEmpty()){
 						break;
 					}
 				}
 			}
 		}
 		
-		if(!ausgangsIntervall.equals(AggregationsIntervall.AGG_DTV_TAG) &&
-		   !ausgangsIntervall.equals(AggregationsIntervall.AGG_DTV_MONAT) &&
-		   !ausgangsIntervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
-			if(!daten.isEmpty()){
-				if((ende - begin) % daten.iterator().next().getT() != 0){
-					daten.clear();
-					LOGGER.warning("Die Laenge des gesuchten Zeitraums und die" + //$NON-NLS-1$
-							" Erfassungsdauer der (ersten) gefundenen Daten sind nicht ganzzahlig teilbar"); //$NON-NLS-1$
-				}
-			}
-		}
-				
+//		if(!aggregationsIntervall.isDTVorTV()){
+//			if(!daten.isEmpty()){
+//				if((ende - begin) % daten.iterator().next().getT() != 0){
+//					daten.clear();
+//					LOGGER.warning("Die Laenge des gesuchten Zeitraums und die" + //$NON-NLS-1$
+//							" Erfassungsdauer der (ersten) gefundenen Daten sind nicht ganzzahlig teilbar"); //$NON-NLS-1$
+//				}
+//			}
+//		}
+			
 		return daten;
 	}
 	
+	
+	/**
+	 * Erfragt den Datenpuffer fuer Daten des uebergebenen Aggregationsintervalls
+	 * 
+	 * @param intervall ein Aggregationsintervall
+	 * @return den Datenpuffer fuer Daten des uebergebenen Aggregationsintervalls
+	 * <code>null</code> erfragt den Datenpuffer fuer messwertersetzte Fahrstreifendaten
+	 */
+	public final AbstraktAggregationsPuffer getPuffer(final AggregationsIntervall intervall){
+		if(intervall == null)return this.pufferMenge.get(MWE);
+		return this.pufferMenge.get(intervall.getAspekt());
+	}
 }

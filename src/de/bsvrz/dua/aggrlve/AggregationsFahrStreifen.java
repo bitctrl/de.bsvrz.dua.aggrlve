@@ -25,7 +25,6 @@
  */
 package de.bsvrz.dua.aggrlve;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -38,9 +37,6 @@ import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
-import de.bsvrz.dua.guete.GWert;
-import de.bsvrz.dua.guete.GueteException;
-import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
@@ -79,7 +75,7 @@ implements ClientReceiverInterface{
 	public AggregationsFahrStreifen(final ClientDavInterface dav,
 									final FahrStreifen fs)
 	throws DUAInitialisierungsException{
-		super(dav);
+		super(dav, fs.getSystemObject());
 		this.fs = fs;
 		if(PUB_ATG == null){
 			PUB_ATG = DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
@@ -128,13 +124,15 @@ implements ClientReceiverInterface{
 		if(!basisDaten.isEmpty()){
 			nutzDatum = DAV.createData(PUB_ATG);
 
-			for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
-				if(attribut.isGeschwindigkeitsAttribut()){
-					this.aggregiereV(attribut, nutzDatum, basisDaten, intervall);
-				}else{
-					this.aggregiereQ(attribut, nutzDatum, basisDaten, intervall);
+			if(intervall.isDTVorTV()){
+				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
+					if(attribut.isGeschwindigkeitsAttribut()){
+						this.aggregiereV(attribut, nutzDatum, basisDaten, zeitStempel, intervall);
+					}else{
+						this.aggregiereQ(attribut, nutzDatum, basisDaten, zeitStempel, intervall);
+					}
 				}
-			}			
+			}
 		}
 		
 		ResultData resultat = new ResultData(
@@ -143,130 +141,12 @@ implements ClientReceiverInterface{
 				zeitStempel, nutzDatum);		
 
 		if(resultat.getData() != null){
-			this.fuelleRest(resultat);
+			this.fuelleRest(resultat, intervall);
 			this.datenPuffer.aktualisiere(resultat);
 		}
 		
 		this.sende(resultat);
 	}
-
-	
-	/**
-	 * Aggregiert ein Geschwindigkeitsdatum
-	 * 
-	 * @param attribut das Attribut, das berechnet werden soll
-	 * @param datum das gesamte Aggregationsdatum (veraenderbar)
-	 * @param basisDaten die der Aggregation zu Grunde liegenden Daten
-	 * @param intervall das gewuenschte Aggregationsintervall
-	 */
-	private final void aggregiereV(AggregationsAttribut attribut,
-			Data nutzDatum,
-			Collection<AggregationsDatum> basisDaten,
-			AggregationsIntervall intervall){
-		/**
-		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
-		 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
-		 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit
-		 * einem Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
-		 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen
-		 * Werten ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit
-		 * einem parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer
-		 * Kennung zu versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung
-		 * generierte) Werte verwendet wurden. 
-		 */
-		Collection<AggregationsAttributWert> werte = this.ersetzteAusgefalleneWerte(attribut, basisDaten, intervall);
-
-		boolean interpoliert = false;
-		boolean nichtErfasst = false;
-		long anzahl = 0;
-		long summe = 0;
-		Collection<GWert> gueteWerte = new ArrayList<GWert>();
-		for(AggregationsAttributWert basisWert:werte){
-			if(basisWert.getWert() >= 0){
-				summe += basisWert.getWert();
-				anzahl++;
-				gueteWerte.add(basisWert.getGuete());
-				interpoliert |= basisWert.isInterpoliert();
-				nichtErfasst |= basisWert.isNichtErfasst();
-			}
-		}
-
-		AggregationsAttributWert exportWert = new AggregationsAttributWert(
-				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-		if(anzahl > 0){
-			exportWert.setWert(
-					Math.round(	(double)summe / (double)anzahl ));
-			exportWert.setInterpoliert(interpoliert);
-			exportWert.setNichtErfasst(nichtErfasst);
-			try {
-				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
-			} catch (GueteException e) {
-				LOGGER.warning("Guete von " + this.fs + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
-				e.printStackTrace();
-			}
-		}
-
-		exportWert.exportiere(nutzDatum, true);
-	}
-	
-
-	/**
-	 * Aggregiert ein Verkehrsstärkedatum
-	 * 
-	 * @param attribut das Attribut, das berechnet werden soll
-	 * @param nutzDatum das gesamte Aggregationsdatum (dieses muss veraenderbar sein
-	 * und wird hier gefuellt)
-	 * @param basisDaten die der Aggregation zu Grunde liegenden Daten
-	 * @param intervall das gewuenschte Aggregationsintervall
-	 */
-	private final void aggregiereQ(AggregationsAttribut attribut,
-								   Data nutzDatum,
-								   Collection<AggregationsDatum> basisDaten,
-								   AggregationsIntervall intervall){
-		/**
-		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
-		 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
-		 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit
-		 * einem Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
-		 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen
-		 * Werten ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit
-		 * einem parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer
-		 * Kennung zu versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung
-		 * generierte) Werte verwendet wurden. 
-		 */
-		Collection<AggregationsAttributWert> werte = this.ersetzteAusgefalleneWerte(attribut, basisDaten, intervall);
-		
-		boolean interpoliert = false;
-		boolean nichtErfasst = false;
-		long summe = 0;
-		Collection<GWert> gueteWerte = new ArrayList<GWert>();
-		for(AggregationsAttributWert basisWert:werte){
-			if(basisWert.getWert() >= 0){
-				summe += basisWert.getWert();
-				gueteWerte.add(basisWert.getGuete());
-				interpoliert |= basisWert.isInterpoliert();
-				nichtErfasst |= basisWert.isNichtErfasst();
-			}
-		}
-		
-		AggregationsAttributWert exportWert = new AggregationsAttributWert(
-							attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-		if(gueteWerte.size() > 0){
-			exportWert.setWert(summe);
-			exportWert.setInterpoliert(interpoliert);
-			exportWert.setNichtErfasst(nichtErfasst);
-			try {
-				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
-			} catch (GueteException e) {
-				LOGGER.warning("Guete von " + this.fs + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
-				e.printStackTrace();
-			}
-		}
-		
-		exportWert.exportiere(nutzDatum, true);
-	}	
 
 	
 	/**
@@ -300,6 +180,15 @@ implements ClientReceiverInterface{
 	@Override
 	public String toString() {
 		return this.fs.toString();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected boolean isFahrstreifen() {
+		return true;
 	}
 	
 }

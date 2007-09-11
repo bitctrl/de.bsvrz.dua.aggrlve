@@ -301,6 +301,18 @@ implements Comparable<AggregationsIntervall>{
 
 	
 	/**
+	 * Erfragt, ob es sich bei diesem Intervall um ein DTV- bzw. TV-Intervall handelt
+	 * 
+	 * @return ob es sich bei diesem Intervall um ein DTV- bzw. TV-Intervall handelt
+	 */
+	public final boolean isDTVorTV(){
+		return this.equals(AggregationsIntervall.AGG_DTV_JAHR) ||
+				this.equals(AggregationsIntervall.AGG_DTV_MONAT) ||
+				this.equals(AggregationsIntervall.AGG_DTV_TAG);
+	}
+	
+	
+	/**
 	 * Erfragt, ob zum uebergebenen Zeitpunkt eine Aggregation 
 	 * notwendig ist
 	 * 

@@ -121,9 +121,17 @@ public abstract class AbstraktAggregationsPuffer{
 				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * intervall.getMaxPufferGroesse();
 			}else
 			if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
+				/**
+				 * Zum Start der Applikation sollen moeglichst die Datensaetze
+				 * der letzten 50 Tage bereitstehen
+				 */
 				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24 * intervall.getMaxPufferGroesse();
 			}else
 			if(intervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
+				/**
+				 * Zum Start der Applikation sollen moeglichst die Datensaetze
+				 * der letzten 15 Monate bereitstehen
+				 */
 				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24 * 30 * intervall.getMaxPufferGroesse();
 			}
 

@@ -25,12 +25,20 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
@@ -38,13 +46,20 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 
 /**
- * TODO
+ * Aggregiert aus den fuer diesen Messquerschnitt (bzw. dessen Fahrstreifen) gespeicherten
+ * Daten die Aggregationswerte aller Aggregationsstufen aus der jeweils darunterliegenden Stufe
+ * bzw. aus den messwertersetzten Fahrstreifendaten fuer die Basisstufe
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class AggregationsMessQuerschnitt
 extends AbstraktAggregationsObjekt{
+	
+	/**
+	 * Publikations-Attributgruppe
+	 */
+	private static AttributeGroup PUB_ATG = null;
 	
 	/**
 	 * der hier betrachtete Messquerschnitt
@@ -70,7 +85,10 @@ extends AbstraktAggregationsObjekt{
 	public AggregationsMessQuerschnitt(final ClientDavInterface dav,
 									   final MessQuerschnitt mq)
 	throws DUAInitialisierungsException{
-		super(dav);
+		super(dav, mq.getSystemObject());
+		if(PUB_ATG == null){
+			PUB_ATG = DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
+		}
 		this.mq = mq;
 		
 		this.datenPuffer = new AggregationsPufferMenge(dav, mq.getSystemObject());
@@ -109,9 +127,109 @@ extends AbstraktAggregationsObjekt{
 		for(AggregationsFahrStreifen fs:this.fsMenge){
 			fs.aggregiere(zeitStempel, intervall);
 		}
+
+		long begin = zeitStempel;
+		long ende = zeitStempel + intervall.getIntervall();
+		if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG) ||
+		   intervall.equals(AggregationsIntervall.AGG_DTV_MONAT) ||
+		   intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
+			
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTimeInMillis(zeitStempel);
+			
+			if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
+				cal.add(Calendar.DAY_OF_YEAR, 1);
+				ende = cal.getTimeInMillis();
+			}else
+			if(intervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
+				cal.add(Calendar.MONTH, 1);
+				ende = cal.getTimeInMillis();
+			}else
+			if(intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
+				cal.add(Calendar.YEAR, 1);
+				ende = cal.getTimeInMillis();
+			}
+			
+		}
 		
-		// TODO
+		Collection<AggregationsDatum> mqDaten = this.datenPuffer.getDatenFuerZeitraum(
+																	begin, ende, intervall);		
+		Data nutzDatum = null;
+		
+		if(intervall.isDTVorTV()){
+			// TODO:
+		}else{
+			if(mqDaten.isEmpty()){
+				/**
+				 * Aggregiere Basisintervall aus messwertersetzten Fahrstreifendaten
+				 */
+				Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten = 
+					new HashMap<AggregationsFahrStreifen, Collection<AggregationsDatum>>();
+				
+				for(AggregationsFahrStreifen fs:this.fsMenge){
+					Collection<AggregationsDatum> daten =
+						fs.getPuffer().getPuffer(null).getDatenFuerZeitraum(begin, ende);
+					fsDaten.put(fs, daten);
+				}
+				
+				boolean kannBasisIntervallBerechnen = true;
+				for(Collection<AggregationsDatum> daten:fsDaten.values()){
+					if(daten.isEmpty() ||
+					   intervall.getIntervall() % daten.iterator().next().getT() != 0){
+						kannBasisIntervallBerechnen = false;
+						break;
+					}
+				}
+				
+				if(kannBasisIntervallBerechnen){
+					nutzDatum = DAV.createData(PUB_ATG);
+					aggregiereBasisDatum(nutzDatum, fsDaten, zeitStempel, intervall);
+				}
+			}else{
+				/**
+				 * Daten koennen nicht aus naechstkleinerem Intervall aggregiert werden
+				 */
+				nutzDatum = DAV.createData(PUB_ATG);
+				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
+					if(attribut.isGeschwindigkeitsAttribut()){
+						this.aggregiereV(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
+					}else{
+						this.aggregiereQ(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
+					}
+				}
+			}
+		}
+		
+		ResultData resultat = new ResultData(
+				this.mq.getSystemObject(),
+				new DataDescription(PUB_ATG, intervall.getAspekt(), (short)0),
+				zeitStempel, nutzDatum);		
+
+		if(resultat.getData() != null){
+			this.fuelleRest(resultat, intervall);
+			this.datenPuffer.aktualisiere(resultat);
+		}
+		
+		this.sende(resultat);
 	}
+	
+	
+	/**
+	 * Aggregiert das erste Aggregationsintervall fuer diesen Messquerschnitt aus
+	 * Basis der uebergebenen messwertersetzten Fahrstreifendaten
+	 * 
+	 * @param nutzDatum ein veraenderbares Nutzdatum
+	 * @param fsDaten die Datenpuffer mit den messwertersetzten Fahrstreifendaten der
+	 * mit diesem Messquerschnitt assoziierten Fahrstreifen
+	 * @param zeitStempel der Zeitstempel (Start)
+	 * @param intervall das Aggregationsintervall
+	 */
+	private final void aggregiereBasisDatum(Data nutzDatum,
+											Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten,
+											long zeitStempel,
+											AggregationsIntervall intervall){
+		
+	}	
 	
 	
 	/**
@@ -131,6 +249,15 @@ extends AbstraktAggregationsObjekt{
 	@Override
 	public String toString() {
 		return this.mq.toString();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected boolean isFahrstreifen() {
+		return false;
 	}
 	
 }

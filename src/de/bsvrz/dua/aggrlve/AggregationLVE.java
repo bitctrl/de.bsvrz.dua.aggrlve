@@ -147,7 +147,7 @@ implements IObjektWeckerListener{
 	
 	/**
 	 * Erfragt den Zeitpunkt, der exakt 30s nach der Minute liegt, in der 
-	 * diese Methode aufgerufen wird
+	 * diese Methode aufgerufen wird (Absolute Zeit ohne Sommer- und Winterzeit)
 	 * 
 	 * @return der Zeitpunkt, der exakt 30s nach der Minute liegt, in der 
 	 * diese Methode aufgerufen wird

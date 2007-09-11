@@ -75,7 +75,7 @@ public class AggregationsIntervallTest {
 		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
 			if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG))break;
 			cal.setTimeInMillis(jetzt);
-			cal.set(Calendar.MONTH, -1);
+			//cal.set(Calendar.MONTH, -1);
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
