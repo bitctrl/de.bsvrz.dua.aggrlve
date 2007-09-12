@@ -144,5 +144,14 @@ public class AggregationsAttribut {
 	public static final Set<AggregationsAttribut> getInstanzen(){
 		return WERTE_BEREICH;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return this.nameFS + " (" + this.nameMQ + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
 	
 }

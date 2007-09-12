@@ -25,6 +25,7 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -39,6 +40,9 @@ import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
+import de.bsvrz.dua.guete.GWert;
+import de.bsvrz.dua.guete.GueteException;
+import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
@@ -130,10 +134,7 @@ extends AbstraktAggregationsObjekt{
 
 		long begin = zeitStempel;
 		long ende = zeitStempel + intervall.getIntervall();
-		if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG) ||
-		   intervall.equals(AggregationsIntervall.AGG_DTV_MONAT) ||
-		   intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
-			
+		if(intervall.isDTVorTV()){
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTimeInMillis(zeitStempel);
 			
@@ -148,8 +149,7 @@ extends AbstraktAggregationsObjekt{
 			if(intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
 				cal.add(Calendar.YEAR, 1);
 				ende = cal.getTimeInMillis();
-			}
-			
+			}			
 		}
 		
 		Collection<AggregationsDatum> mqDaten = this.datenPuffer.getDatenFuerZeitraum(
@@ -157,7 +157,21 @@ extends AbstraktAggregationsObjekt{
 		Data nutzDatum = null;
 		
 		if(intervall.isDTVorTV()){
-			// TODO:
+			if(!mqDaten.isEmpty()){
+				/**
+				 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
+				 */
+				nutzDatum = DAV.createData(PUB_ATG);
+				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
+					if(!attribut.isGeschwindigkeitsAttribut()){
+						this.aggregiereQ(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
+					}
+				}
+			}else{
+				LOGGER.warning(intervall + " fuer " + this.objekt +  //$NON-NLS-1$
+						" kann nicht berechnet werden, da keine Basisdaten (Intervall: " + //$NON-NLS-1$
+						intervall.getVorgaenger() + ") zur Verfuegung stehen"); //$NON-NLS-1$
+			}
 		}else{
 			if(mqDaten.isEmpty()){
 				/**
@@ -174,8 +188,7 @@ extends AbstraktAggregationsObjekt{
 				
 				boolean kannBasisIntervallBerechnen = true;
 				for(Collection<AggregationsDatum> daten:fsDaten.values()){
-					if(daten.isEmpty() ||
-					   intervall.getIntervall() % daten.iterator().next().getT() != 0){
+					if(daten.isEmpty()){
 						kannBasisIntervallBerechnen = false;
 						break;
 					}
@@ -187,7 +200,7 @@ extends AbstraktAggregationsObjekt{
 				}
 			}else{
 				/**
-				 * Daten koennen nicht aus naechstkleinerem Intervall aggregiert werden
+				 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
 				 */
 				nutzDatum = DAV.createData(PUB_ATG);
 				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
@@ -228,7 +241,51 @@ extends AbstraktAggregationsObjekt{
 											Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten,
 											long zeitStempel,
 											AggregationsIntervall intervall){
-		
+
+		for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
+			boolean interpoliert = false;
+			boolean nichtErfasst = false;
+			long summe = 0;
+			long anzahl = 0;
+			Collection<GWert> gueteWerte = new ArrayList<GWert>();
+
+			for(Collection<AggregationsDatum> fsQuellDatum:fsDaten.values()){
+				Collection<AggregationsAttributWert> werte = 
+					this.ersetzteAusgefalleneWerte(attribut, fsQuellDatum, intervall, zeitStempel);
+
+				for(AggregationsAttributWert basisWert:werte){
+					if(basisWert.getWert() >= 0){
+						anzahl++;
+						summe += basisWert.getWert();
+						gueteWerte.add(basisWert.getGuete());
+						interpoliert |= basisWert.isInterpoliert();
+						nichtErfasst |= basisWert.isNichtErfasst();
+					}
+				}					
+			}
+
+			AggregationsAttributWert exportWert = new AggregationsAttributWert(
+					attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
+			
+			if(gueteWerte.size() > 0){
+				if(attribut.isGeschwindigkeitsAttribut()){
+					exportWert.setWert(Math.round((double)summe / (double)anzahl));
+				}else{
+					exportWert.setWert(summe);
+				}
+				exportWert.setInterpoliert(interpoliert);
+				exportWert.setNichtErfasst(nichtErfasst);
+				try {
+					exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
+				} catch (GueteException e) {
+					LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+							attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+					e.printStackTrace();
+				}
+			}
+
+			exportWert.exportiere(nutzDatum, this.isFahrstreifen());
+		}
 	}	
 	
 	

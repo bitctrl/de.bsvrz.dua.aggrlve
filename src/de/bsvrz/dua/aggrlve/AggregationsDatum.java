@@ -1,9 +1,11 @@
 package de.bsvrz.dua.aggrlve;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.bsvrz.dav.daf.main.Dataset;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Enthaelt alle Informationen, die mit einem <code>ResultData</code>
@@ -136,7 +138,16 @@ implements Comparable<AggregationsDatum>, Cloneable{
 	 */
 	@Override
 	public String toString() {
-		return super.toString();
+		String s = "Datenzeit: " +  //$NON-NLS-1$
+			DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(this.datenZeit)) +
+			" (" + this.datenZeit +")"; //$NON-NLS-1$ //$NON-NLS-2$
+		
+		s += "\nT: " + T; //$NON-NLS-1$
+		for(AggregationsAttribut attribut:this.werte.keySet()){
+			s += "\n" + attribut + ":\n" + this.werte.get(attribut);  //$NON-NLS-1$//$NON-NLS-2$
+		}
+		
+		return s;
 	}
 	
 }

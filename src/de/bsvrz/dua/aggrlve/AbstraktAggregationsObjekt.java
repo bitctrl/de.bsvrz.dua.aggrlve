@@ -64,6 +64,7 @@ public abstract class AbstraktAggregationsObjekt {
 	 */
 	private static final String[][] REST_ATTRIBUTE_AGGR = new String[][]{
 		 	 new String[]{null, "BMax"},  //$NON-NLS-1$
+		 	 new String[]{null, "VDelta"},  //$NON-NLS-1$
 			 new String[]{"vgKfz", "VgKfz"},  //$NON-NLS-1$//$NON-NLS-2$
 			 new String[]{"sKfz", "SKfz"},  //$NON-NLS-1$//$NON-NLS-2$
 			 new String[]{"b", "B"},  //$NON-NLS-1$//$NON-NLS-2$
@@ -82,6 +83,7 @@ public abstract class AbstraktAggregationsObjekt {
 	 */
 	private static final String[][] REST_ATTRIBUTE_DTV = new String[][]{
 		 	 new String[]{null, "BMax"},  //$NON-NLS-1$
+		 	 new String[]{null, "VDelta"},  //$NON-NLS-1$
 			 new String[]{"vKfz", "VKfz"},  //$NON-NLS-1$//$NON-NLS-2$
 			 new String[]{"vPkw", "VPkw"},  //$NON-NLS-1$//$NON-NLS-2$
 			 new String[]{"vLkw", "VLkw"},  //$NON-NLS-1$//$NON-NLS-2$
@@ -173,7 +175,11 @@ public abstract class AbstraktAggregationsObjekt {
 		if(intervall.isDTVorTV()){
 			REST_ATTRIBUTE = REST_ATTRIBUTE_DTV;
 		}
-			
+
+		if(this.isFahrstreifen()){
+			resultat.getData().getTimeValue("T").setMillis(intervall.getIntervall()); //$NON-NLS-1$
+		}
+		
 		for(int i = 0; i<REST_ATTRIBUTE.length; i++){
 			String attributName = REST_ATTRIBUTE[i][1];
 			if(this.isFahrstreifen()){
@@ -197,7 +203,11 @@ public abstract class AbstraktAggregationsObjekt {
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
 												getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
-												getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$							
+												getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Güte").getUnscaledValue("Index"). //$NON-NLS-1$ //$NON-NLS-2$
+												set(DUAKonstanten.NICHT_ERMITTELBAR);
+				resultat.getData().getItem(attributName).getItem("Güte").getUnscaledValue("Verfahren"). //$NON-NLS-1$ //$NON-NLS-2$
+												set(GueteVerfahren.STANDARD.getCode());
 			}
 		}
 	}
@@ -221,10 +231,11 @@ public abstract class AbstraktAggregationsObjekt {
 	 * Werten ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit
 	 * einem parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer
 	 * Kennung zu versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung
-	 * generierte) Werte verwendet wurden. 
+	 * generierte) Werte verwendet wurden.
 	 * 
 	 * @param attribut das Attribut, fuer das Daten gesucht werden
 	 * @param quellDaten die aus dem Puffer ausgelesenen Daten
+	 * (darf keine leere Liste sein)
 	 * @param intervall das Aggregationsintervall, fuer dass Daten aus den uebergebenen
 	 * Quelldaten errechnet werden sollen
 	 * @param zeitStempel der Zeitstempel, fuer den das Datum fuer das uebergebene Intervall
@@ -277,9 +288,14 @@ public abstract class AbstraktAggregationsObjekt {
 				mittelWertGuete = (double)gueteSumme / (double)wertAnzahl;
 			}
 	
-			if(Math.abs(anzahlSoll + 1.0) - zielDaten.size() > 0){
-				boolean first = true;
-				for(int i = 0; i<Math.abs(anzahlSoll + 1.0) - zielDaten.size(); i++){
+			boolean first = false;
+			long zielDatenSoll = (long)anzahlSoll;
+			if(anzahlSoll - (double)zielDatenSoll > 0.00005){
+				zielDatenSoll++;
+				first = true;
+			}
+			if(zielDatenSoll - zielDaten.size() > 0){
+				for(int i = 0; i<zielDatenSoll - zielDaten.size(); i++){
 					if(wertAnzahl > 0){
 						if(attribut.isGeschwindigkeitsAttribut()){
 							zielDaten.add(new AggregationsAttributWert(attribut, mittelWert, AggregationLVE.GUETE * mittelWertGuete));
@@ -288,7 +304,7 @@ public abstract class AbstraktAggregationsObjekt {
 							 * "halber" Q-Wert muss noch gewichtet werden
 							 */
 							if(first){
-								long teilMittelWert = Math.round((double)mittelWert * (anzahlSoll - Math.abs(anzahlSoll)));
+								long teilMittelWert = Math.round((double)mittelWert * (double)(anzahlSoll - (long)anzahlSoll));
 								zielDaten.add(new AggregationsAttributWert(attribut, teilMittelWert, AggregationLVE.GUETE * mittelWertGuete));
 							}else{
 								zielDaten.add(new AggregationsAttributWert(attribut, mittelWert, AggregationLVE.GUETE * mittelWertGuete));
@@ -406,7 +422,7 @@ public abstract class AbstraktAggregationsObjekt {
 			}
 		}
 
-		exportWert.exportiere(nutzDatum, true);
+		exportWert.exportiere(nutzDatum, this.isFahrstreifen());
 	}
 	
 
@@ -466,7 +482,7 @@ public abstract class AbstraktAggregationsObjekt {
 			}
 		}
 		
-		exportWert.exportiere(nutzDatum, true);
+		exportWert.exportiere(nutzDatum, this.isFahrstreifen());
 	}	
 	
 	

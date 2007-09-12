@@ -92,7 +92,15 @@ public class AggregationsPufferMenge {
 		
 		this.pufferMenge.put(MWE, new MweAggregationsPuffer(dav, obj));			
 		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
-			this.pufferMenge.put(intervall.getAspekt(), new AggregationsPuffer(dav, obj, intervall));
+			if(intervall.equals(AggregationsIntervall.AGG_60MINUTE) ||
+			   intervall.equals(AggregationsIntervall.AGG_DTV_TAG) ||
+			   intervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
+				if(!obj.getType().equals(AggregationLVE.TYP_FAHRSTREIFEN)){
+					this.pufferMenge.put(intervall.getAspekt(), new DTVAggregationsPuffer(dav, obj, intervall));
+				}
+			}else{
+				this.pufferMenge.put(intervall.getAspekt(), new AggregationsPuffer(dav, obj, intervall));
+			}
 		}
 	}
 	
@@ -121,9 +129,6 @@ public class AggregationsPufferMenge {
 	 * Erfragt alle in dieser Puffermenge gespeicherten Datensaetze <b>eines</b> Unterpuffers,
 	 * deren Zeitstempel im Intervall [begin, ende[ liegen und deren Erfassungs- bzw.
 	 * Aggregationsintervall kleiner dem uebergebenen Aggregationsintervall ist<br>
-	 * <b>Achtung:</b> Sollte die Intervalllaenge des gesuchten Zeitraums und die Erfassungsdauer
-	 * der gefundenen Daten nicht ganzzahlig teilbar sein, wird eine leere Liste zurueck
-	 * geliefert (trifft nur auf messwertersetzte Fahrstreifendaten zu)
 	 * 
 	 * @param begin Begin des Intervalls
 	 * @param ende Ende des Intervalls
@@ -151,23 +156,14 @@ public class AggregationsPufferMenge {
 				AbstraktAggregationsPuffer puffer = this.pufferMenge.get(ASPEKTE_SORTIERT[i]);
 				if(puffer != null){
 					daten = puffer.getDatenFuerZeitraum(begin, ende);
-					if(aggregationsIntervall.isDTVorTV() || !daten.isEmpty()){
+					if(aggregationsIntervall.isDTVorTV() ||
+					  !daten.isEmpty()){
 						break;
 					}
 				}
 			}
 		}
-		
-//		if(!aggregationsIntervall.isDTVorTV()){
-//			if(!daten.isEmpty()){
-//				if((ende - begin) % daten.iterator().next().getT() != 0){
-//					daten.clear();
-//					LOGGER.warning("Die Laenge des gesuchten Zeitraums und die" + //$NON-NLS-1$
-//							" Erfassungsdauer der (ersten) gefundenen Daten sind nicht ganzzahlig teilbar"); //$NON-NLS-1$
-//				}
-//			}
-//		}
-			
+					
 		return daten;
 	}
 	
@@ -175,9 +171,9 @@ public class AggregationsPufferMenge {
 	/**
 	 * Erfragt den Datenpuffer fuer Daten des uebergebenen Aggregationsintervalls
 	 * 
-	 * @param intervall ein Aggregationsintervall
+	 * @param intervall ein Aggregationsintervall (<code>null</code> erfragt den
+	 * Datenpuffer fuer messwertersetzte Fahrstreifendaten)
 	 * @return den Datenpuffer fuer Daten des uebergebenen Aggregationsintervalls
-	 * <code>null</code> erfragt den Datenpuffer fuer messwertersetzte Fahrstreifendaten
 	 */
 	public final AbstraktAggregationsPuffer getPuffer(final AggregationsIntervall intervall){
 		if(intervall == null)return this.pufferMenge.get(MWE);

@@ -30,6 +30,7 @@ import de.bsvrz.dav.daf.main.Dataset;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertMarkierung;
 
@@ -149,7 +150,12 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 		
 		String attributName = attr.getAttributName(isFahrstreifen);
 
-		nutzDatum.getItem(attributName).getUnscaledValue("Wert").set(this.wert);  //$NON-NLS-1$
+		if(DUAUtensilien.isWertInWerteBereich(nutzDatum.getItem(attributName).getItem("Wert"), this.wert)){ //$NON-NLS-1$
+			nutzDatum.getItem(attributName).getUnscaledValue("Wert").set(this.wert);  //$NON-NLS-1$			
+		}else{
+			nutzDatum.getItem(attributName).getUnscaledValue("Wert").set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);  //$NON-NLS-1$
+		}		
+
 		nutzDatum.getItem(attributName).getItem("Status").getItem("Erfassung").  //$NON-NLS-1$//$NON-NLS-2$
 										getUnscaledValue("NichtErfasst").set(this.isNichtErfasst()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung").  //$NON-NLS-1$//$NON-NLS-2$

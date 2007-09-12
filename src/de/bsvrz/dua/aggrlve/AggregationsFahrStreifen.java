@@ -116,6 +116,10 @@ implements ClientReceiverInterface{
 	@Override
 	public void aggregiere(long zeitStempel,
 						   AggregationsIntervall intervall) {
+		if(this.objekt.getPid().equals("fs.mq.a100.0000.hfs")){ //$NON-NLS-1$
+			
+		}
+		
 		Collection<AggregationsDatum> basisDaten = 
 			this.datenPuffer.getDatenFuerZeitraum(zeitStempel,
 												  zeitStempel + intervall.getIntervall(), intervall);
@@ -124,7 +128,7 @@ implements ClientReceiverInterface{
 		if(!basisDaten.isEmpty()){
 			nutzDatum = DAV.createData(PUB_ATG);
 
-			if(intervall.isDTVorTV()){
+			if(!intervall.isDTVorTV()){
 				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 					if(attribut.isGeschwindigkeitsAttribut()){
 						this.aggregiereV(attribut, nutzDatum, basisDaten, zeitStempel, intervall);
