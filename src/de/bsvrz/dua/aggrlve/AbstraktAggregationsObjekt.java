@@ -167,7 +167,7 @@ public abstract class AbstraktAggregationsObjekt {
 	 * ggf. (bei DTV-Werten) werden auch die Attribute <code>vLkw</code>, <code>vKfz</code> 
 	 * und <code>vPkw</code> gefuellt
 	 *  
-	 * @param ein zu versendendes Aggregationsdatum
+	 * @param resultat zu versendendes Aggregationsdatum
 	 * @param intervall der Aggregationsintervall
 	 */
 	protected final void fuelleRest(ResultData resultat, AggregationsIntervall intervall){
@@ -369,7 +369,7 @@ public abstract class AbstraktAggregationsObjekt {
 	 * Aggregiert einen arithmetischen Mittelwert
 	 * 
 	 * @param attribut das Attribut, das berechnet werden soll
-	 * @param datum das gesamte Aggregationsdatum (veraenderbar)
+	 * @param nutzDatum das gesamte Aggregationsdatum (veraenderbar)
 	 * @param basisDaten die der Aggregation zu Grunde liegenden Daten
 	 * @param zeitStempel der Zeitstempel, mit dem die aggregierten Daten veröffentlicht werden sollen
 	 * @param intervall das gewuenschte Aggregationsintervall

@@ -65,7 +65,7 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 	 * Standardkonstruktor
 	 * 
 	 * @param attr das Attribut
-	 * @param datenSatz der Datensatz in dem der Attributwert steht
+	 * @param resultat der Datensatz in dem der Attributwert steht
 	 */
 	public AggregationsAttributWert(final AggregationsAttribut attr,
 									final Dataset resultat){

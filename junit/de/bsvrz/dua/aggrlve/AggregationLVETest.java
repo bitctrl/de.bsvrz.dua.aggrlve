@@ -50,7 +50,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  */
 public class AggregationLVETest 
 implements ClientSenderInterface{
-	
+		
 	/**
 	 * Verbindungsdaten
 	 */
@@ -59,6 +59,12 @@ implements ClientSenderInterface{
 			"-benutzer=Tester", //$NON-NLS-1$
 			"-authentifizierung=c:\\passwd1"}; //$NON-NLS-1$
 	
+	/**
+	 * Wurzelverzeichnis der Testdaten
+	 */
+	public static final String WURZEL = "C:\\Dokumente und Einste" + //$NON-NLS-1$
+				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\"; //$NON-NLS-1$
+
 	
 	/**
 	 * Sendet Testdaten
@@ -160,8 +166,8 @@ implements ClientSenderInterface{
 					dav.sendData(resultat);
 				}else{
 					if(i%2 == 0){
-
 						ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+						resultat.getData().getTimeValue("T").setMillis(60 * 1000L);
 						dav.sendData(resultat);
 					}
 				}				

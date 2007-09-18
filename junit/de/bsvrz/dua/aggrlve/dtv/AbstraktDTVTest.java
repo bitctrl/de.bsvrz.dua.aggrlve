@@ -85,12 +85,10 @@ public class AbstraktDTVTest {
 		AGR_MAP.put(AggregationsAttribut.Q_LKW, 2);
 		
 		inputImporter = new AggregationUnvImporter(dav, 
-				"C:\\Dokumente und Einste" + //$NON-NLS-1$
-				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
+				AggregationLVETest.WURZEL + "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
 
 		outputImporter = new CSVImporter( 
-				"C:\\Dokumente und Einste" + //$NON-NLS-1$
-				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\Messwert_Aggregation_TV_DTV_Soll.csv"); //$NON-NLS-1$
+				AggregationLVETest.WURZEL + "Messwert_Aggregation_TV_DTV_Soll.csv"); //$NON-NLS-1$
 	}
 	
 	

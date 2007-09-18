@@ -225,7 +225,7 @@ implements IObjektWeckerListener{
 	/**
 	 * Startet diese Applikation
 	 * 
-	 * @param args Argumente der Kommandozeile
+	 * @param argumente Argumente der Kommandozeile
 	 */
 	public static void main(String argumente[]){
         Thread.setDefaultUncaughtExceptionHandler(new Thread.

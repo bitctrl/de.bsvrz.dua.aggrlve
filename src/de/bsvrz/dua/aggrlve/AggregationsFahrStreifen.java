@@ -160,7 +160,7 @@ implements ClientReceiverInterface{
 	 * messwertersetzten Fahrstreifendaten (nur fuer Verkehrsstaerke-Werte)
 	 * 
 	 * @param attribut das Attribut, das berechnet werden soll
-	 * @param datum das gesamte Aggregationsdatum (veraenderbar)
+	 * @param nutzDatum das gesamte Aggregationsdatum (veraenderbar)
 	 * @param basisDaten die der Aggregation zu Grunde liegenden Daten (muss mindestens ein Element enthalten)
 	 * @param zeitStempel der Zeitstempel, mit dem die aggregierten Daten veröffentlicht werden sollen
 	 * @param intervall das gewuenschte Aggregationsintervall
