@@ -25,6 +25,7 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -37,10 +38,14 @@ import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
+import de.bsvrz.dua.guete.GWert;
+import de.bsvrz.dua.guete.GueteException;
+import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Aggregiert aus den fuer diesen Fahrstreifen gespeicherten Daten die Aggregationswerte 
@@ -116,42 +121,93 @@ implements ClientReceiverInterface{
 	@Override
 	public void aggregiere(long zeitStempel,
 						   AggregationsIntervall intervall) {
-		if(this.objekt.getPid().equals("fs.mq.a100.0000.hfs")){ //$NON-NLS-1$
+		if(!intervall.isDTVorTV()){
+			Collection<AggregationsDatum> basisDaten = 
+				this.datenPuffer.getDatenFuerZeitraum(zeitStempel,
+													  zeitStempel + intervall.getIntervall(), intervall);
+			Data nutzDatum = null;
 			
-		}
-		
-		Collection<AggregationsDatum> basisDaten = 
-			this.datenPuffer.getDatenFuerZeitraum(zeitStempel,
-												  zeitStempel + intervall.getIntervall(), intervall);
-		Data nutzDatum = null;
-		
-		if(!basisDaten.isEmpty()){
-			nutzDatum = DAV.createData(PUB_ATG);
-
-			if(!intervall.isDTVorTV()){
+			if(!basisDaten.isEmpty()){
+				nutzDatum = DAV.createData(PUB_ATG);
+	
 				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
-					if(attribut.isGeschwindigkeitsAttribut()){
-						this.aggregiereV(attribut, nutzDatum, basisDaten, zeitStempel, intervall);
+					if(attribut.isGeschwindigkeitsAttribut() || 
+					   basisDaten.iterator().next().isNormiert()){
+						this.aggregiereMittel(attribut, nutzDatum, basisDaten, zeitStempel, intervall);
 					}else{
-						this.aggregiereQ(attribut, nutzDatum, basisDaten, zeitStempel, intervall);
+						this.aggregiereAlsBasisDatum(attribut, nutzDatum, basisDaten, zeitStempel, intervall);
 					}
 				}
 			}
+			
+			ResultData resultat = new ResultData(
+					this.fs.getSystemObject(),
+					new DataDescription(PUB_ATG, intervall.getAspekt(), (short)0),
+					zeitStempel, nutzDatum);		
+	
+			if(resultat.getData() != null){
+				this.fuelleRest(resultat, intervall);
+				this.datenPuffer.aktualisiere(resultat);
+			}
+			
+			this.sende(resultat);
 		}
-		
-		ResultData resultat = new ResultData(
-				this.fs.getSystemObject(),
-				new DataDescription(PUB_ATG, intervall.getAspekt(), (short)0),
-				zeitStempel, nutzDatum);		
-
-		if(resultat.getData() != null){
-			this.fuelleRest(resultat, intervall);
-			this.datenPuffer.aktualisiere(resultat);
-		}
-		
-		this.sende(resultat);
 	}
 
+	
+	/**
+	 * Aggregiert das niedrigstmoegliche Aggregationsintervalldatum aus
+	 * messwertersetzten Fahrstreifendaten (nur fuer Verkehrsstaerke-Werte)
+	 * 
+	 * @param attribut das Attribut, das berechnet werden soll
+	 * @param datum das gesamte Aggregationsdatum (veraenderbar)
+	 * @param basisDaten die der Aggregation zu Grunde liegenden Daten (muss mindestens ein Element enthalten)
+	 * @param zeitStempel der Zeitstempel, mit dem die aggregierten Daten veröffentlicht werden sollen
+	 * @param intervall das gewuenschte Aggregationsintervall
+	 */
+	protected final void aggregiereAlsBasisDatum(AggregationsAttribut attribut,
+			Data nutzDatum,
+			Collection<AggregationsDatum> basisDaten,
+			long zeitStempel,
+			AggregationsIntervall intervall){
+
+		final double erfassungsIntervallLaenge = basisDaten.iterator().next().getT();
+		boolean interpoliert = false;
+		boolean nichtErfasst = false;
+		long summe = 0;
+		Collection<GWert> gueteWerte = new ArrayList<GWert>();
+		for(AggregationsDatum basisDatum:basisDaten){
+			AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
+			if(basisWert.getWert() >= 0){
+				summe += basisWert.getWert();
+				gueteWerte.add(basisWert.getGuete());
+				interpoliert |= basisWert.isInterpoliert();
+				nichtErfasst |= basisWert.isNichtErfasst();
+			}
+		}
+
+		AggregationsAttributWert exportWert = new AggregationsAttributWert(
+				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
+		if(gueteWerte.size() > 0){
+			exportWert.setWert(
+					Math.round(	(double)summe * Konstante.STUNDE_IN_MS /
+							(erfassungsIntervallLaenge * (double)gueteWerte.size())));
+			exportWert.setInterpoliert(interpoliert);
+			if(AggregationLVE.NICHT_ERFASST){
+				exportWert.setNichtErfasst(nichtErfasst);
+			}
+			try {
+				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
+			} catch (GueteException e) {
+				LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+				e.printStackTrace();
+			}
+		}
+
+		exportWert.exportiere(nutzDatum, this.isFahrstreifen());
+	}
+	
 	
 	/**
 	 * {@inheritDoc}

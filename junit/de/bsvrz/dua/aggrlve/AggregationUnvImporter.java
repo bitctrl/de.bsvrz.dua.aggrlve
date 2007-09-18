@@ -33,16 +33,15 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
-
 /**
  * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
  * 
- * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein
+ * Liest die Ausgangsdaten für die Prüfung der Aggregation LVE (TV und DTV) ein
  * 
- * @author BitCtrl Systems GmbH, Görlitz
+ * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class AnalysewerteImporter
+public class AggregationUnvImporter
 extends CSVImporter{
 	
 	/**
@@ -69,7 +68,7 @@ extends CSVImporter{
 	 * @param atg Attributgruppen-ID
 	 * @throws Exception falls dieses Objekt nicht vollständig initialisiert werden konnte
 	 */
-	public AnalysewerteImporter(final ClientDavInterface dav, 
+	public AggregationUnvImporter(final ClientDavInterface dav, 
 								    final String csvQuelle)
 	throws Exception{
 		super(csvQuelle);
@@ -112,58 +111,36 @@ extends CSVImporter{
 		if(datensatz != null){
 			if(ZEILE != null){
 				try {
-					int QKfz = Integer.parseInt(ZEILE[84]);
-					String QKfzStatus = ZEILE[85];
-					int QLkw = Integer.parseInt(ZEILE[86]);
-					String QLkwStatus = ZEILE[87];
-					int QPkw = Integer.parseInt(ZEILE[88]);
-					String QPkwStatus = ZEILE[89];
-					int VKfz = Integer.parseInt(ZEILE[90]);
-					String VKfzStatus = ZEILE[91];
-					int VLkw = Integer.parseInt(ZEILE[92]);
-					String VLkwStatus = ZEILE[93];
-					int VPkw = Integer.parseInt(ZEILE[94]);
-					String VPkwStatus = ZEILE[95];
-					int VgKfz = Integer.parseInt(ZEILE[96]);
-					String VgKfzStatus = ZEILE[97];
-					int B = Integer.parseInt(ZEILE[98]);
-					String BStatus = ZEILE[99];
-					int BMax = Integer.parseInt(ZEILE[100]);
-					String BMaxStatus = ZEILE[101];
-					int SKfz = Integer.parseInt(ZEILE[100]);
-					String SKfzStatus = ZEILE[101];
-					int ALkw = Integer.parseInt(ZEILE[102]);
-					String ALkwStatus = ZEILE[103];
-					int KKfz = Integer.parseInt(ZEILE[104]);
-					String KKfzStatus = ZEILE[105];
-					int KLkw = Integer.parseInt(ZEILE[106]);
-					String KLkwStatus = ZEILE[107];
-					int KPkw = Integer.parseInt(ZEILE[108]);
-					String KPkwStatus = ZEILE[109];
-					int QB = Integer.parseInt(ZEILE[110]);
-					String QBStatus = ZEILE[111];
-					int KB = Integer.parseInt(ZEILE[112]);
-					String KBStatus = ZEILE[113];
-					int VDelta = Integer.parseInt(ZEILE[114]);
-					String VDeltaStatus = ZEILE[115];
-				
+					int QKfz = Integer.parseInt(ZEILE[0]);
+					String QKfzStatus = ZEILE[1];
+					int QPkw = Integer.parseInt(ZEILE[2]);
+					String QPkwStatus = ZEILE[3];
+					int QLkw = Integer.parseInt(ZEILE[4]);
+					String QLkwStatus = ZEILE[5];
+					int VKfz = Integer.parseInt(ZEILE[6]);
+					String VKfzStatus = ZEILE[7];
+					int VLkw = Integer.parseInt(ZEILE[8]);
+					String VLkwStatus = ZEILE[9];
+					int VPkw = Integer.parseInt(ZEILE[10]);
+					String VPkwStatus = ZEILE[11];
+									
 					datensatz = setAttribut("QKfz", QKfz, QKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("QLkw", QLkw, QLkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("QPkw", QPkw, QPkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("VKfz", VKfz, VKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("VLkw", VLkw, VLkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("VPkw", VPkw, VPkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("VgKfz", VgKfz, VgKfzStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("B", B, BStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("BMax", BMax, BMaxStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("SKfz", SKfz, SKfzStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("ALkw", ALkw, ALkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("KKfz", KKfz, KKfzStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("KLkw", KLkw, KLkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("KPkw", KPkw, KPkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("QB", QB, QBStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("KB", KB, KBStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("VDelta", VDelta, VDeltaStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("VgKfz", -1, "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("B", -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("BMax",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("SKfz",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("ALkw",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("KKfz",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("KLkw",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("KPkw",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("QB",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("KB",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
+					datensatz = setAttribut("VDelta",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
 					
 				}catch(ArrayIndexOutOfBoundsException ex){
 					datensatz = null;
@@ -175,83 +152,7 @@ extends CSVImporter{
 	
 		return datensatz;
 	}
-	
-	/**
-	 * Bildet einen Ausgabe-Datensatz der FS-Analysewerte aus den Daten der aktuellen CSV-Zeile
-	 * 
-	 * @param FS Fahrstreifen (1-3)
-	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile
-	 * oder <code>null</code>, wenn der Dateizeiger am Ende ist
-	 */	
-	public final Data getFSAnalyseDatensatz(final int FS){	
-		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall")); //$NON-NLS-1$
-
-		int fsMulti = FS-1;
 		
-		if(datensatz != null){
-			
-			if(ZEILE != null){
-				try{
-					int qKfz = Integer.parseInt(ZEILE[0+(fsMulti*2)]);
-					String qKfzStatus = ZEILE[1+(fsMulti*2)];
-					int qPkw = Integer.parseInt(ZEILE[6+(fsMulti*2)]);
-					String qPkwStatus = ZEILE[7+(fsMulti*2)];
-					int qLkw = Integer.parseInt(ZEILE[12+(fsMulti*2)]);
-					String qLkwStatus = ZEILE[13+(fsMulti*2)];
-					int vKfz = Integer.parseInt(ZEILE[18+(fsMulti*2)]);
-					String vKfzStatus = ZEILE[19+(fsMulti*2)];
-					int vPkw = Integer.parseInt(ZEILE[24+(fsMulti*2)]);
-					String vPkwStatus = ZEILE[25+(fsMulti*2)];
-					int vLkw = Integer.parseInt(ZEILE[30+(fsMulti*2)]);
-					String vLkwStatus = ZEILE[31+(fsMulti*2)];
-					int vgKfz = Integer.parseInt(ZEILE[36+(fsMulti*2)]);
-					String vgKfzStatus = ZEILE[37+(fsMulti*2)];
-					int b = Integer.parseInt(ZEILE[42+(fsMulti*2)]);
-					String bStatus = ZEILE[43+(fsMulti*2)];
-					int aLkw = Integer.parseInt(ZEILE[48+(fsMulti*2)]);
-					String aLkwStatus = ZEILE[49+(fsMulti*2)];
-					int kKfz = Integer.parseInt(ZEILE[54+(fsMulti*2)]);
-					String kKfzStatus = ZEILE[55+(fsMulti*2)];
-					int kLkw = Integer.parseInt(ZEILE[60+(fsMulti*2)]);
-					String kLkwStatus = ZEILE[61+(fsMulti*2)];
-					int kPkw = Integer.parseInt(ZEILE[66+(fsMulti*2)]);
-					String kPkwStatus = ZEILE[67+(fsMulti*2)];
-					int qB = Integer.parseInt(ZEILE[72+(fsMulti*2)]);
-					String qBStatus = ZEILE[73+(fsMulti*2)];
-					int kB = Integer.parseInt(ZEILE[78+(fsMulti*2)]);
-					String kBStatus = ZEILE[79+(fsMulti*2)];
-					int sKfz = 1;
-					
-					datensatz.getTimeValue("T").setMillis(INTERVALL); //$NON-NLS-1$
-					datensatz.getUnscaledValue("ArtMittelwertbildung").set(0); //$NON-NLS-1$
-					datensatz = setAttribut("qKfz", qKfz, qKfzStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("qPkw", qPkw, qPkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("qLkw", qLkw, qLkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("vKfz", vKfz, vKfzStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("vPkw", vPkw, vPkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("vLkw", vLkw, vLkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("vgKfz", vgKfz, vgKfzStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("b", b, bStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("tNetto", aLkw, aLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("aLkw", aLkw, aLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kKfz", kKfz, kKfzStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kLkw", kLkw, kLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kPkw", kPkw, kPkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("qB", qB, qBStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kB", kB, kBStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("sKfz", sKfz, null, datensatz); //$NON-NLS-1$
-					
-				}catch(ArrayIndexOutOfBoundsException ex){
-					datensatz = null;
-				}
-			}else{
-				datensatz = null;
-			}
-		}
-		
-		return datensatz;
-	}
-	
 	
 	/**
 	 * Setzt Attribut in Datensatz

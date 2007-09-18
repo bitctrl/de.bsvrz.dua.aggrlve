@@ -25,13 +25,16 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
@@ -63,6 +66,24 @@ extends AbstraktVerwaltungsAdapterMitGuete
 implements IObjektWeckerListener{
 
 	/**
+	 * indiziert, ob diese das Flag <code>nicht erfasst</code> uebernommen werden
+	 * soll
+	 */
+	public static final boolean NICHT_ERFASST = false;
+
+	/**
+	 * indiziert, bei der TV-Tag-Berechnung nicht vorhandene Wert durch das
+	 * Mittel der restlichen Werte ersetzte werden sollen. 
+	 */
+	public static final boolean APPROX_REST = true;
+	
+	/**
+	 * indiziert, ob diese Applikation im Test-Modus läuft,
+	 * in welchem sie nicht von der Systemzeit getriggert wird
+	 */
+	public static boolean TEST = false;
+	
+	/**
 	 * der Guetefaktor dieser SWE
 	 */
 	public static double GUETE;
@@ -71,6 +92,11 @@ implements IObjektWeckerListener{
 	 * der Systemobjekttyp Fahrstreifen
 	 */
 	public static SystemObjectType TYP_FAHRSTREIFEN = null;
+	
+	/**
+	 * Aspekt der messwertersetzten Fahrstreifendaten
+	 */
+	public static Aspect MWE = null;
 	
 	/**
 	 * der interne Kontrollprozess dient der zeitlichen Steuerung der Aggregationsberechnungen
@@ -82,8 +108,9 @@ implements IObjektWeckerListener{
 	/**
 	 * alle Messquerschnitte, fuer die Daten aggregiert werden sollen
 	 */
-	private Set<AggregationsMessQuerschnitt> messQuerschnitte = 
-											new HashSet<AggregationsMessQuerschnitt>();
+	private Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = 
+											new HashMap<SystemObject, AggregationsMessQuerschnitt>();
+
 	
 	
 	/**
@@ -106,6 +133,7 @@ implements IObjektWeckerListener{
 		
 		GUETE = this.getGueteFaktor();
 		TYP_FAHRSTREIFEN = this.verbindung.getDataModel().getType(DUAKonstanten.TYP_FAHRSTREIFEN);
+		MWE = this.verbindung.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG);
 
 		Collection<SystemObject> alleMqObjImKB = DUAUtensilien.getBasisInstanzen(
 				this.verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ),
@@ -118,11 +146,29 @@ implements IObjektWeckerListener{
 				throw new DUAInitialisierungsException("Konfiguration von Messquerschnitt " + //$NON-NLS-1$ 
 						mq + " konnte nicht vollstaendig ausgelesen werden"); //$NON-NLS-1$
 			}else{
-				messQuerschnitte.add(new AggregationsMessQuerschnitt(this.verbindung, mq));
+				messQuerschnitte.put(mqObjekt, new AggregationsMessQuerschnitt(this.verbindung, mq));
 			}
 		}
 			
-		wecker.setWecker(this, getNaechstenWeckZeitPunkt());
+		if(!TEST){
+			wecker.setWecker(this, getNaechstenWeckZeitPunkt());
+		}
+	}
+	
+	
+	/**
+	 * Startet diese Applikation nur fuer Testzwecke
+	 * 
+	 * @param dav Verbindung zum Datenverteiler
+	 * @throws Exception wenn die Initialisierung fehlschlaegt 
+	 */
+	public final void testStart(final ClientDavInterface dav)
+	throws Exception{
+		TEST = true;
+		this.komArgumente = new ArrayList<String>();
+		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
+				"kb.objekteTestUnterzentraleK2S_100_MessQuerschnitte"); //$NON-NLS-1$
+		this.initialize(dav);
 	}
 	
 	
@@ -132,7 +178,7 @@ implements IObjektWeckerListener{
 	public void alarm() {
 		final long jetzt = System.currentTimeMillis();
 		
-		for(AggregationsMessQuerschnitt mq:this.messQuerschnitte){
+		for(AggregationsMessQuerschnitt mq:this.messQuerschnitte.values()){
 			for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
 				if(intervall.isAggregationErforderlich(jetzt)){
 					mq.aggregiere(intervall.getAggregationZeitStempel(jetzt),
@@ -142,6 +188,16 @@ implements IObjektWeckerListener{
 		}
 		
 		wecker.setWecker(this, getNaechstenWeckZeitPunkt());
+	}
+	
+	
+	/**
+	 * Erfragt ein Aggregationsobjekt (nur fuer Testzwecke)
+	 * 
+	 * @param obj das assoziierte Systemobjekt
+	 */
+	public AggregationsMessQuerschnitt getAggregationsObjekt(final SystemObject obj){
+		return this.messQuerschnitte.get(obj);
 	}
 	
 	
@@ -182,8 +238,7 @@ implements IObjektWeckerListener{
                 Runtime.getRuntime().exit(0);
             }
         });
-		StandardApplicationRunner.run(
-					new AggregationLVE(), argumente);
+		StandardApplicationRunner.run(new AggregationLVE(), argumente);
 	}
 
 

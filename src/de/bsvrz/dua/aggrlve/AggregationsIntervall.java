@@ -221,7 +221,7 @@ implements Comparable<AggregationsIntervall>{
 	 * Erfragt den Zeitstempel des Aggregationsdatums, das zum uebergebenen
 	 * Zeitpunkt fuer dieses Aggregationsintervall berechnet werden sollte<br>
 	 * <b>Achtung:</b> Die Methode geht davon aus, dass sie nur einmal in der
-	 * Minute aufgereufen wird!
+	 * Minute aufgerufen wird!
 	 * 
 	 * @param zeitpunkt ein Zeitpunkt
 	 * @return der Zeitstempel des Aggregationsdatums, das zum uebergebenen

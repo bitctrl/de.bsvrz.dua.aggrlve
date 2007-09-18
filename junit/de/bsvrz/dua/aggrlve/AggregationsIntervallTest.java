@@ -39,6 +39,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
+ * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
+ * 
  * Allgemeine Tests
  * 
  * @author BitCtrl Systems GmbH, Thierfelder

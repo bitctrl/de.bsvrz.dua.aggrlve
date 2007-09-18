@@ -41,6 +41,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
+ * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
+ * 
  * Allgemeine Tests
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -55,7 +57,7 @@ implements ClientSenderInterface{
 	public static final String[] CON_DATA = new String[] {
 			"-datenverteiler=192.168.1.191:8083", //$NON-NLS-1$ 
 			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=c:\\passwd1" }; //$NON-NLS-1$
+			"-authentifizierung=c:\\passwd1"}; //$NON-NLS-1$
 	
 	
 	/**
@@ -70,13 +72,26 @@ implements ClientSenderInterface{
 		SystemObject fs1 = dav.getDataModel().getObject("fs.mq.a100.0000.hfs"); //$NON-NLS-1$
 		SystemObject fs2 = dav.getDataModel().getObject("fs.mq.a100.0000.1üfs"); //$NON-NLS-1$
 		SystemObject fs3 = dav.getDataModel().getObject("fs.mq.a100.0000.2üfs"); //$NON-NLS-1$
+
+		SystemObject fs11 = dav.getDataModel().getObject("fs.mq.a100.0001.hfs"); //$NON-NLS-1$
+		SystemObject fs21 = dav.getDataModel().getObject("fs.mq.a100.0001.1üfs"); //$NON-NLS-1$
+		SystemObject fs31 = dav.getDataModel().getObject("fs.mq.a100.0001.2üfs"); //$NON-NLS-1$
+
 		
 		DataDescription dd = new DataDescription(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 				dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
 				(short)0);
+		SystemObject[] fs = new SystemObject[]{fs1,fs2,fs3};
+		SystemObject[] fs_1 = new SystemObject[]{fs11,fs21,fs31};
 		try{
-			dav.subscribeSender(this, new SystemObject[]{fs1,fs2,fs3}, dd, SenderRole.source());
+			dav.subscribeSender(this, fs, dd, SenderRole.source());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+
+		try{
+			dav.subscribeSender(this, fs_1, dd, SenderRole.source());
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -85,41 +100,106 @@ implements ClientSenderInterface{
 		
 		AnalysewerteImporter importer = new AnalysewerteImporter(dav, 
 				"C:\\Dokumente und Einste" + //$NON-NLS-1$
-				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\Analysewerte.csv"); //$NON-NLS-1$
+				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\Analysewerte_Test.csv"); //$NON-NLS-1$
 		
-		long itvl = 40L;
+		long itvl = 30L;
 		
-		AnalysewerteImporter.setT(itvl * 1000L);
+		AnalysewerteImporter.setT(60 * 1000L);
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());		
 		cal.set(Calendar.SECOND, (int)(((cal.get(Calendar.SECOND) / itvl) * itvl) + itvl));
 		cal.set(Calendar.MILLISECOND, 0);
 		
+//		/**
+//		 * Fs1 aller 30 s
+//		 * Fs2 und Fs3 aller 60s
+//		 */
+//		for(int i = 0; i<1000; i++){
+//			while(System.currentTimeMillis() < cal.getTimeInMillis()){
+//				Pause.warte(1000);
+//			}
+//			
+//			importer.importNaechsteZeile();
+//			for(int j = 0; j<3; j++){
+//				if(j == 0){
+//					ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+//					resultat.getData().getTimeValue("T").setMillis(30 * 1000L);
+//					dav.sendData(resultat);
+//				}else{
+//					if(i%2 == 0){
+//						
+//						ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+//						dav.sendData(resultat);
+//					}
+//				}				
+//			}
+//			
+//			cal.add(Calendar.SECOND, 30);
+//			//cal.add(Calendar.SECOND, (int)itvl);
+//		}
 		
-		for(int i = 0; i<1000; i++){
+		
+		
+		/**
+		 * Fs1 aller 30 s
+		 * Fs2 und Fs3 aller 60s
+		 * 
+		 * Fs11 aller 60 s
+		 * Fs21 und Fs31 aller 30s
+		 */
+		importer.importNaechsteZeile();
+		for(int i = 0; i<100000; i++){
 			while(System.currentTimeMillis() < cal.getTimeInMillis()){
 				Pause.warte(1000);
 			}
+
+			for(int j = 0; j<3; j++){
+				if(j == 0){
+					ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+					resultat.getData().getTimeValue("T").setMillis(30 * 1000L);
+					dav.sendData(resultat);
+				}else{
+					if(i%2 == 0){
+
+						ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+						dav.sendData(resultat);
+					}
+				}				
+			}
 			
-			importer.importNaechsteZeile();
-			ResultData resultat = new ResultData(fs1, dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(1));
-			dav.sendData(resultat);
+			for(int j = 0; j<3; j++){
+				if(j == 1 || j == 2){
+					ResultData resultat = new ResultData(fs_1[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+					resultat.getData().getTimeValue("T").setMillis(30 * 1000L);
+					dav.sendData(resultat);
+				}else{
+					if(i%2 == 0){
+						ResultData resultat = new ResultData(fs_1[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+						dav.sendData(resultat);
+					}
+				}				
+			}
 			
-			cal.add(Calendar.SECOND, (int)itvl);
+
+			cal.add(Calendar.SECOND, 30);
+			//cal.add(Calendar.SECOND, (int)itvl);
 		}
 	}
 
 
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
-		// TODO Auto-generated method stub
+	/**
+	 * {@inheritDoc}
+	 */
+	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
 		
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

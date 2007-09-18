@@ -78,7 +78,11 @@ implements ArchiveAvailabilityListener{
 								 AggregationsIntervall intervall)
 	throws DUAInitialisierungsException {
 		super(dav, obj, intervall);
-		DAV.getArchive().addArchiveAvailabilityListener(this);
+		if(DAV.getArchive().isArchiveAvailable()){
+			this.archiveAvailabilityChanged(DAV.getArchive());
+		}else{
+			DAV.getArchive().addArchiveAvailabilityListener(this);
+		}		
 	}
 
 
@@ -103,14 +107,16 @@ implements ArchiveAvailabilityListener{
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 50 Tage bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24 * this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24L * this.aggregationsIntervall.getMaxPufferGroesse();
 			}else
 			if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
 				/**
 				* Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 15 Monate bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24 * 30 * this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24L * 31L * this.aggregationsIntervall.getMaxPufferGroesse();
+			}else{
+				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24L * 370L;
 			}
 
 			if(beginArchivAnfrage > 0){
@@ -142,7 +148,7 @@ implements ArchiveAvailabilityListener{
 									this.aktualisiere(archiveDatum);	
 								}
 							}while(archiveDatum != null);
-						}						
+						}
 					}
 				} catch (Exception e) {
 					LOGGER.error(Konstante.LEERSTRING, e);

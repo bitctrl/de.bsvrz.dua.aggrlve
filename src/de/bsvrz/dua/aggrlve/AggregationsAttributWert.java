@@ -110,7 +110,7 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 	 * @param wert der Wert dieses Attributs
 	 * @param guete die Guete
 	 */
-	protected AggregationsAttributWert(AggregationsAttribut attribut, long wert, double guete){
+	public AggregationsAttributWert(AggregationsAttribut attribut, long wert, double guete){
 		this.attr = attribut;
 		this.wert = wert;
 		GanzZahl gueteGanzZahl = GanzZahl.getGueteIndex();

@@ -20,6 +20,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  */
 public class AggregationsDatum 
 implements Comparable<AggregationsDatum>, Cloneable{
+	
+	/**
+	 * Erfragt, ob dieses Datum auf Stunden normiert ist
+	 */
+	private boolean normiert = true;
 
 	/**
 	 * die Datenzeit dieses Datums
@@ -56,6 +61,9 @@ implements Comparable<AggregationsDatum>, Cloneable{
 	public AggregationsDatum(final Dataset resultat){
 		this.datenZeit = resultat.getDataTime();
 		if(resultat.getObject().isOfType(AggregationLVE.TYP_FAHRSTREIFEN)){
+			if(resultat.getDataDescription().getAspect().equals(AggregationLVE.MWE)){
+				this.normiert = false;
+			}
 			this.T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
 		}else{
 			for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
@@ -76,6 +84,7 @@ implements Comparable<AggregationsDatum>, Cloneable{
 	public AggregationsDatum clone(){
 		AggregationsDatum kopie = new AggregationsDatum();
 		
+		kopie.normiert = this.normiert;
 		kopie.datenZeit = this.datenZeit;
 		kopie.T = this.T;
 		for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
@@ -85,6 +94,16 @@ implements Comparable<AggregationsDatum>, Cloneable{
 		return kopie;
 	}
 
+	
+	/**
+	 * Erfragt, ob die Werte dieses Datums auf ganze Stunden normiert sind
+	 * 
+	 * @return ob die Werte dieses Datums auf ganze Stunden normiert sind
+	 */
+	public final boolean isNormiert(){
+		return this.normiert;
+	}
+	
 	
 	/**
 	 * Erfragt den Wert eines Attributs

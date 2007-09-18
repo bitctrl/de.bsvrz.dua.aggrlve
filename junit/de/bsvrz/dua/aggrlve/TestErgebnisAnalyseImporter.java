@@ -42,7 +42,7 @@ import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
  * @author BitCtrl Systems GmbH, Görlitz
  *
  */
-public class AnalysewerteImporter
+public class TestErgebnisAnalyseImporter
 extends CSVImporter{
 	
 	/**
@@ -69,7 +69,7 @@ extends CSVImporter{
 	 * @param atg Attributgruppen-ID
 	 * @throws Exception falls dieses Objekt nicht vollständig initialisiert werden konnte
 	 */
-	public AnalysewerteImporter(final ClientDavInterface dav, 
+	public TestErgebnisAnalyseImporter(final ClientDavInterface dav, 
 								    final String csvQuelle)
 	throws Exception{
 		super(csvQuelle);
@@ -107,7 +107,7 @@ extends CSVImporter{
 	 * oder <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getMQAnalyseDatensatz() {
-		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq")); //$NON-NLS-1$
+		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"));
 		
 		if(datensatz != null){
 			if(ZEILE != null){
@@ -184,7 +184,7 @@ extends CSVImporter{
 	 * oder <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */	
 	public final Data getFSAnalyseDatensatz(final int FS){	
-		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall")); //$NON-NLS-1$
+		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitFs"));
 
 		int fsMulti = FS-1;
 		
@@ -223,7 +223,6 @@ extends CSVImporter{
 					int sKfz = 1;
 					
 					datensatz.getTimeValue("T").setMillis(INTERVALL); //$NON-NLS-1$
-					datensatz.getUnscaledValue("ArtMittelwertbildung").set(0); //$NON-NLS-1$
 					datensatz = setAttribut("qKfz", qKfz, qKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qPkw", qPkw, qPkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qLkw", qLkw, qLkwStatus, datensatz); //$NON-NLS-1$
@@ -232,15 +231,14 @@ extends CSVImporter{
 					datensatz = setAttribut("vLkw", vLkw, vLkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("vgKfz", vgKfz, vgKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("b", b, bStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("tNetto", aLkw, aLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("aLkw", aLkw, aLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kKfz", kKfz, kKfzStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kLkw", kLkw, kLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kPkw", kPkw, kPkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("qB", qB, qBStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kB", kB, kBStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("aLkw", aLkw, aLkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("kKfz", kKfz, kKfzStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("kLkw", kLkw, kLkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("kPkw", kPkw, kPkwStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("qB", qB, qBStatus, datensatz); //$NON-NLS-1$
+					datensatz = setAttribut("kB", kB, kBStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("sKfz", sKfz, null, datensatz); //$NON-NLS-1$
-					
+
 				}catch(ArrayIndexOutOfBoundsException ex){
 					datensatz = null;
 				}
@@ -264,12 +262,12 @@ extends CSVImporter{
 	private final Data setAttribut(final String attributName, long wert, String status, Data datensatz){
 		Data data = datensatz;
 	
-		if((attributName.startsWith("v") || attributName.startsWith("V")) //$NON-NLS-1$ //$NON-NLS-2$
+		if((attributName.startsWith("v") || attributName.startsWith("V"))
 				&& wert >= 255) {
 			wert = -1;
 		}
 		
-		if((attributName.startsWith("k") || attributName.startsWith("K")) //$NON-NLS-1$ //$NON-NLS-2$
+		if((attributName.startsWith("k") || attributName.startsWith("K"))
 				&& wert > 10000) {
 			wert = -1;
 		}
@@ -286,39 +284,39 @@ extends CSVImporter{
 		int errCode = 0;
 		
 		if(status != null) {
-			String[] splitStatus = status.trim().split(" "); //$NON-NLS-1$
+			String[] splitStatus = status.trim().split(" ");
 			
 			for(int i = 0; i<splitStatus.length;i++) {
-				if(splitStatus[i].equalsIgnoreCase("Fehl")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("Fehl"))
 					errCode = errCode-2;
 				
-				if(splitStatus[i].equalsIgnoreCase("nErm")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("nErm"))
 					errCode = errCode-1;
 				
-				if(splitStatus[i].equalsIgnoreCase("Impl")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("Impl"))
 					 impl = DUAKonstanten.JA;
 				
-				if(splitStatus[i].equalsIgnoreCase("Intp")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("Intp"))
 					intp = DUAKonstanten.JA;				
 
-				if(splitStatus[i].equalsIgnoreCase("nErf")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("nErf"))
 					nErf = DUAKonstanten.JA;
 
-				if(splitStatus[i].equalsIgnoreCase("wMaL")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("wMaL"))
 					wMaL = DUAKonstanten.JA;
 				
-				if(splitStatus[i].equalsIgnoreCase("wMax")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("wMax"))
 					wMax = DUAKonstanten.JA;
 
-				if(splitStatus[i].equalsIgnoreCase("wMiL")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("wMiL"))
 					wMiL = DUAKonstanten.JA;
 
-				if(splitStatus[i].equalsIgnoreCase("wMin")) //$NON-NLS-1$
+				if(splitStatus[i].equalsIgnoreCase("wMin"))
 					wMin = DUAKonstanten.JA;
 				
 				try {
 //					guete = Float.parseFloat(splitStatus[i].replace(",", "."))*10000;
-					guete = Float.parseFloat(splitStatus[i].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
+					guete = Float.parseFloat(splitStatus[i].replace(",", "."));
 				} catch (Exception e) {
 					//kein float Wert
 				}
