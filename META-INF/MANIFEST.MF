@@ -7,4 +7,5 @@ Bundle-Vendor: BitCtrl Systems GmbH
 Require-Bundle: de.bsvrz.dua.guete,
  de.bitctrl.sys.funclib,
  de.bitctrl.dav.daf
-Export-Package: de.bsvrz.dua.aggrlve
+Export-Package: de.bsvrz.dua.aggrlve,
+ de.bsvrz.dua.aggrlve.dtv

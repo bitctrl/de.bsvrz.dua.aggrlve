@@ -86,7 +86,7 @@ implements ClientSenderInterface{
 		
 		DataDescription dd = new DataDescription(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
-				dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
+				dav.getDataModel().getAspect(DUAKonstanten.ASP_EXTERNE_ERFASSUNG),
 				(short)0);
 		SystemObject[] fs = new SystemObject[]{fs1,fs2,fs3};
 		SystemObject[] fs_1 = new SystemObject[]{fs11,fs21,fs31};
@@ -116,16 +116,50 @@ implements ClientSenderInterface{
 		cal.set(Calendar.SECOND, (int)(((cal.get(Calendar.SECOND) / itvl) * itvl) + itvl));
 		cal.set(Calendar.MILLISECOND, 0);
 		
+		/**
+		 * Fs1 aller 30 s
+		 * Fs2 und Fs3 aller 60s
+		 */
+		importer.importNaechsteZeile();
+		for(int i = 0; i<10000; i++){
+			while(System.currentTimeMillis() < cal.getTimeInMillis()){
+				Pause.warte(1000);
+			}
+			
+			//importer.importNaechsteZeile();
+			for(int j = 0; j<3; j++){
+				if(j == 0){
+					ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+					resultat.getData().getTimeValue("T").setMillis(30 * 1000L); //$NON-NLS-1$
+					dav.sendData(resultat);
+				}else{
+					if(i%2 == 0){
+						
+						ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+						dav.sendData(resultat);
+					}
+				}				
+			}
+			
+			cal.add(Calendar.SECOND, 30);
+			//cal.add(Calendar.SECOND, (int)itvl);
+		}
+		
+		
+		
 //		/**
 //		 * Fs1 aller 30 s
 //		 * Fs2 und Fs3 aller 60s
+//		 * 
+//		 * Fs11 aller 60 s
+//		 * Fs21 und Fs31 aller 30s
 //		 */
-//		for(int i = 0; i<1000; i++){
+//		importer.importNaechsteZeile();
+//		for(int i = 0; i<100000; i++){
 //			while(System.currentTimeMillis() < cal.getTimeInMillis()){
 //				Pause.warte(1000);
 //			}
-//			
-//			importer.importNaechsteZeile();
+//
 //			for(int j = 0; j<3; j++){
 //				if(j == 0){
 //					ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
@@ -133,63 +167,30 @@ implements ClientSenderInterface{
 //					dav.sendData(resultat);
 //				}else{
 //					if(i%2 == 0){
-//						
 //						ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+//						resultat.getData().getTimeValue("T").setMillis(60 * 1000L);
 //						dav.sendData(resultat);
 //					}
 //				}				
 //			}
 //			
+//			for(int j = 0; j<3; j++){
+//				if(j == 1 || j == 2){
+//					ResultData resultat = new ResultData(fs_1[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+//					resultat.getData().getTimeValue("T").setMillis(30 * 1000L);
+//					dav.sendData(resultat);
+//				}else{
+//					if(i%2 == 0){
+//						ResultData resultat = new ResultData(fs_1[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
+//						dav.sendData(resultat);
+//					}
+//				}				
+//			}
+//			
+//
 //			cal.add(Calendar.SECOND, 30);
 //			//cal.add(Calendar.SECOND, (int)itvl);
 //		}
-		
-		
-		
-		/**
-		 * Fs1 aller 30 s
-		 * Fs2 und Fs3 aller 60s
-		 * 
-		 * Fs11 aller 60 s
-		 * Fs21 und Fs31 aller 30s
-		 */
-		importer.importNaechsteZeile();
-		for(int i = 0; i<100000; i++){
-			while(System.currentTimeMillis() < cal.getTimeInMillis()){
-				Pause.warte(1000);
-			}
-
-			for(int j = 0; j<3; j++){
-				if(j == 0){
-					ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
-					resultat.getData().getTimeValue("T").setMillis(30 * 1000L);
-					dav.sendData(resultat);
-				}else{
-					if(i%2 == 0){
-						ResultData resultat = new ResultData(fs[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
-						resultat.getData().getTimeValue("T").setMillis(60 * 1000L);
-						dav.sendData(resultat);
-					}
-				}				
-			}
-			
-			for(int j = 0; j<3; j++){
-				if(j == 1 || j == 2){
-					ResultData resultat = new ResultData(fs_1[j], dd, cal.getTimeInMillis() - itvl * 1000L, importer.getFSAnalyseDatensatz(j + 1));
-					resultat.getData().getTimeValue("T").setMillis(30 * 1000L);
-					dav.sendData(resultat);
-				}else{
-					if(i%2 == 0){
-						ResultData resultat = new ResultData(fs_1[j], dd, cal.getTimeInMillis() - 60 * 1000L, importer.getFSAnalyseDatensatz(j + 1));
-						dav.sendData(resultat);
-					}
-				}				
-			}
-			
-
-			cal.add(Calendar.SECOND, 30);
-			//cal.add(Calendar.SECOND, (int)itvl);
-		}
 	}
 
 
