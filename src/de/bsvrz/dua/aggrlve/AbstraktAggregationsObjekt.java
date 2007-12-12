@@ -102,7 +102,7 @@ public abstract class AbstraktAggregationsObjekt {
 	/**
 	 * statische Verbindung zum Datenverteiler
 	 */
-	protected static ClientDavInterface DAV = null;
+	protected ClientDavInterface dav = null;
 	
 	/**
 	 * Datensender
@@ -134,11 +134,9 @@ public abstract class AbstraktAggregationsObjekt {
 	 */
 	public AbstraktAggregationsObjekt(final ClientDavInterface dav,
 									  final SystemObject obj){
-		if(DAV == null){
-			DAV = dav;
-		}
+		this.dav = dav;
 		this.objekt = obj;
-		this.sender = new DAVSendeAnmeldungsVerwaltung(DAV, SenderRole.source());		
+		this.sender = new DAVSendeAnmeldungsVerwaltung(dav, SenderRole.source());		
 	}
 
 

@@ -93,7 +93,7 @@ extends AbstraktAggregationsObjekt{
 	throws DUAInitialisierungsException{
 		super(dav, mq.getSystemObject());
 		if(PUB_ATG == null){
-			PUB_ATG = DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
+			PUB_ATG = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
 		}
 		this.mq = mq;
 		
@@ -105,7 +105,7 @@ extends AbstraktAggregationsObjekt{
 						new DAVObjektAnmeldung(
 						mq.getSystemObject(), 
 						new DataDescription(
-								DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+								dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 								intervall.getAspekt(),
 								(short)0)));
 			} catch (Exception e) {
@@ -116,7 +116,7 @@ extends AbstraktAggregationsObjekt{
 		sender.modifiziereObjektAnmeldung(anmeldungen);
 		
 		for(FahrStreifen fs:mq.getFahrStreifen()){
-			this.fsMenge.put(fs.getSystemObject(), new AggregationsFahrStreifen(DAV, fs));
+			this.fsMenge.put(fs.getSystemObject(), new AggregationsFahrStreifen(dav, fs));
 		}		
 	}
 
@@ -164,7 +164,7 @@ extends AbstraktAggregationsObjekt{
 					/**
 					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
 					 */
-					nutzDatum = DAV.createData(PUB_ATG);
+					nutzDatum = dav.createData(PUB_ATG);
 					for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 						if(!attribut.isGeschwindigkeitsAttribut()){
 							this.aggregiereSumme(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
@@ -200,7 +200,7 @@ extends AbstraktAggregationsObjekt{
 						}
 		
 						if(kannBasisIntervallBerechnen){
-							nutzDatum = DAV.createData(PUB_ATG);
+							nutzDatum = dav.createData(PUB_ATG);
 							aggregiereBasisDatum(nutzDatum, fsDaten, zeitStempel, intervall);
 						}
 						
@@ -209,7 +209,7 @@ extends AbstraktAggregationsObjekt{
 					/**
 					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
 					 */
-					nutzDatum = DAV.createData(PUB_ATG);
+					nutzDatum = dav.createData(PUB_ATG);
 					for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 						this.aggregiereMittel(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
 					}

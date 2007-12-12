@@ -30,14 +30,24 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import de.bsvrz.dav.daf.main.ClientDavConnection;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.CommunicationError;
+import de.bsvrz.dav.daf.main.ConnectionException;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.MissingParameterException;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
+import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
@@ -45,8 +55,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktVerwaltungsAdapterMitGuete;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
+import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.kappich.tools.sleep.main.Sleep;
 
 /**
  * Die SWE Aggregation LVE meldet sich auf alle messwertersetzten Kurzzeitdaten
@@ -64,6 +77,45 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
 public class AggregationLVE
 extends AbstraktVerwaltungsAdapterMitGuete
 implements IObjektWeckerListener{
+	
+	
+	/***********************
+	 * Nur fuer Testzwecke *
+	 ***********************/
+	
+	/**
+	 * Schaltet saemtliche Funktionalitaeten ab, die sich an der
+	 * lokalen Systemzeit orientieren. Dadurch wird der Zeitrafferbetrieb
+	 * dieser SWE ermoeglicht.
+	 */	
+	private static boolean ZEIT_RAFFER = false;
+
+	/**
+	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehören
+	 */
+	private Map<SystemObject, SystemObject> fsMq = 
+											new HashMap<SystemObject, SystemObject>();
+	/**
+	 * alle Messquerschnitte, mit den Fahrstreifen, zu denen sie gehören
+	 */
+	private Map<SystemObject, Set<SystemObject>> mqFs = 
+											new HashMap<SystemObject, Set<SystemObject>>();
+	
+	/**
+	 * Letztes Fahrstreifendatum pro Fahrstreifen
+	 */
+	private Map<SystemObject, ResultData> fsDataHist = 
+		new HashMap<SystemObject, ResultData>();
+
+	/**
+	 * Zweite Datenverteiler-Verbindung fuer Testzwecke
+	 */
+	private ClientDavInterface dav2 = null;
+
+
+	/*********************
+	 * Normale Variablen * 
+	 *********************/
 
 	/**
 	 * indiziert, ob diese das Flag <code>nicht erfasst</code> uebernommen werden
@@ -76,12 +128,6 @@ implements IObjektWeckerListener{
 	 * Mittel der restlichen Werte ersetzte werden sollen. 
 	 */
 	public static final boolean APPROX_REST = true;
-	
-	/**
-	 * indiziert, ob diese Applikation im Test-Modus läuft,
-	 * in welchem sie nicht von der Systemzeit getriggert wird
-	 */
-	public static boolean TEST = false;
 	
 	/**
 	 * der Guetefaktor dieser SWE
@@ -111,6 +157,9 @@ implements IObjektWeckerListener{
 	private Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = 
 											new HashMap<SystemObject, AggregationsMessQuerschnitt>();
 
+	
+	
+	
 	
 	
 	/**
@@ -147,11 +196,43 @@ implements IObjektWeckerListener{
 						mq + " konnte nicht vollstaendig ausgelesen werden"); //$NON-NLS-1$
 			}else{
 				messQuerschnitte.put(mqObjekt, new AggregationsMessQuerschnitt(this.verbindung, mq));
+				
+				Set<SystemObject> fsList = new HashSet<SystemObject>();
+				for(FahrStreifen fs:mq.getFahrStreifen()){
+					this.fsMq.put(fs.getSystemObject(), mq.getSystemObject());
+					fsList.add(fs.getSystemObject());
+				}
+				this.mqFs.put(mq.getSystemObject(), fsList);
 			}
 		}
 			
-		if(!TEST){
+		if(!ZEIT_RAFFER){
 			wecker.setWecker(this, getNaechstenWeckZeitPunkt());
+		}else{
+			/**
+			 * Anmeldung auf alle Rohdaten, die hier verarbeitet werden sollen
+			 * unter der Vorraussetzung, dass diese Daten im 1min-Intervall gesendet
+			 * werden
+			 */
+			try {
+				this.dav2 = new ClientDavConnection(this.getVerbindung().getClientDavParameters());
+				this.dav2.connect();
+				this.dav2.login();
+				
+				for(SystemObject fs:fsMq.keySet()){
+					this.dav2.subscribeReceiver(this,
+							fs,
+							new DataDescription(
+									this.dav2.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+									this.dav2.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
+									(short)0),
+									ReceiveOptions.normal(),
+									ReceiverRole.receiver());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new DUAInitialisierungsException("Testapplikation konnte nicht gestartet werden", e); //$NON-NLS-1$
+			}
 		}
 	}
 	
@@ -164,13 +245,14 @@ implements IObjektWeckerListener{
 	 */
 	public final void testStart(final ClientDavInterface dav)
 	throws Exception{
-		TEST = true;
+		ZEIT_RAFFER = true;
+		LOGGER.config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
 		this.komArgumente = new ArrayList<String>();
 		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
 				"kb.objekteTestUnterzentraleK2S_100_MessQuerschnitte"); //$NON-NLS-1$
 		this.initialize(dav);
 	}
-	
+
 	
 	/**
 	 * {@inheritDoc}
@@ -183,11 +265,11 @@ implements IObjektWeckerListener{
 				if(intervall.isAggregationErforderlich(jetzt)){
 					mq.aggregiere(intervall.getAggregationZeitStempel(jetzt),
 								  intervall);
-				}				
+				}
 			}
 		}
-		
-		wecker.setWecker(this, getNaechstenWeckZeitPunkt());
+
+		wecker.setWecker(this, getNaechstenWeckZeitPunkt());	
 	}
 	
 	
@@ -263,7 +345,77 @@ implements IObjektWeckerListener{
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		// Daten werden von den Untermodulen selbst entgegen genommen
+		if(resultate != null){
+			for(ResultData resultat:resultate){
+				if(resultat != null){
+					synchronized (dav2) {
+						this.fsDataHist.put(resultat.getObject(), resultat);
+
+						SystemObject mq = this.fsMq.get(resultat.getObject());
+						int fsZaehler = 0;
+						for(SystemObject fs:this.mqFs.get(mq)){
+							if(this.fsDataHist.get(fs) != null){
+								fsZaehler++;
+							}
+						}
+
+						if(fsZaehler == this.mqFs.get(mq).size()){
+							/**
+							 * fuer alle Fs des Mq sind Daten im Puffer
+							 */
+							this.loeseBerechnungAus(mq, resultat.getDataTime() + Konstante.STUNDE_IN_MS * 10L);
+							this.loescheMqPuffer(mq);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * Leitet eine Berechnung mit allen bis zum uebergebenen Zeitpunkt
+	 * eingetroffenen Daten fuer den uebergebenen Zeitpunkt aus
+	 * 
+	 * @param mqObj der Messquerschnitt, fuer den die Berechnung (Aggregation)
+	 * stattfinden soll
+	 * @param jetzt der Zeitpunkt der Berechnung
+	 */
+	private final void loeseBerechnungAus(final SystemObject mqObj, final long jetzt){
+		synchronized (dav2) {
+			AggregationsMessQuerschnitt mqZiel = null;
+			for(AggregationsMessQuerschnitt mq:this.messQuerschnitte.values()){
+				if(mq.getObjekt().equals(mqObj)){
+					mqZiel = mq;
+					break;
+				}					
+			}			
+
+			if(mqZiel != null){
+				for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
+					if(intervall.isAggregationErforderlich(jetzt)){
+						mqZiel.aggregiere(intervall.getAggregationZeitStempel(jetzt),
+										  intervall);
+					}
+				}				
+			}else{
+				throw new RuntimeException("TEST: Kein MQ gefunden"); //$NON-NLS-1$
+			}
+		}
 	}
 
+
+	/**
+	 * Löscht den aktuellen Fahrstreifen-Datenpuffer fuer einen bestimmten Messquerschnitt
+	 * 
+	 * @param mq ein Messquerschnitt
+	 */
+	private final void loescheMqPuffer(final SystemObject mq){
+		if(mq != null && this.mqFs.get(mq) != null){
+			for(SystemObject fs:this.mqFs.get(mq)){
+				this.fsDataHist.put(fs, null);
+			}			
+		}
+	}
+	
 }

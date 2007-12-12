@@ -83,7 +83,7 @@ implements ClientReceiverInterface{
 		super(dav, fs.getSystemObject());
 		this.fs = fs;
 		if(PUB_ATG == null){
-			PUB_ATG = DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
+			PUB_ATG = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
 		}
 		
 		this.datenPuffer = new AggregationsPufferMenge(dav, fs.getSystemObject());
@@ -94,7 +94,7 @@ implements ClientReceiverInterface{
 						new DAVObjektAnmeldung(
 						fs.getSystemObject(), 
 						new DataDescription(
-								DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+								dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 								intervall.getAspekt(),
 								(short)0)));
 			} catch (Exception e) {
@@ -104,11 +104,11 @@ implements ClientReceiverInterface{
 		}
 		sender.modifiziereObjektAnmeldung(anmeldungen);
 		
-		DAV.subscribeReceiver(this,
+		dav.subscribeReceiver(this,
 					fs.getSystemObject(),
 					new DataDescription(
-							DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
-							DAV.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
+							dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+							dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG),
 							(short)0),
 							ReceiveOptions.normal(),
 							ReceiverRole.receiver());
@@ -128,7 +128,7 @@ implements ClientReceiverInterface{
 			Data nutzDatum = null;
 			
 			if(!basisDaten.isEmpty()){
-				nutzDatum = DAV.createData(PUB_ATG);
+				nutzDatum = dav.createData(PUB_ATG);
 	
 				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 					if(attribut.isGeschwindigkeitsAttribut() || 
