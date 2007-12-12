@@ -71,7 +71,7 @@ public class AggregationLVE_1_5Test{
 	@Test
 	public void test1und5MinutenFSundMQ()
 	throws Exception{
-		ClientDavInterface dav = DAVTest.getDav(AggregationLVETest.CON_DATA);
+		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 
 		AggregationLVE aggregation = new AggregationLVE();
 		aggregation.testStart(dav);

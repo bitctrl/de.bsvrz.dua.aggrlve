@@ -52,27 +52,12 @@ public class AggregationLVETest
 implements ClientSenderInterface{
 		
 	/**
-	 * Verbindungsdaten
-	 */
-	public static final String[] CON_DATA = new String[] {
-			"-datenverteiler=192.168.1.191:8083", //$NON-NLS-1$ 
-			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=c:\\passwd1"}; //$NON-NLS-1$
-	
-	/**
-	 * Wurzelverzeichnis der Testdaten
-	 */
-	public static final String WURZEL = "C:\\Dokumente und Einste" + //$NON-NLS-1$
-				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\"; //$NON-NLS-1$
-
-	
-	/**
 	 * Sendet Testdaten
 	 */
 	@Test
 	public void sendeFahrstreifen()
 	throws Exception{
-		ClientDavInterface dav = DAVTest.getDav(AggregationLVETest.CON_DATA);
+		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 		AggregationsIntervall.initialisiere(dav);
 
 		SystemObject fs1 = dav.getDataModel().getObject("fs.mq.a100.0000.hfs"); //$NON-NLS-1$

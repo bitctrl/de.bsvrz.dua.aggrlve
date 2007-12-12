@@ -54,7 +54,7 @@ public class AggregationsIntervallTest {
 	@Test
 	public void testGetInstanzen()
 	throws Exception{
-		ClientDavInterface dav = DAVTest.getDav(AggregationLVETest.CON_DATA);
+		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 		AggregationsIntervall.initialisiere(dav);
 		AggregationsIntervall instanzen[] = new AggregationsIntervall[AggregationsIntervall.getInstanzen().size()];
 		instanzen[0] = AggregationsIntervall.AGG_1MINUTE;

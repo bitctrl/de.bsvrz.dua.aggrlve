@@ -43,6 +43,7 @@ import de.bsvrz.dua.aggrlve.AggregationsAttributWert;
 import de.bsvrz.dua.aggrlve.AggregationsDatum;
 import de.bsvrz.dua.aggrlve.AggregationsIntervall;
 import de.bsvrz.dua.aggrlve.AggregationsMessQuerschnitt;
+import de.bsvrz.dua.aggrlve.Verbindung;
 import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
@@ -64,7 +65,7 @@ extends AbstraktDTVTest{
 	public void testTVTag()
 	throws Exception{
 		this.setup();
-		ClientDavInterface dav = DAVTest.getDav(AggregationLVETest.CON_DATA);
+		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 
 		SystemObject mq = dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
 

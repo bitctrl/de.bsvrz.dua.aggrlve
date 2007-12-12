@@ -33,6 +33,7 @@ import de.bsvrz.dua.aggrlve.AggregationLVETest;
 import de.bsvrz.dua.aggrlve.AggregationUnvImporter;
 import de.bsvrz.dua.aggrlve.AggregationsAttribut;
 import de.bsvrz.dua.aggrlve.AggregationsAttributWert;
+import de.bsvrz.dua.aggrlve.Verbindung;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
@@ -41,8 +42,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
  * Abstrakte DTV-Tests
- * Eingabe: extra/Messwert_Aggregation_unv.csv
- * Soll-Erwartet: extra/Messwert_Aggregation_TV_DTV_Soll.csv
+ * Eingabe: extra/testDaten/[Version]/Messwert_Aggregation_unv.csv
+ * Soll-Erwartet: extra/testDaten/[Version]/Messwert_Aggregation_TV_DTV_Soll.csv
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -58,7 +59,7 @@ public class AbstraktDTVTest {
 	/**
 	 * Aggregations-Applikation
 	 */
-	protected AggregationLVE aggregation = new AggregationLVE();
+	protected AggregationLVE aggregation = null;
 
 	/**
 	 * Input-Werte
@@ -72,12 +73,15 @@ public class AbstraktDTVTest {
 
 	
 	/**
-	 * Testet die Aggregation von TV-Tagesdaten
+	 * Bereitet den Test fuer die Aggregation von TV und DTV-Daten vor
 	 */
 	protected final void setup()
 	throws Exception{
-		ClientDavInterface dav = DAVTest.getDav(AggregationLVETest.CON_DATA);
+		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
+		dav.disconnect(false, "ss");
+		dav = DAVTest.newDav(Verbindung.getConData());
 
+		this.aggregation = new AggregationLVE();
 		this.aggregation.testStart(dav);
 		
 		AGR_MAP.put(AggregationsAttribut.Q_KFZ, 0);
@@ -85,12 +89,12 @@ public class AbstraktDTVTest {
 		AGR_MAP.put(AggregationsAttribut.Q_LKW, 2);
 		
 		inputImporter = new AggregationUnvImporter(dav, 
-				AggregationLVETest.WURZEL + "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
+				Verbindung.WURZEL + "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
 
 		outputImporter = new CSVImporter( 
-				AggregationLVETest.WURZEL + "Messwert_Aggregation_TV_DTV_Soll.csv"); //$NON-NLS-1$
+				Verbindung.WURZEL + "Messwert_Aggregation_TV_DTV_Soll.csv"); //$NON-NLS-1$
 	}
-	
+		
 	
 	/**
 	 * Extrahiert den Wert und den Status-String (Soll)
