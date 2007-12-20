@@ -26,7 +26,6 @@
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.archive.ArchiveAvailabilityListener;
 import de.bsvrz.dav.daf.main.archive.ArchiveData;
 import de.bsvrz.dav.daf.main.archive.ArchiveDataKind;
@@ -42,7 +41,6 @@ import de.bsvrz.dav.daf.main.archive.ArchiveTimeSpecification;
 import de.bsvrz.dav.daf.main.archive.TimingType;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
@@ -120,11 +118,6 @@ implements ArchiveAvailabilityListener{
 			}
 
 			if(beginArchivAnfrage > 0){
-				DataDescription datenBeschreibung = new DataDescription(
-							DAV.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-							this.aggregationsIntervall.getAspekt(),
-							(short)0);										
-
 				ArchiveTimeSpecification zeit = new ArchiveTimeSpecification(
 						TimingType.DATA_TIME, false, beginArchivAnfrage, endeArchivAnfrage);
 
@@ -133,7 +126,7 @@ implements ArchiveAvailabilityListener{
 							new ArchiveDataKindCombination(ArchiveDataKind.ONLINE),
 							ArchiveOrder.BY_DATA_TIME, 
 							ArchiveRequestOption.NORMAL,
-							datenBeschreibung, 
+							aggregationsIntervall.getDatenBeschreibung(false), 
 							this.objekt);
 
 				try{

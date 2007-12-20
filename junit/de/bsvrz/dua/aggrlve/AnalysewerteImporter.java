@@ -33,7 +33,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
-
 /**
  * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
  * 
@@ -209,16 +208,6 @@ extends CSVImporter{
 					String bStatus = ZEILE[43+(fsMulti*2)];
 					int aLkw = Integer.parseInt(ZEILE[48+(fsMulti*2)]);
 					String aLkwStatus = ZEILE[49+(fsMulti*2)];
-					int kKfz = Integer.parseInt(ZEILE[54+(fsMulti*2)]);
-					String kKfzStatus = ZEILE[55+(fsMulti*2)];
-					int kLkw = Integer.parseInt(ZEILE[60+(fsMulti*2)]);
-					String kLkwStatus = ZEILE[61+(fsMulti*2)];
-					int kPkw = Integer.parseInt(ZEILE[66+(fsMulti*2)]);
-					String kPkwStatus = ZEILE[67+(fsMulti*2)];
-					int qB = Integer.parseInt(ZEILE[72+(fsMulti*2)]);
-					String qBStatus = ZEILE[73+(fsMulti*2)];
-					int kB = Integer.parseInt(ZEILE[78+(fsMulti*2)]);
-					String kBStatus = ZEILE[79+(fsMulti*2)];
 					int sKfz = 1;
 					
 					datensatz.getTimeValue("T").setMillis(INTERVALL); //$NON-NLS-1$
@@ -232,12 +221,6 @@ extends CSVImporter{
 					datensatz = setAttribut("vgKfz", vgKfz, vgKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("b", b, bStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("tNetto", aLkw, aLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("aLkw", aLkw, aLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kKfz", kKfz, kKfzStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kLkw", kLkw, kLkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kPkw", kPkw, kPkwStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("qB", qB, qBStatus, datensatz); //$NON-NLS-1$
-//					datensatz = setAttribut("kB", kB, kBStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("sKfz", sKfz, null, datensatz); //$NON-NLS-1$
 					
 				}catch(ArrayIndexOutOfBoundsException ex){
@@ -316,7 +299,6 @@ extends CSVImporter{
 					wMin = DUAKonstanten.JA;
 				
 				try {
-//					guete = Float.parseFloat(splitStatus[i].replace(",", "."))*10000;
 					guete = Float.parseFloat(splitStatus[i].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (Exception e) {
 					//kein float Wert

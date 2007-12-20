@@ -36,10 +36,7 @@ import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ClientDavConnection;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.CommunicationError;
-import de.bsvrz.dav.daf.main.ConnectionException;
 import de.bsvrz.dav.daf.main.DataDescription;
-import de.bsvrz.dav.daf.main.MissingParameterException;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
@@ -47,7 +44,6 @@ import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
-import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
@@ -58,8 +54,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
-import de.kappich.tools.sleep.main.Sleep;
 
 /**
  * Die SWE Aggregation LVE meldet sich auf alle messwertersetzten Kurzzeitdaten
@@ -156,10 +150,6 @@ implements IObjektWeckerListener{
 	 */
 	private Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = 
 											new HashMap<SystemObject, AggregationsMessQuerschnitt>();
-
-	
-	
-	
 	
 	
 	/**
@@ -230,7 +220,6 @@ implements IObjektWeckerListener{
 									ReceiverRole.receiver());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				throw new DUAInitialisierungsException("Testapplikation konnte nicht gestartet werden", e); //$NON-NLS-1$
 			}
 		}
@@ -363,7 +352,7 @@ implements IObjektWeckerListener{
 							/**
 							 * fuer alle Fs des Mq sind Daten im Puffer
 							 */
-							this.loeseBerechnungAus(mq, resultat.getDataTime() + Konstante.STUNDE_IN_MS * 10L);
+							this.loeseBerechnungAus(mq, resultat.getDataTime());
 							this.loescheMqPuffer(mq);
 						}
 					}

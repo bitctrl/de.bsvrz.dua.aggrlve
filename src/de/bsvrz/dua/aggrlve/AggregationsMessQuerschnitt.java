@@ -36,9 +36,7 @@ import java.util.TreeSet;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteException;
@@ -60,11 +58,6 @@ import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
  */
 public class AggregationsMessQuerschnitt
 extends AbstraktAggregationsObjekt{
-	
-	/**
-	 * Publikations-Attributgruppe
-	 */
-	private static AttributeGroup PUB_ATG = null;
 	
 	/**
 	 * der hier betrachtete Messquerschnitt
@@ -92,9 +85,6 @@ extends AbstraktAggregationsObjekt{
 									   final MessQuerschnitt mq)
 	throws DUAInitialisierungsException{
 		super(dav, mq.getSystemObject());
-		if(PUB_ATG == null){
-			PUB_ATG = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
-		}
 		this.mq = mq;
 		
 		this.datenPuffer = new AggregationsPufferMenge(dav, mq.getSystemObject());
@@ -104,10 +94,7 @@ extends AbstraktAggregationsObjekt{
 				anmeldungen.add(
 						new DAVObjektAnmeldung(
 						mq.getSystemObject(), 
-						new DataDescription(
-								dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-								intervall.getAspekt(),
-								(short)0)));
+						intervall.getDatenBeschreibung(false)));
 			} catch (Exception e) {
 				throw new DUAInitialisierungsException("Messquerschnitt " + mq //$NON-NLS-1$
 						+ " konnte nicht initialisiert werden", e); //$NON-NLS-1$
@@ -164,7 +151,7 @@ extends AbstraktAggregationsObjekt{
 					/**
 					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
 					 */
-					nutzDatum = dav.createData(PUB_ATG);
+					nutzDatum = dav.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
 					for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 						if(!attribut.isGeschwindigkeitsAttribut()){
 							this.aggregiereSumme(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
@@ -200,7 +187,7 @@ extends AbstraktAggregationsObjekt{
 						}
 		
 						if(kannBasisIntervallBerechnen){
-							nutzDatum = dav.createData(PUB_ATG);
+							nutzDatum = dav.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
 							aggregiereBasisDatum(nutzDatum, fsDaten, zeitStempel, intervall);
 						}
 						
@@ -209,7 +196,7 @@ extends AbstraktAggregationsObjekt{
 					/**
 					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
 					 */
-					nutzDatum = dav.createData(PUB_ATG);
+					nutzDatum = dav.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
 					for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 						this.aggregiereMittel(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
 					}
@@ -218,7 +205,7 @@ extends AbstraktAggregationsObjekt{
 			
 			ResultData resultat = new ResultData(
 					this.mq.getSystemObject(),
-					new DataDescription(PUB_ATG, intervall.getAspekt(), (short)0),
+					intervall.getDatenBeschreibung(false),
 					zeitStempel, nutzDatum);		
 	
 			if(resultat.getData() != null){

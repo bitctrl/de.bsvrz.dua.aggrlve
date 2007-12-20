@@ -48,23 +48,32 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
- * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
- * 
- * Allgemeine Tests fuer 1- und 5-Minuten-Intervall
+ * Allgemeine Tests fuer 1- und 5-Minuten-Intervall (entspricht den Testvorschriften aus 
+ * PrüfSpez Version 2.0 Abschnitt 5.1.10.2 u. 5.1.10.3 erster Abschnitt)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class AggregationLVE_1_5Test{
+	
+	/**
+	 * Sollen Assert-Statements benutzt werden?
+	 */
+	private static final boolean USE_ASSERT = true;
 		
 	/**
 	 * Mappt Attribut auf relative Posisition in Tabelle
 	 */
-	private final HashMap<AggregationsAttribut, Integer> AGR_MAP = new HashMap<AggregationsAttribut, Integer>(); 
-	
+	private final HashMap<AggregationsAttribut, Integer> AGR_MAP = new HashMap<AggregationsAttribut, Integer>();
 	
 	/**
-	 * Testet, ob die 1 Minuten intervalle korrekt zu fünf-Minuten
+	 * Menge aller Fahrstreifen
+	 */
+	private SystemObject[] fs = new SystemObject[3];
+
+	
+	/**
+	 * Testet, ob die 1 Minuten-Intervalle korrekt zu fünf-Minuten
 	 * Intervallen zusammengerechnet und die Fahrstreifen korrekt zu
 	 * Messquerschnitten zusammengerechnet werden
 	 */
@@ -72,9 +81,23 @@ public class AggregationLVE_1_5Test{
 	public void test1und5MinutenFSundMQ()
 	throws Exception{
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
+		dav.disconnect(false, "letzte Testverbindung beendet"); //$NON-NLS-1$
+		dav = DAVTest.newDav(Verbindung.getConData());
 
 		AggregationLVE aggregation = new AggregationLVE();
 		aggregation.testStart(dav);
+
+		/**
+		 * drei Fahrstreifen
+		 */
+		SystemObject fs1 = dav.getDataModel().getObject("fs.mq.a100.0000.hfs"); //$NON-NLS-1$
+		SystemObject fs2 = dav.getDataModel().getObject("fs.mq.a100.0000.1üfs"); //$NON-NLS-1$
+		SystemObject fs3 = dav.getDataModel().getObject("fs.mq.a100.0000.2üfs"); //$NON-NLS-1$
+		this.fs = new SystemObject[]{fs1,fs2,fs3};
+		/**
+		 * der Messquerschnitt, der sich aus den drei Fahrstreifen zusammensetzt
+		 */
+		SystemObject mq = dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
 		
 		AGR_MAP.put(AggregationsAttribut.Q_KFZ, 0);
 		AGR_MAP.put(AggregationsAttribut.Q_PKW, 1);
@@ -83,25 +106,16 @@ public class AggregationLVE_1_5Test{
 		AGR_MAP.put(AggregationsAttribut.V_PKW, 4);
 		AGR_MAP.put(AggregationsAttribut.V_LKW, 5);
 		
-		SystemObject mq = dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
-
-		SystemObject fs1 = dav.getDataModel().getObject("fs.mq.a100.0000.hfs"); //$NON-NLS-1$
-		SystemObject fs2 = dav.getDataModel().getObject("fs.mq.a100.0000.1üfs"); //$NON-NLS-1$
-		SystemObject fs3 = dav.getDataModel().getObject("fs.mq.a100.0000.2üfs"); //$NON-NLS-1$
-
-		DataDescription dd = new DataDescription(
+		DataDescription dd1min = new DataDescription(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 				AggregationsIntervall.AGG_1MINUTE.getAspekt(),
 				(short)0);
-		SystemObject[] fs = new SystemObject[]{fs1,fs2,fs3};
 
 		TestErgebnisAnalyseImporter inputImporter = new TestErgebnisAnalyseImporter(dav, 
-				"C:\\Dokumente und Einste" + //$NON-NLS-1$
-				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\Analysewerte.csv"); //$NON-NLS-1$
+				Verbindung.WURZEL + "Analysewerte.csv"); //$NON-NLS-1$
 
 		CSVImporter outputImporter = new CSVImporter( 
-				"C:\\Dokumente und Einste" + //$NON-NLS-1$
-				"llungen\\Thierfelder\\workspace3.3\\de.bsvrz.dua.aggrlve\\extra\\Messwert_Aggregation.csv"); //$NON-NLS-1$
+				Verbindung.WURZEL + "Messwert_Aggregation.csv"); //$NON-NLS-1$
 
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, 2000);
@@ -118,12 +132,14 @@ public class AggregationLVE_1_5Test{
 		for(int a = 0; a<5; a++){
 			long startzeit = zeit;
 			for(int i = 0; i<5; i++){
-				Pause.warte(50);
+				Pause.warte(100L);
 				
 				inputImporter.importNaechsteZeile();
 				for(int j = 0; j<3; j++){
-					ResultData resultat = new ResultData(fs[j], dd, startzeit, inputImporter.getFSAnalyseDatensatz(j + 1));
-					resultat.getData().getTimeValue("T").setMillis(Konstante.MINUTE_IN_MS); //$NON-NLS-1$
+					ResultData resultat = new ResultData(fs[j], dd1min, startzeit, inputImporter.getFSAnalyseDatensatz(j + 1));
+					/**
+					 * Aktualisiere das Aggregationsobjekt, das mit dem Fahrstreifen assoziiert ist
+					 */
 					mqObj.getAggregationsObjekt(fs[j]).getPuffer().aktualisiere(resultat);	
 				}
 				
@@ -132,7 +148,8 @@ public class AggregationLVE_1_5Test{
 			mqObj.aggregiere(zeit, AggregationsIntervall.AGG_5MINUTE);
 			
 			/**
-			 * vergleiche
+			 * vergleiche die für die Fahrstreifen aggregierten Daten
+			 * mit den Soll-Daten aus der Tabelle Messwert-Aggr.
 			 */
 			int f = 0;
 			String[] zeile = outputImporter.getNaechsteZeile();
@@ -141,16 +158,16 @@ public class AggregationLVE_1_5Test{
 						getPuffer().getPuffer(AggregationsIntervall.AGG_5MINUTE).
 						getDatenFuerZeitraum(zeit, startzeit);
 
-				int j = 0;
 				if(daten !=null && !daten.isEmpty()){
 					for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
-						if(attribut.equals(AggregationsAttribut.V_LKW)){
-							AggregationsAttributWert wertSoll = getTextDatenSatz(attribut, zeile, f);
-							//System.out.println(fsObj + ", I:" + a + " Soll: " + wertSoll + ", Ist:" + daten.iterator().next().getWert(attribut));  //$NON-NLS-1$//$NON-NLS-2$
-//							if(j++ > 0){
-							Assert.assertEquals(fsObj + ", I:" + a + " ", wertSoll, daten.iterator().next().getWert(attribut));  //$NON-NLS-1$//$NON-NLS-2$
-							//System.out.println(fsObj + ", I:" + a + " " + wertSoll.equals(daten.iterator().next().getWert(attribut)));  //$NON-NLS-1$//$NON-NLS-2$
-	//						}
+						AggregationsAttributWert wertSoll = getTextDatenSatz(attribut, zeile, f);
+						if(!wertSoll.equals(daten.iterator().next().getWert(attribut)) ){
+							System.out.println("FS" + this.getFsNummer(fsObj) + ", Interv.: " + (a + 1) + " Soll:\n" + wertSoll +   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+										", Ist:\n" + daten.iterator().next().getWert(attribut));  //$NON-NLS-1$
+						}
+						if(USE_ASSERT){
+							Assert.assertEquals("FS" + this.getFsNummer(fsObj) + ", Interv.: " + //$NON-NLS-1$//$NON-NLS-2$
+									(a + 1) + " ", wertSoll, daten.iterator().next().getWert(attribut));  //$NON-NLS-1$s
 						}
 					}
 				}
@@ -160,6 +177,23 @@ public class AggregationLVE_1_5Test{
 			zeit = startzeit;
 		}
 		
+	}
+	
+	
+	/**
+	 * Erfragt die Nummer eines Fahrstreifens (in Bezug 
+	 * auf die PruefSpez-Tabelle der Ein- und Ausgangswerte)
+	 * 
+	 * @param fsObjekt ein hier getesteter Fahrstreifen
+	 * @return dessen Nummer (in Bezug auf die PruefSpez-Tabelle
+	 * der Ein- und Ausgangswerte)
+	 */
+	private final int getFsNummer(final SystemObject fsObjekt){
+		int i;
+		for(i = 0; i<this.fs.length; i++){
+			if(fsObjekt.equals(this.fs[i]))break;
+		}
+		return i + 1;
 	}
 	
 	
@@ -188,4 +222,5 @@ public class AggregationLVE_1_5Test{
 		
 		return wert;
 	}
+	
 }

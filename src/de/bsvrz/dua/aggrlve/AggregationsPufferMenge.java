@@ -141,7 +141,7 @@ public class AggregationsPufferMenge {
 		}else{
 			int start = 0; 
 			for(int i = 0; i<ASPEKTE_SORTIERT.length; i++){
-				if(ASPEKTE_SORTIERT[i].equals(ausgangsIntervall.getAspekt())){
+				if(ASPEKTE_SORTIERT[i].equals(ausgangsIntervall.getDatenBeschreibung(true).getAspect())){
 					start = i;
 				}
 			}
@@ -171,6 +171,6 @@ public class AggregationsPufferMenge {
 	 */
 	public final AbstraktAggregationsPuffer getPuffer(final AggregationsIntervall intervall){
 		if(intervall == null)return this.pufferMenge.get(AggregationLVE.MWE);
-		return this.pufferMenge.get(intervall.getAspekt());
+		return this.pufferMenge.get(intervall.getDatenBeschreibung(true).getAspect());
 	}
 }

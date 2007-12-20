@@ -29,7 +29,6 @@ import java.util.HashMap;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dua.aggrlve.AggregationLVE;
-import de.bsvrz.dua.aggrlve.AggregationLVETest;
 import de.bsvrz.dua.aggrlve.AggregationUnvImporter;
 import de.bsvrz.dua.aggrlve.AggregationsAttribut;
 import de.bsvrz.dua.aggrlve.AggregationsAttributWert;
@@ -78,7 +77,7 @@ public class AbstraktDTVTest {
 	protected final void setup()
 	throws Exception{
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
-		dav.disconnect(false, "ss");
+		dav.disconnect(false, "Testverbindung beendet"); //$NON-NLS-1$
 		dav = DAVTest.newDav(Verbindung.getConData());
 
 		this.aggregation = new AggregationLVE();

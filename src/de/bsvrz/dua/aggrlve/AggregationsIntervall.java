@@ -31,7 +31,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.config.Aspect;
+import de.bsvrz.dav.daf.main.config.AttributeGroup;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
@@ -98,10 +101,17 @@ implements Comparable<AggregationsIntervall>{
 	private static SortedSet<AggregationsIntervall> WERTE_BEREICH = new TreeSet<AggregationsIntervall>();
 	
 	/**
-	 * der Aggregationsaspekt
+	 * die Datenbeschreibung der Publikationsdaten dieses Aggregations-
+	 * Intervalls (fuer FS)
 	 */
-	private Aspect asp = null;
-	
+	private DataDescription datenBeschreibungFs = null;
+
+	/**
+	 * die Datenbeschreibung der Publikationsdaten dieses Aggregations-
+	 * Intervalls (fuer MQ)
+	 */
+	private DataDescription datenBeschreibungMq = null;
+
 	/**
 	 * die Laenge des Aggregationsintervalls in ms
 	 */
@@ -117,15 +127,23 @@ implements Comparable<AggregationsIntervall>{
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param asp der Aggregationsaspekt
+	 * @param atgFs die Attributgruppe der Publikationsdaten dieses Aggregations-
+	 * Intervalls (fuer FS)
+	 * @param atgMq die Attributgruppe der Publikationsdaten dieses Aggregations-
+	 * Intervalls (fuer MQ)
+	 * @param asp der Aspekt der Publikationsdaten dieses Aggregations-
+	 * Intervalls (fuer FS <b>und</b> MQ)
 	 * @param intervall die Laenge des Aggregationsintervalls in ms
 	 * @param maxPufferGroesse die maximale Anzahl der Elemente, die in einem Puffer mit Daten dieser
 	 * Aggregationsstufe vorgehalten werden muessen
 	 */
-	private AggregationsIntervall(final Aspect asp,
+	private AggregationsIntervall(final AttributeGroup atgFs,
+								  final AttributeGroup atgMq,
+								  final Aspect asp,
 								  final long intervall,
 								  final long maxPufferGroesse) {
-		this.asp = asp;
+		this.datenBeschreibungFs = new DataDescription(atgFs, asp);
+		this.datenBeschreibungMq = new DataDescription(atgMq, asp);
 		this.intervallLaengeInMillis = intervall;
 		this.maxPufferGroesse = maxPufferGroesse;
 		WERTE_BEREICH.add(this);
@@ -139,23 +157,47 @@ implements Comparable<AggregationsIntervall>{
 	 */
 	public static final void initialisiere(final ClientDavInterface dav){
 		AGG_1MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation1Minute"), Konstante.MINUTE_IN_MS, 5);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect("asp.agregation1Minute"),  //$NON-NLS-1$
+				Konstante.MINUTE_IN_MS, 5);
 		
 		AGG_5MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation5Minuten"), 5 * Konstante.MINUTE_IN_MS, 3);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						dav.getDataModel().getAspect("asp.agregation5Minuten"),  //$NON-NLS-1$
+				5 * Konstante.MINUTE_IN_MS, 3);
 		AGG_15MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation15Minuten"), 15 * Konstante.MINUTE_IN_MS, 2);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						dav.getDataModel().getAspect("asp.agregation15Minuten"),  //$NON-NLS-1$
+				15 * Konstante.MINUTE_IN_MS, 2);
 		AGG_30MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation30Minuten"), 30 * Konstante.MINUTE_IN_MS, 2);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						dav.getDataModel().getAspect("asp.agregation30Minuten"),  //$NON-NLS-1$
+				30 * Konstante.MINUTE_IN_MS, 2);
 		AGG_60MINUTE = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregation60Minuten"), 60 * Konstante.MINUTE_IN_MS, 40);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						dav.getDataModel().getAspect("asp.agregation60Minuten"),  //$NON-NLS-1$
+				60 * Konstante.MINUTE_IN_MS, 40);
 
 		AGG_DTV_TAG = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregationDtvTag"), 60 * 24 * Konstante.MINUTE_IN_MS, 50);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						dav.getDataModel().getAspect("asp.agregationDtvTag"),  //$NON-NLS-1$
+				60 * 24 * Konstante.MINUTE_IN_MS, 50);
 		AGG_DTV_MONAT = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregationDtvMonat"), 61 * 24 * Konstante.MINUTE_IN_MS, 15);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						dav.getDataModel().getAspect("asp.agregationDtvMonat"),  //$NON-NLS-1$
+				61 * 24 * Konstante.MINUTE_IN_MS, 15);
 		AGG_DTV_JAHR = new AggregationsIntervall(
-				dav.getDataModel().getAspect("asp.agregationDtvJahr"), 62 * 24 * Konstante.MINUTE_IN_MS, 0);  //$NON-NLS-1$
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						dav.getDataModel().getAspect("asp.agregationDtvJahr"),  //$NON-NLS-1$
+				62 * 24 * Konstante.MINUTE_IN_MS, 0);
 	}
 	
 	
@@ -188,14 +230,31 @@ implements Comparable<AggregationsIntervall>{
 		return this.maxPufferGroesse;
 	}
 	
-
+	
+	
 	/**
-	 * Erfragt den Aspekt
-	 * 
-	 * @return der Aspekt
+	 * Erfragt den Publikationsaspekt der Daten fuer FS und MQ
+	 *  
+	 * @return der Publikationsaspekt der Daten fuer FS und MQ
 	 */
 	public final Aspect getAspekt(){
-		return this.asp;
+		return this.datenBeschreibungFs.getAspect();
+	}
+	
+
+	/**
+	 * Erfragt die Datenbeschreibung der Publikationsdaten dieses Aggregations-
+	 * Intervalls
+	 * 
+	 * @param fuerFahrstreifen fuer Fahrstreifen?
+	 * @return die Datenbeschreibung der Publikationsdaten dieses Aggregations-
+	 * Intervalls
+	 */
+	public final DataDescription getDatenBeschreibung(boolean fuerFahrstreifen){
+		if(fuerFahrstreifen){
+			return this.datenBeschreibungFs;
+		}
+		return this.datenBeschreibungMq;
 	}
 
 
@@ -351,7 +410,10 @@ implements Comparable<AggregationsIntervall>{
 		
 		if(obj != null && obj instanceof AggregationsIntervall){
 			AggregationsIntervall that = (AggregationsIntervall)obj;
-			ergebnis = this.getAspekt().equals(that.getAspekt());
+			ergebnis = this.getDatenBeschreibung(true).getAspect().equals(
+						that.getDatenBeschreibung(true).getAspect()) && 
+						this.getDatenBeschreibung(true).getAttributeGroup().equals(
+								that.getDatenBeschreibung(true).getAttributeGroup());
 		}
 		
 		return ergebnis;
@@ -363,7 +425,7 @@ implements Comparable<AggregationsIntervall>{
 	 */
 	@Override
 	public String toString() {
-		return this.asp.toString();
+		return this.datenBeschreibungFs + "\n" + this.datenBeschreibungMq; //$NON-NLS-1$
 	}
 
 }

@@ -34,8 +34,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
- * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
- * 
  * Liest die Ausgangsdaten für die Prüfung der Aggregation LVE (TV und DTV) ein
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -110,18 +108,24 @@ extends CSVImporter{
 		if(datensatz != null){
 			if(ZEILE != null){
 				try {
-					int QKfz = Integer.parseInt(ZEILE[0]);
-					String QKfzStatus = ZEILE[1];
-					int QPkw = Integer.parseInt(ZEILE[2]);
-					String QPkwStatus = ZEILE[3];
-					int QLkw = Integer.parseInt(ZEILE[4]);
-					String QLkwStatus = ZEILE[5];
-					int VKfz = Integer.parseInt(ZEILE[6]);
-					String VKfzStatus = ZEILE[7];
-					int VLkw = Integer.parseInt(ZEILE[8]);
-					String VLkwStatus = ZEILE[9];
-					int VPkw = Integer.parseInt(ZEILE[10]);
-					String VPkwStatus = ZEILE[11];
+					int c = 0;
+					int QKfz = this.parseAlsPositiveZahl(ZEILE[c + 0]);
+					String QKfzStatus = ZEILE[c + 1];
+					c+=2;
+					int QPkw = this.parseAlsPositiveZahl(ZEILE[c + 2]);
+					String QPkwStatus = ZEILE[c + 3];
+					c+=2;
+					int QLkw = this.parseAlsPositiveZahl(ZEILE[c + 4]);
+					String QLkwStatus = ZEILE[c + 5];
+					c+=2;
+					int VKfz = this.parseAlsPositiveZahl(ZEILE[c + 6]);
+					String VKfzStatus = ZEILE[c + 7];
+					c+=2;
+					int VLkw = this.parseAlsPositiveZahl(ZEILE[c + 8]);
+					String VLkwStatus = ZEILE[c + 9];
+					c+=2;
+					int VPkw = this.parseAlsPositiveZahl(ZEILE[c + 10]);
+					String VPkwStatus = ZEILE[c + 11];
 									
 					datensatz = setAttribut("QKfz", QKfz, QKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("QLkw", QLkw, QLkwStatus, datensatz); //$NON-NLS-1$
@@ -140,7 +144,6 @@ extends CSVImporter{
 					datensatz = setAttribut("QB",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
 					datensatz = setAttribut("KB",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
 					datensatz = setAttribut("VDelta",  -1,  "0", datensatz); //$NON-NLS-1$ //$NON-NLS-2$
-					
 				}catch(ArrayIndexOutOfBoundsException ex){
 					datensatz = null;
 				}
@@ -151,7 +154,22 @@ extends CSVImporter{
 	
 		return datensatz;
 	}
-		
+	
+	
+	/**
+	 * Erfragt den Zahlenwert der geparsten Zeichenkette
+	 * 
+	 * @param zahl eine Zahl als Zeichenkette
+	 * @return den Zahlenwert der geparsten Zeichenkette
+	 */
+	private final int parseAlsPositiveZahl(String zahl){
+		int a = Integer.parseInt(zahl);
+		if(a < 0){
+			a = 0;
+		}
+		return a;
+	}
+	
 	
 	/**
 	 * Setzt Attribut in Datensatz
@@ -217,7 +235,6 @@ extends CSVImporter{
 					wMin = DUAKonstanten.JA;
 				
 				try {
-//					guete = Float.parseFloat(splitStatus[i].replace(",", "."))*10000;
 					guete = Float.parseFloat(splitStatus[i].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (Exception e) {
 					//kein float Wert

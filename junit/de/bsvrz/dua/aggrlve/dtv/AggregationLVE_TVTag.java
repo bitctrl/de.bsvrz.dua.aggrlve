@@ -37,7 +37,6 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.aggrlve.AggregationLVETest;
 import de.bsvrz.dua.aggrlve.AggregationsAttribut;
 import de.bsvrz.dua.aggrlve.AggregationsAttributWert;
 import de.bsvrz.dua.aggrlve.AggregationsDatum;
@@ -104,9 +103,11 @@ extends AbstraktDTVTest{
 
 		if(daten !=null && !daten.isEmpty()){
 			String[] zeile = outputImporter.getNaechsteZeile();
+			int i = 1;
 			for(AggregationsAttribut attribut:AGR_MAP.keySet()){
+				i++;
 				AggregationsAttributWert wertSoll = getTextDatenSatz(attribut, zeile);
-					Assert.assertEquals(wertSoll, daten.iterator().next().getWert(attribut));
+					Assert.assertEquals("Zeile " + i + ": ", wertSoll, daten.iterator().next().getWert(attribut)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

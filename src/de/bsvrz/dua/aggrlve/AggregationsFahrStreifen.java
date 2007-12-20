@@ -37,7 +37,6 @@ import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteException;
 import de.bsvrz.dua.guete.GueteVerfahren;
@@ -59,11 +58,6 @@ extends AbstraktAggregationsObjekt
 implements ClientReceiverInterface{
 	
 	/**
-	 * Publikations-Attributgruppe
-	 */
-	private static AttributeGroup PUB_ATG = null;
-	
-	/**
 	 * der hier betrachtete Fahrstreifen
 	 */
 	private FahrStreifen fs = null;
@@ -82,9 +76,6 @@ implements ClientReceiverInterface{
 	throws DUAInitialisierungsException{
 		super(dav, fs.getSystemObject());
 		this.fs = fs;
-		if(PUB_ATG == null){
-			PUB_ATG = dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS);
-		}
 		
 		this.datenPuffer = new AggregationsPufferMenge(dav, fs.getSystemObject());
 		Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>(); 
@@ -93,10 +84,7 @@ implements ClientReceiverInterface{
 				anmeldungen.add(
 						new DAVObjektAnmeldung(
 						fs.getSystemObject(), 
-						new DataDescription(
-								dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-								intervall.getAspekt(),
-								(short)0)));
+						intervall.getDatenBeschreibung(true)));
 			} catch (Exception e) {
 				throw new DUAInitialisierungsException("Fahrstreifen " + fs //$NON-NLS-1$
 						+ " konnte nicht initialisiert werden", e); //$NON-NLS-1$
@@ -128,7 +116,7 @@ implements ClientReceiverInterface{
 			Data nutzDatum = null;
 			
 			if(!basisDaten.isEmpty()){
-				nutzDatum = dav.createData(PUB_ATG);
+				nutzDatum = dav.createData(intervall.getDatenBeschreibung(true).getAttributeGroup());
 	
 				for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 					if(attribut.isGeschwindigkeitsAttribut() || 
@@ -142,7 +130,7 @@ implements ClientReceiverInterface{
 			
 			ResultData resultat = new ResultData(
 					this.fs.getSystemObject(),
-					new DataDescription(PUB_ATG, intervall.getAspekt(), (short)0),
+					intervall.getDatenBeschreibung(true),
 					zeitStempel, nutzDatum);		
 	
 			if(resultat.getData() != null){

@@ -45,10 +45,16 @@ public class Verbindung {
 		"-debugLevelFileText=WARNING" }; //$NON-NLS-1$
 	
 	/**
-	 * Wurzelverzeichnis der Testdaten
+	 * Wurzelverzeichnis der Testdaten z.Z. <code>V_2.1(11.12.07)</code>
 	 */
-	public static final String WURZEL = ".\\extra\\testDaten\\"; //$NON-NLS-1$
+	public static final String WURZEL = ".\\extra\\testDaten\\V_2.1(11.12.07)\\"; //$NON-NLS-1$
 
+//	/**
+//	 * Wurzelverzeichnis der Testdaten z.Z. <code>V_1.0</code>
+//	 */
+//	public static final String WURZEL = ".\\extra\\testDaten\\V_1.0\\"; //$NON-NLS-1$
+
+	
 	
 	/**
 	 * Erfragt eine Kopie der Verbindungsdaten
