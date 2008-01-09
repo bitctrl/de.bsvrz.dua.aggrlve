@@ -25,9 +25,6 @@
  */
 package de.bsvrz.dua.aggrlve;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import org.junit.Test;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -42,9 +39,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
- * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
- * 
- * Allgemeine Tests
+ * Allgemeine Tests 		!!!!!!!Kann wieder raus!!!!!!!!
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -52,12 +47,12 @@ import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 public class AggregationLVETest 
 implements ClientSenderInterface{
 
-	
+	private int i;
 	
 	/**
 	 * Sendet Testdaten
 	 */
-	@Test
+//	@Test
 	public void sendeFahrstreifen()
 	throws Exception{
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());

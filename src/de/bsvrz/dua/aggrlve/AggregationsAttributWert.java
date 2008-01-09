@@ -250,8 +250,8 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 					   this.getWert() == that.getWert() &&
 					   this.isNichtErfasst() == that.isNichtErfasst() &&
 					   this.isImplausibel() == that.isImplausibel() &&
-					   this.getGuete().equals(that.getGuete()) &&
-					   this.isInterpoliert() == that.isInterpoliert();
+					   this.isInterpoliert() == that.isInterpoliert() &&
+					   this.getGuete().getIndex() - that.getGuete().getIndex() < 0.001;
 		}
 		
 		return ergebnis;

@@ -34,8 +34,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
- * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
- * 
  * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein
  * 
  * @author BitCtrl Systems GmbH, Görlitz

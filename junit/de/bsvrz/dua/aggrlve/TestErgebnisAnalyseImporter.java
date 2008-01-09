@@ -35,8 +35,6 @@ import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 
 /**
- * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
- * 
  * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein
  * 
  * @author BitCtrl Systems GmbH, Görlitz
@@ -92,6 +90,7 @@ extends CSVImporter{
 		INTERVALL = t;
 	}
 	
+	
 	/**
 	 * Importiert die nächste Zeile aus der CSV-Datei
 	 *
@@ -99,6 +98,7 @@ extends CSVImporter{
 	public final void importNaechsteZeile() {
 		ZEILE = this.getNaechsteZeile();
 	}
+	
 	
 	/**
 	 * Bildet einen Ausgabe-Datensatz der MQ-Analysewerte aus den Daten der aktuellen CSV-Zeile
@@ -174,6 +174,7 @@ extends CSVImporter{
 	
 		return datensatz;
 	}
+	
 	
 	/**
 	 * Bildet einen Ausgabe-Datensatz der FS-Analysewerte aus den Daten der aktuellen CSV-Zeile

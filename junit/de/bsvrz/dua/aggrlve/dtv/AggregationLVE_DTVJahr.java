@@ -87,7 +87,7 @@ extends AbstraktDTVTest{
 		long startzeit = zeit;
 		for(int a = 0; a<12; a++){			
 			inputImporter.importNaechsteZeile();
-			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getMQAnalyseDatensatz());
+			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getAnalyseDatensatz(true, 0, 0));
 			mqObj.getPuffer().aktualisiere(resultat);
 			
 			cal.add(Calendar.MONTH, 1);

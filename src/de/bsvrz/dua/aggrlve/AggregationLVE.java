@@ -238,7 +238,7 @@ implements IObjektWeckerListener{
 		LOGGER.config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
 		this.komArgumente = new ArrayList<String>();
 		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
-				"kb.objekteTestUnterzentraleK2S_100_MessQuerschnitte"); //$NON-NLS-1$
+				"kb.duaTestObjekte"); //$NON-NLS-1$
 		this.initialize(dav);
 	}
 

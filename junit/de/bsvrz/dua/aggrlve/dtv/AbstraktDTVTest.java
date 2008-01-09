@@ -40,7 +40,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
- * Abstrakte DTV-Tests
+ * Abstrakter DTV-Test
  * Eingabe: extra/testDaten/[Version]/Messwert_Aggregation_unv.csv
  * Soll-Erwartet: extra/testDaten/[Version]/Messwert_Aggregation_TV_DTV_Soll.csv
  * 

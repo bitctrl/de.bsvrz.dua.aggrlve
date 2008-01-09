@@ -26,9 +26,11 @@
 package de.bsvrz.dua.aggrlve.kalk;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.bsvrz.dua.aggrlve.Verbindung;
-import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
  * Dieses Programm produziert die Tabellen <code>5-6</code> und 
@@ -39,35 +41,55 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  *
  */
 public class Kalkulation {
-
-	/**
-	 * Alle Attribute, die geschrieben werden sollen
-	 */
-	private static final String[] ATTRIBUTE = new String[]{
-		"qKfz(t)(1)", //$NON-NLS-1$
-		"qKfz(t)(2)", //$NON-NLS-1$
-		"QKfz(Mq)", //$NON-NLS-1$
-		"qPkw(t)(1)", //$NON-NLS-1$
-		"qPkw(t)(2)", //$NON-NLS-1$
-		"QPkw(Mq)", //$NON-NLS-1$
-		"qLkw(t)(1)", //$NON-NLS-1$
-		"qLkw(t)(2)", //$NON-NLS-1$
-		"QLkw(Mq)", //$NON-NLS-1$
-		"vKfz(t)(1)", //$NON-NLS-1$
-		"vKfz(t)(2)", //$NON-NLS-1$
-		"VKfz(Mq)",  //$NON-NLS-1$
-		"vPkw(t)(1)", //$NON-NLS-1$
-		"vPkw(t)(2)", //$NON-NLS-1$
-		"VPkw(Mq)", //$NON-NLS-1$
-		"vLkw(t)(1)", //$NON-NLS-1$
-		"vLkw(t)(2)", //$NON-NLS-1$
-		"VLkw(Mq)"}; //$NON-NLS-1$
 	
 	/**
-	 * Importiert die Tabelle <code>Messwert_Aggregation_unv</code>
+	 * Alle Attribute, die geschrieben werden sollen und die Art,
+	 * wie sie Berechnet werden (nachdem der Mittelwert gebildet wurde)
 	 */
-	CSVImporter importer = null;
-
+	private static final RechenVorschrift[] ATTRIBUTE = new RechenVorschrift[]{
+		new RechenVorschrift("qKfz(t)(1)", false, null), //$NON-NLS-1$
+		new RechenVorschrift("qKfz(t)(2)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("QKfz(Mq)", true, new String[]{"qKfz(t)(1)", "qKfz(t)(2)"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		new RechenVorschrift("qPkw(t)(1)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("qPkw(t)(2)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("QPkw(Mq)", true, new String[]{"qPkw(t)(1)", "qPkw(t)(2)"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		new RechenVorschrift("qLkw(t)(1)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("qLkw(t)(2)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("QLkw(Mq)", true, new String[]{"qLkw(t)(1)", "qLkw(t)(2)"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		new RechenVorschrift("vKfz(t)(1)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("vKfz(t)(2)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("VKfz(Mq)", false, new String[]{"vKfz(t)(1)", "vKfz(t)(2)"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		new RechenVorschrift("vPkw(t)(1)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("vPkw(t)(2)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("VPkw(Mq)", false, new String[]{"vPkw(t)(1)", "vPkw(t)(2)"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		new RechenVorschrift("vLkw(t)(1)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("vLkw(t)(2)", false, null),  //$NON-NLS-1$
+		new RechenVorschrift("VLkw(Mq)", false, new String[]{"vLkw(t)(1)", "vLkw(t)(2)"})}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	
+	/**
+	 * Datenimporter 
+	 */
+	private PruefTabImporter importer = null; 
+	
+	
+	/**
+	 * Startet dieses Programm
+	 * 
+	 * @param args Kommandozeilenparameter
+	 */
+	public static void main(String[] args){
+		final String name56 = Verbindung.WURZEL + "Tabelle56.csv"; //$NON-NLS-1$
+		final String name57 = Verbindung.WURZEL + "Tabelle57.csv"; //$NON-NLS-1$
+		final String quelle = Verbindung.WURZEL + "Messwert_Aggregation_unv.csv"; //$NON-NLS-1$
+		
+		try {
+			Kalkulation kalkulation = new Kalkulation(quelle);
+			kalkulation.erzeugeTab(3, name56);
+			kalkulation.erzeugeTab(2, name57);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	/**
@@ -77,36 +99,9 @@ public class Kalkulation {
 	 * <code>Messwert_Aggregation_unv</code>
 	 * @throws Exception wenn die Datei nicht geoeffnet werden kann
 	 */
-	public Kalkulation(final File messwertAggregationUnvDatei)
+	private Kalkulation(final String messwertAggregationUnvDatei)
 	throws Exception{
-		this.importer = new CSVImporter(messwertAggregationUnvDatei);
-		this.importer.getNaechsteZeile();
-	}
-	
-
-	/**
-	 * Erzeugt aus der Eingangstabelle das Analogon von Tabelle 
-	 * <code>5-6</code> aus der Prüfspezifikation V 2.0 
-	 * 
-	 * @param dateiName der Name der Ausgabedatei (CSV)
-	 * @throws Exception wenn es Probleme beim Lesen oder Schreiben gab
-	 */
-	public final void ergeugeTab56(final String dateiName)
-	throws Exception{
-		this.erzeugeTab(3, dateiName);
-	}
-
-	
-	/**
-	 * Erzeugt aus der Eingangstabelle das Analogon von Tabelle 
-	 * <code>5-7</code> aus der Prüfspezifikation V 2.0 
-	 * 
-	 * @param dateiName der Name der Ausgabedatei (CSV)
-	 * @throws Exception wenn es Probleme beim Lesen oder Schreiben gab
-	 */
-	public final void ergeugeTab57(final String dateiName)
-	throws Exception{
-		this.erzeugeTab(2, dateiName);
+		this.importer = new PruefTabImporter(messwertAggregationUnvDatei);
 	}
 
 	
@@ -120,17 +115,128 @@ public class Kalkulation {
 	 */
 	private final void erzeugeTab(final int anzahlDatenSaetze, final String dateiName)
 	throws Exception{
-		File file = new File(Verbindung.WURZEL + dateiName);
+		File file = new File(dateiName);
+		
+		if(file.exists()){
+			file.delete();
+		}
+		
 		if(file.createNewFile()){
+			FileOutputStream stream = new FileOutputStream(file);
+			for(RechenVorschrift rv:ATTRIBUTE){
+				stream.write(rv.name.getBytes());
+				stream.write(";".getBytes()); //$NON-NLS-1$
+				stream.write("Status".getBytes()); //$NON-NLS-1$
+				stream.write(";".getBytes()); //$NON-NLS-1$
+			}
+			stream.write("\n".getBytes()); //$NON-NLS-1$
+
+			
+			int offset = 0;
+			
+			/**
+			 * Berechne 3 Werte
+			 */
 			for(int i = 0; i<3; i++){
-				for(int j = 0; j < anzahlDatenSaetze; j++){
-					
+				for(RechenVorschrift rv:ATTRIBUTE){
+
+					if(rv.quellen == null){
+						/**
+						 * Fahrstreifendaten
+						 */
+						List<PruefTabImporter.Element> elemente = new ArrayList<PruefTabImporter.Element>();
+						for(int j = 0 + offset; j < offset + anzahlDatenSaetze; j++){
+							try{
+								elemente.add(this.importer.getElement(rv.name, j));
+							}catch(Exception ex){
+								ex.printStackTrace();
+								System.out.println(rv.name);
+							}
+						}
+						PruefTabImporter.Element durchschnitt = PruefTabImporter.durchschnitt(elemente.toArray(new PruefTabImporter.Element[0]));
+						
+						stream.write(durchschnitt.getWert().getBytes());
+						stream.write(";".getBytes()); //$NON-NLS-1$
+						stream.write(durchschnitt.getStatus().getBytes());
+						stream.write(";".getBytes()); //$NON-NLS-1$
+					}else{
+						List<PruefTabImporter.Element> elementeMQ = new ArrayList<PruefTabImporter.Element>();
+						/**
+						 * Fahrstreifendaten #1
+						 */
+						List<PruefTabImporter.Element> elementeFS1 = new ArrayList<PruefTabImporter.Element>();
+						for(int j = 0 + offset; j < offset + anzahlDatenSaetze; j++){
+							elementeFS1.add(this.importer.getElement(rv.quellen[0], j));
+						}
+						elementeMQ.add(PruefTabImporter.durchschnitt(elementeFS1.toArray(new PruefTabImporter.Element[0])));
+						/**
+						 * Fahrstreifendaten #2
+						 */
+						List<PruefTabImporter.Element> elementeFS2 = new ArrayList<PruefTabImporter.Element>();
+						for(int j = 0 + offset; j < offset + anzahlDatenSaetze; j++){
+							elementeFS2.add(this.importer.getElement(rv.quellen[1], j));
+						}
+						elementeMQ.add(PruefTabImporter.durchschnitt(elementeFS2.toArray(new PruefTabImporter.Element[0])));
+
+						PruefTabImporter.Element ergebnis = null;
+						if(rv.summe){
+							ergebnis = PruefTabImporter.summe(elementeMQ.toArray(new PruefTabImporter.Element[0]));
+						}else{
+							ergebnis = PruefTabImporter.durchschnitt(elementeMQ.toArray(new PruefTabImporter.Element[0]));
+						}
+						
+						stream.write(ergebnis.getWert().getBytes());
+						stream.write(";".getBytes()); //$NON-NLS-1$
+						stream.write(ergebnis.getStatus().getBytes());
+						stream.write(";".getBytes()); //$NON-NLS-1$
+					}					
 				}
-				
+				stream.write("\n".getBytes()); //$NON-NLS-1$
+				offset += anzahlDatenSaetze;
 			}
 		}else{
 			throw new Exception("Konnte Datei " +  //$NON-NLS-1$
 					(Verbindung.WURZEL + dateiName) + " nicht anlegen"); //$NON-NLS-1$
-		}		
+		}
+	}
+	
+	
+	/**
+	 * Hilfklasse zur Beschreibung der Ermittlung der Werte in der Zieltabelle
+	 * 
+	 * @author BitCtrl Systems GmbH, Thierfelder
+	 *
+	 */
+	private static class RechenVorschrift{
+		
+		/**
+		 * Name der Ausgabespalte
+		 */
+		public String name = null;
+		
+		/**
+		 * Ansonsten wird der Durchschnitt berechnet
+		 */
+		public boolean summe = true;
+		
+		/**
+		 * die Daten aus denen sich die Ergebnisse ermitteln (Spaltennamen)
+		 */
+		public String[] quellen = null;
+		
+		
+		/**
+		 * Standardkonstruktor
+		 * 
+		 * @param name Name der Ausgabespalte
+		 * @param summe ansonsten wird der Durchschnitt berechnet
+		 * @param quellen die Daten aus denen sich die Ergebnisse ermitteln (Spaltennamen)
+		 */
+		protected RechenVorschrift(String name, boolean summe, String[] quellen){
+			this.name = name;
+			this.summe = summe;
+			this.quellen = quellen;
+		}
+		
 	}
 }

@@ -184,18 +184,18 @@ implements Comparable<AggregationsIntervall>{
 				60 * Konstante.MINUTE_IN_MS, 40);
 
 		AGG_DTV_TAG = new AggregationsIntervall(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 						dav.getDataModel().getAspect("asp.agregationDtvTag"),  //$NON-NLS-1$
 				60 * 24 * Konstante.MINUTE_IN_MS, 50);
 		AGG_DTV_MONAT = new AggregationsIntervall(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 						dav.getDataModel().getAspect("asp.agregationDtvMonat"),  //$NON-NLS-1$
 				61 * 24 * Konstante.MINUTE_IN_MS, 15);
 		AGG_DTV_JAHR = new AggregationsIntervall(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 						dav.getDataModel().getAspect("asp.agregationDtvJahr"),  //$NON-NLS-1$
 				62 * 24 * Konstante.MINUTE_IN_MS, 0);
 	}

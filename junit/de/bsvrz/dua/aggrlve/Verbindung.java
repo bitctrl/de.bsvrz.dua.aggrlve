@@ -42,18 +42,12 @@ public class Verbindung {
 		"-benutzer=Tester",  //$NON-NLS-1$
 		"-authentifizierung=c:\\passwd1",  //$NON-NLS-1$
 		"-debugLevelStdErrText=WARNING", //$NON-NLS-1$
-		"-debugLevelFileText=WARNING" }; //$NON-NLS-1$
+		"-debugLevelFileText=WARNING"}; //$NON-NLS-1$
 	
 	/**
 	 * Wurzelverzeichnis der Testdaten z.Z. <code>V_2.1(11.12.07)</code>
 	 */
 	public static final String WURZEL = ".\\extra\\testDaten\\V_2.1(11.12.07)\\"; //$NON-NLS-1$
-
-//	/**
-//	 * Wurzelverzeichnis der Testdaten z.Z. <code>V_1.0</code>
-//	 */
-//	public static final String WURZEL = ".\\extra\\testDaten\\V_1.0\\"; //$NON-NLS-1$
-
 	
 	
 	/**

@@ -33,20 +33,25 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
+ * Liesst komplett eine Tabelle ein, die aus (Wert, Status)-Paaren besteht. Ermoeglicht
+ * so den wahrfreihen Zugriff auf alle Elemente der Tabelle
  *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class PruefTabImporter {
 
+	/**
+	 * Tabelleninhalt
+	 */
 	private Map<String, Element[]> tabContent = new HashMap<String, Element[]>();
 	
 	
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param csvDateiName
-	 * @throws Exception
+	 * @param csvDateiName Name der zu importierenden CSV-Datei
+	 * @throws Exception wird weitergereicht
 	 */
 	public PruefTabImporter(final String csvDateiName)
 	throws Exception{
@@ -83,6 +88,18 @@ public class PruefTabImporter {
 		}
 	}
 	
+	
+	/**
+	 * Erfragt ein Element einer bestimmten Spalte / Zeile 
+	 * 
+	 * @param spaltenName der Name der Spalte
+	 * @param line die Zeile
+	 * @return ein Element einer bestimmten Spalte / Zeile
+	 */
+	public final Element getElement(String spaltenName, int line){
+		return this.tabContent.get(spaltenName)[line];
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -107,8 +124,79 @@ public class PruefTabImporter {
 		return ergebnis;
 	}
 
-
+	
 	/**
+	 * Berechnet die Summe
+	 * 
+	 * @param elemente Elemente ueber denen die Summe berechnt werden soll
+	 */
+	protected static final Element summe(Element... elemente){
+		Element summeElement = new Element("0", "1");  //$NON-NLS-1$//$NON-NLS-2$
+		double wert = 0.0;
+		double guete = 0.0;
+		boolean intp = false;
+		double zaehler = 0;
+		
+		for(Element e:elemente){
+			if(e.guete > 0.0 && !e.impl && e.wert >= 0){
+				guete += e.guete;
+				intp |= e.intp;
+				wert += e.wert;
+				zaehler += 1.0; 
+			}
+		}
+		
+		if(zaehler == 0.0){
+			summeElement.impl = true;
+			summeElement.wert = -3.0;
+			summeElement.guete = 0.0;
+		}else{
+			summeElement.intp = intp;
+			summeElement.wert = wert;
+			summeElement.guete = guete / zaehler;			
+		}
+		
+		return summeElement;
+	}
+
+	
+	/**
+	 * Berechnet den Durchschnitt
+	 * 
+	 * @param elemente Elemente ueber denen der Durchschnitt berechnt werden soll
+	 */
+	protected static final Element durchschnitt(Element... elemente){
+		Element durchschnittElement = new Element("0", "1");  //$NON-NLS-1$//$NON-NLS-2$
+		double wert = 0.0;
+		double guete = 0.0;
+		boolean intp = false;
+		double zaehler = 0;
+		
+		for(Element e:elemente){
+			if(e.guete > 0.0 && !e.impl && e.wert >= 0){
+				guete += e.guete;
+				intp |= e.intp;
+				wert += e.wert;
+				zaehler += 1.0; 
+			}
+		}
+		
+		if(zaehler == 0.0){
+			durchschnittElement.impl = true;
+			durchschnittElement.wert = -3.0;
+			durchschnittElement.guete = 0.0;
+		}else{
+			durchschnittElement.intp = intp;
+			durchschnittElement.wert = Math.round(wert / zaehler);
+			durchschnittElement.guete = guete / zaehler;			
+		}
+		
+		return durchschnittElement;
+	}
+	
+	
+	/**
+	 * Ein Tabellenelement: (Wert, Status)-Paar
 	 * 
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 *
@@ -174,6 +262,49 @@ public class PruefTabImporter {
 			if(errCode < 0)
 				wert = errCode;
 		}
+		
+		
+		/**
+		 * Erfragt den ersten Wert
+		 * 
+		 * @return der erste Wert
+		 */
+		public final String getWert(){
+			return new Long(Math.round(this.wert)).toString();
+		}
+		
+		
+		/**
+		 * Erfragt den ersten Statuswert
+		 * 
+		 * @return der erste Wert
+		 */
+		public final String getStatus(){
+			String s = new Double(guete).toString();
+			if(impl){
+				s += " Impl"; //$NON-NLS-1$
+			}
+			if(intp){
+				s += " Intp"; //$NON-NLS-1$
+			}
+			if(nErf){
+				s += " nErf"; //$NON-NLS-1$
+			}
+			if(wMaL){
+				s += " wMaL"; //$NON-NLS-1$
+			}
+			if(wMax){
+				s += " wMax"; //$NON-NLS-1$
+			}
+			if(wMiL){
+				s += " wMiL"; //$NON-NLS-1$
+			}
+			if(wMin){
+				s += " wMin"; //$NON-NLS-1$
+			}
+
+			return s;
+		}
 
 		
 		/**
@@ -215,7 +346,5 @@ public class PruefTabImporter {
 			
 			return s;
 		}
-				
-	}
-	
+	}	
 }

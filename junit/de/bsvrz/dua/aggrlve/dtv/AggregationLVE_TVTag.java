@@ -91,7 +91,7 @@ extends AbstraktDTVTest{
 			Pause.warte(50);
 
 			inputImporter.importNaechsteZeile();
-			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getMQAnalyseDatensatz());
+			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getAnalyseDatensatz(true, 0, 0));
 			mqObj.getPuffer().aktualisiere(resultat);
 			startzeit += Konstante.STUNDE_IN_MS;
 				

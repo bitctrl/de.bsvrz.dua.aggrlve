@@ -39,9 +39,10 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
- * <b>Vorlaeufige Version, bis zur Klaerung der Probleme mit den Testdaten)</b>
- * 
- * Allgemeine Tests
+ * Allgemeine Tests<br>
+ * Testet insbesondere, ob die Berechnungszeitpunkte fuer die unterschiedlichen
+ * Aggregationsintervalle richtig bestimmt werden (dies muss stichprobenartig
+ * anhand der Konsolenausgabe nachgeprueft werden)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -49,7 +50,11 @@ import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 public class AggregationsIntervallTest {
 		
 	/**
-	 * Datenverteilerverbindung herstellen
+	 * Testet:<br>
+	 * - ob die Berechnungsintervalle in der richtigen Reihenfolge angelegt werden<br>
+	 * - ob die Berechnungszeitpunkte fuer die unterschiedlichen Aggregationsintervalle
+	 * richtig bestimmt werden (dies muss stichprobenartig anhand der Konsolenausgabe
+	 * nachgeprueft werden)
 	 */
 	@Test
 	public void testGetInstanzen()
@@ -69,8 +74,7 @@ public class AggregationsIntervallTest {
 		int i = 0;
 		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
 			Assert.assertEquals(instanzen[i++], intervall);
-		}
-		
+		}		
 		
 		GregorianCalendar cal = new GregorianCalendar();
 		long jetzt = System.currentTimeMillis();
