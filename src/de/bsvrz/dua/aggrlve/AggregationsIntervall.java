@@ -410,10 +410,11 @@ implements Comparable<AggregationsIntervall>{
 		
 		if(obj != null && obj instanceof AggregationsIntervall){
 			AggregationsIntervall that = (AggregationsIntervall)obj;
+			
 			ergebnis = this.getDatenBeschreibung(true).getAspect().equals(
-						that.getDatenBeschreibung(true).getAspect()) && 
-						this.getDatenBeschreibung(true).getAttributeGroup().equals(
-								that.getDatenBeschreibung(true).getAttributeGroup());
+					that.getDatenBeschreibung(true).getAspect()) && 
+					this.getDatenBeschreibung(true).getAttributeGroup().equals(
+							that.getDatenBeschreibung(true).getAttributeGroup());
 		}
 		
 		return ergebnis;

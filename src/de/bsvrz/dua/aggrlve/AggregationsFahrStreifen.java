@@ -162,24 +162,29 @@ implements ClientReceiverInterface{
 		final double erfassungsIntervallLaenge = basisDaten.iterator().next().getT();
 		boolean interpoliert = false;
 		boolean nichtErfasst = false;
+		double elementZaehler = 0;
 		long summe = 0;
 		Collection<GWert> gueteWerte = new ArrayList<GWert>();
 		for(AggregationsDatum basisDatum:basisDaten){
 			AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
 			if(basisWert.getWert() >= 0){
+				elementZaehler++;
 				summe += basisWert.getWert();
 				gueteWerte.add(basisWert.getGuete());
 				interpoliert |= basisWert.isInterpoliert();
 				nichtErfasst |= basisWert.isNichtErfasst();
 			}
+//			else{
+//				gueteWerte.add(GWert.getMinGueteWert(basisWert.getGuete().getVerfahren()));
+//			}
 		}
 
 		AggregationsAttributWert exportWert = new AggregationsAttributWert(
 				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-		if(gueteWerte.size() > 0){
+		if(elementZaehler > 0){
 			exportWert.setWert(
 					Math.round(	(double)summe * Konstante.STUNDE_IN_MS /
-							(erfassungsIntervallLaenge * (double)gueteWerte.size())));
+							(erfassungsIntervallLaenge * elementZaehler)));
 			exportWert.setInterpoliert(interpoliert);
 			if(AggregationLVE.NICHT_ERFASST){
 				exportWert.setNichtErfasst(nichtErfasst);

@@ -392,6 +392,10 @@ public abstract class AbstraktAggregationsObjekt {
 				interpoliert |= basisWert.isInterpoliert();
 				nichtErfasst |= basisWert.isNichtErfasst();
 			}
+//			gueteWerte.add(basisWert.getGuete());
+//			else{
+//				gueteWerte.add(GWert.getMinGueteWert(basisWert.getGuete().getVerfahren()));
+//			}
 		}
 
 		AggregationsAttributWert exportWert = new AggregationsAttributWert(
@@ -404,6 +408,12 @@ public abstract class AbstraktAggregationsObjekt {
 				exportWert.setNichtErfasst(nichtErfasst);
 			}
 			try {
+				
+				System.out.println(((long)(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])).getIndex()*100.0)) + ", " + Math.round(	(double)summe / (double)anzahl ));
+				if(((long)(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])).getIndex()*100.0)) == 66){
+					System.out.println();
+				}
+				
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (GueteException e) {
 				LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
@@ -450,11 +460,15 @@ public abstract class AbstraktAggregationsObjekt {
 				interpoliert |= basisWert.isInterpoliert();
 				nichtErfasst |= basisWert.isNichtErfasst();
 			}
+//			gueteWerte.add(basisWert.getGuete());
+//			else{
+//				gueteWerte.add(GWert.getMinGueteWert(basisWert.getGuete().getVerfahren()));
+//			}
 		}
 		
 		AggregationsAttributWert exportWert = new AggregationsAttributWert(
 							attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-		if(gueteWerte.size() > 0){
+		if(anzahlIst > 0){
 			exportWert.setWert(Math.round((double)summe * (AggregationLVE.APPROX_REST?anzahlSoll/anzahlIst:1.0)));
 			exportWert.setInterpoliert(interpoliert);
 			if(AggregationLVE.NICHT_ERFASST){
