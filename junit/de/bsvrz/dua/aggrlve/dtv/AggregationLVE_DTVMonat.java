@@ -33,6 +33,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
@@ -45,7 +47,6 @@ import de.bsvrz.dua.aggrlve.AggregationsMessQuerschnitt;
 import de.bsvrz.dua.aggrlve.Verbindung;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Testet die Aggregation von DTV-Monatswerten
@@ -90,7 +91,7 @@ extends AbstraktDTVTest{
 			inputImporter.importNaechsteZeile();
 			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getAnalyseDatensatz(true, 0, 0));
 			mqObj.getPuffer().aktualisiere(resultat);
-			startzeit += Konstante.STUNDE_IN_MS * 24;
+			startzeit += Constants.MILLIS_PER_HOUR * 24;
 				
 		}
 		mqObj.aggregiere(zeit, AggregationsIntervall.AGG_DTV_MONAT);

@@ -33,10 +33,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Allgemeine Tests<br>
@@ -87,8 +88,8 @@ public class AggregationsIntervallTest {
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 
-			for(long zeitpunkt = cal.getTimeInMillis() + 30 * Konstante.SEKUNDE_IN_MS; 
-			zeitpunkt < cal.getTimeInMillis() + Konstante.STUNDE_IN_MS * 2; zeitpunkt += Konstante.MINUTE_IN_MS){
+			for(long zeitpunkt = cal.getTimeInMillis() + 30 * Constants.MILLIS_PER_SECOND; 
+			zeitpunkt < cal.getTimeInMillis() + Constants.MILLIS_PER_HOUR * 2; zeitpunkt += Constants.MILLIS_PER_MINUTE){
 				if(intervall.isAggregationErforderlich(zeitpunkt)){
 					System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(zeitpunkt)) + ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
 						DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(intervall.getAggregationZeitStempel(zeitpunkt))));
@@ -106,8 +107,8 @@ public class AggregationsIntervallTest {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		AggregationsIntervall intervall = AggregationsIntervall.AGG_DTV_TAG;
-		for(long zeitpunkt = cal.getTimeInMillis() + 30 * Konstante.SEKUNDE_IN_MS; 
-		zeitpunkt < cal.getTimeInMillis() + Konstante.STUNDE_IN_MS * 60; zeitpunkt += Konstante.MINUTE_IN_MS){
+		for(long zeitpunkt = cal.getTimeInMillis() + 30 * Constants.MILLIS_PER_SECOND; 
+		zeitpunkt < cal.getTimeInMillis() + Constants.MILLIS_PER_HOUR * 60; zeitpunkt += Constants.MILLIS_PER_MINUTE){
 			if(intervall.isAggregationErforderlich(zeitpunkt)){
 				System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(zeitpunkt)) + ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
 					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(intervall.getAggregationZeitStempel(zeitpunkt))));
@@ -117,7 +118,7 @@ public class AggregationsIntervallTest {
 		}		
 
 		
-		dav.disconnect(false, Konstante.LEERSTRING);
+		dav.disconnect(false, Constants.EMPTY_STRING);
 	}
 	
 }

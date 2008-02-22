@@ -29,8 +29,9 @@ package de.bsvrz.dua.aggrlve.kalk;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Liesst komplett eine Tabelle ein, die aus (Wert, Status)-Paaren besteht. Ermoeglicht
@@ -106,7 +107,7 @@ public class PruefTabImporter {
 	 */
 	@Override
 	public String toString() {
-		String ergebnis = Konstante.LEERSTRING;
+		String ergebnis = Constants.EMPTY_STRING;
 		
 		boolean brk = false;
 		for(int i = 0; !brk; i++){
@@ -315,7 +316,7 @@ public class PruefTabImporter {
 			String s = "undefiniert"; //$NON-NLS-1$
 			
 			if( !Double.isNaN(wert) ){
-				s = Konstante.LEERSTRING;
+				s = Constants.EMPTY_STRING;
 				
 				s += wert + " ("; //$NON-NLS-1$
 				s += "G:" + guete; //$NON-NLS-1$

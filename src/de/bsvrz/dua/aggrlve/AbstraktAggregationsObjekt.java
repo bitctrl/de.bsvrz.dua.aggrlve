@@ -30,6 +30,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.ResultData;
@@ -41,7 +43,6 @@ import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVSendeAnmeldungsVerwaltung;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -409,7 +410,6 @@ public abstract class AbstraktAggregationsObjekt {
 			}
 			try {
 				
-				System.out.println(((long)(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])).getIndex()*100.0)) + ", " + Math.round(	(double)summe / (double)anzahl ));
 				if(((long)(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])).getIndex()*100.0)) == 66){
 					System.out.println();
 				}
@@ -443,7 +443,7 @@ public abstract class AbstraktAggregationsObjekt {
 								   AggregationsIntervall intervall){
 		double anzahlSoll = -1;
 		if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
-			anzahlSoll = DUAUtensilien.getStundenVonTag(zeitStempel + 2 * Konstante.STUNDE_IN_MS); 
+			anzahlSoll = DUAUtensilien.getStundenVonTag(zeitStempel + 2 * Constants.MILLIS_PER_HOUR); 
 		}
 		
 		boolean interpoliert = false;

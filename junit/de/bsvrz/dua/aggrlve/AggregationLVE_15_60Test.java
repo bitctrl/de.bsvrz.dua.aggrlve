@@ -34,6 +34,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
@@ -45,7 +47,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Testet, ob die 15-Minuten-Intervalle richtig aus den 5 Minuten-Intervallen berechnet werden
@@ -143,14 +144,14 @@ public class AggregationLVE_15_60Test{
 				
 				inputImporter.importNaechsteZeile();
 				for(int j = 0; j<2; j++){
-					ResultData resultat = new ResultData(fs[j], dd5min, startzeit, inputImporter.getMWEDatensatz(60 * Konstante.MINUTE_IN_MS, j));
+					ResultData resultat = new ResultData(fs[j], dd5min, startzeit, inputImporter.getMWEDatensatz(60 * Constants.MILLIS_PER_MINUTE, j));
 					/**
 					 * Aktualisiere das Aggregationsobjekt, das mit dem Fahrstreifen assoziiert ist
 					 */
 					mqObj.getAggregationsObjekt(fs[j]).getPuffer().aktualisiere(resultat);	
 				}
 				
-				startzeit += 5 * Konstante.MINUTE_IN_MS;
+				startzeit += 5 * Constants.MILLIS_PER_MINUTE;
 			}
 			mqObj.aggregiere(zeit, AggregationsIntervall.AGG_15MINUTE);
 			
@@ -281,14 +282,14 @@ public class AggregationLVE_15_60Test{
 				
 				inputImporter.importNaechsteZeile();
 				for(int j = 0; j<2; j++){
-					ResultData resultat = new ResultData(fs[j], dd5min, startzeit, inputImporter.getMWEDatensatz(60 * Konstante.MINUTE_IN_MS, j));
+					ResultData resultat = new ResultData(fs[j], dd5min, startzeit, inputImporter.getMWEDatensatz(60 * Constants.MILLIS_PER_MINUTE, j));
 					/**
 					 * Aktualisiere das Aggregationsobjekt, das mit dem Fahrstreifen assoziiert ist
 					 */
 					mqObj.getAggregationsObjekt(fs[j]).getPuffer().aktualisiere(resultat);	
 				}
 				
-				startzeit += 15 * Konstante.MINUTE_IN_MS;
+				startzeit += 15 * Constants.MILLIS_PER_MINUTE;
 			}
 			mqObj.aggregiere(zeit, AggregationsIntervall.AGG_30MINUTE);
 			

@@ -34,6 +34,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
@@ -45,7 +47,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Allgemeine Tests fuer 1- und 5-Minuten-Intervall (entspricht den Testvorschriften aus 
@@ -143,7 +144,7 @@ public class AggregationLVE_1_5Test{
 					mqObj.getAggregationsObjekt(fs[j]).getPuffer().aktualisiere(resultat);	
 				}
 				
-				startzeit += Konstante.MINUTE_IN_MS;
+				startzeit += Constants.MILLIS_PER_MINUTE;
 			}
 			mqObj.aggregiere(zeit, AggregationsIntervall.AGG_5MINUTE);
 			

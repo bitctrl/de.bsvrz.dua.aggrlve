@@ -25,6 +25,8 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.archive.ArchiveAvailabilityListener;
 import de.bsvrz.dav.daf.main.archive.ArchiveData;
@@ -41,7 +43,6 @@ import de.bsvrz.dav.daf.main.archive.ArchiveTimeSpecification;
 import de.bsvrz.dav.daf.main.archive.TimingType;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -98,23 +99,23 @@ implements ArchiveAvailabilityListener{
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 24 Stunden bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * this.aggregationsIntervall.getMaxPufferGroesse();
 			}else
 			if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 50 Tage bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24L * this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L * this.aggregationsIntervall.getMaxPufferGroesse();
 			}else
 			if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
 				/**
 				* Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 15 Monate bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24L * 31L * this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L * 31L * this.aggregationsIntervall.getMaxPufferGroesse();
 			}else{
-				beginArchivAnfrage = jetzt - Konstante.STUNDE_IN_MS * 24L * 370L;
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L * 370L;
 			}
 
 			if(beginArchivAnfrage > 0){
@@ -144,7 +145,7 @@ implements ArchiveAvailabilityListener{
 						}
 					}
 				} catch (Exception e) {
-					LOGGER.error(Konstante.LEERSTRING, e);
+					LOGGER.error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
 				}
 			}

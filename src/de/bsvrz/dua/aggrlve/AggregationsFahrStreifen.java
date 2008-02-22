@@ -30,6 +30,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -44,7 +46,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Aggregiert aus den fuer diesen Fahrstreifen gespeicherten Daten die Aggregationswerte 
@@ -183,7 +184,7 @@ implements ClientReceiverInterface{
 				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
 		if(elementZaehler > 0){
 			exportWert.setWert(
-					Math.round(	(double)summe * Konstante.STUNDE_IN_MS /
+					Math.round(	(double)summe * Constants.MILLIS_PER_HOUR /
 							(erfassungsIntervallLaenge * elementZaehler)));
 			exportWert.setInterpoliert(interpoliert);
 			if(AggregationLVE.NICHT_ERFASST){

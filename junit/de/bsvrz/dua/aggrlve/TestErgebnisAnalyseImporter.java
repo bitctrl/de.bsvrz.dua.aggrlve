@@ -26,12 +26,13 @@
 
 package de.bsvrz.dua.aggrlve;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 
 /**
@@ -56,7 +57,7 @@ extends CSVImporter{
 	/**
 	 * T
 	 */
-	protected static long INTERVALL = Konstante.MINUTE_IN_MS;
+	protected static long INTERVALL = Constants.MILLIS_PER_MINUTE;
 	
 
 	/**

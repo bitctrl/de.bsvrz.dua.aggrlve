@@ -30,12 +30,13 @@ import java.util.GregorianCalendar;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Korrespondiert mit den Aspekten der Aggregationsintervalle:<br>
@@ -160,44 +161,44 @@ implements Comparable<AggregationsIntervall>{
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 				dav.getDataModel().getAspect("asp.agregation1Minute"),  //$NON-NLS-1$
-				Konstante.MINUTE_IN_MS, 5);
+				Constants.MILLIS_PER_MINUTE, 5);
 		
 		AGG_5MINUTE = new AggregationsIntervall(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 						dav.getDataModel().getAspect("asp.agregation5Minuten"),  //$NON-NLS-1$
-				5 * Konstante.MINUTE_IN_MS, 3);
+				5 * Constants.MILLIS_PER_MINUTE, 3);
 		AGG_15MINUTE = new AggregationsIntervall(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 						dav.getDataModel().getAspect("asp.agregation15Minuten"),  //$NON-NLS-1$
-				15 * Konstante.MINUTE_IN_MS, 2);
+				15 * Constants.MILLIS_PER_MINUTE, 2);
 		AGG_30MINUTE = new AggregationsIntervall(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 						dav.getDataModel().getAspect("asp.agregation30Minuten"),  //$NON-NLS-1$
-				30 * Konstante.MINUTE_IN_MS, 2);
+				30 * Constants.MILLIS_PER_MINUTE, 2);
 		AGG_60MINUTE = new AggregationsIntervall(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 						dav.getDataModel().getAspect("asp.agregation60Minuten"),  //$NON-NLS-1$
-				60 * Konstante.MINUTE_IN_MS, 40);
+				60 * Constants.MILLIS_PER_MINUTE, 40);
 
 		AGG_DTV_TAG = new AggregationsIntervall(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 						dav.getDataModel().getAspect("asp.agregationDtvTag"),  //$NON-NLS-1$
-				60 * 24 * Konstante.MINUTE_IN_MS, 50);
+				60 * 24 * Constants.MILLIS_PER_MINUTE, 50);
 		AGG_DTV_MONAT = new AggregationsIntervall(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 						dav.getDataModel().getAspect("asp.agregationDtvMonat"),  //$NON-NLS-1$
-				61 * 24 * Konstante.MINUTE_IN_MS, 15);
+				61 * 24 * Constants.MILLIS_PER_MINUTE, 15);
 		AGG_DTV_JAHR = new AggregationsIntervall(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 						dav.getDataModel().getAspect("asp.agregationDtvJahr"),  //$NON-NLS-1$
-				62 * 24 * Konstante.MINUTE_IN_MS, 0);
+				62 * 24 * Constants.MILLIS_PER_MINUTE, 0);
 	}
 	
 	
@@ -299,7 +300,7 @@ implements Comparable<AggregationsIntervall>{
 		   this.equals(AGG_15MINUTE) ||
 		   this.equals(AGG_30MINUTE) ||
 		   this.equals(AGG_60MINUTE)){
-			long intervallLaengeInMinuten = this.getIntervall() / Konstante.MINUTE_IN_MS; 			
+			long intervallLaengeInMinuten = this.getIntervall() / Constants.MILLIS_PER_MINUTE; 			
 			if(minuteJetzt%intervallLaengeInMinuten == 0){
 				cal.add(Calendar.MINUTE, (int)(-1 * intervallLaengeInMinuten));
 				cal.set(Calendar.SECOND, 0);

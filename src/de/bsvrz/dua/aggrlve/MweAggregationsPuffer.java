@@ -25,11 +25,12 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Dataset;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Speichert alle messwerterstetzten Fahrstreifendaten eines Fahrstreifens der
@@ -82,7 +83,7 @@ extends AbstraktAggregationsPuffer{
 			
 			double T = this.ringPuffer.getFirst().getT();
 			this.maxPufferAktuell =
-				Math.round(Math.max(1.0, (double)Konstante.STUNDE_IN_MS / T)) + 5;
+				Math.round(Math.max(1.0, (double)Constants.MILLIS_PER_HOUR / T)) + 5;
 		}
 	}
 
