@@ -386,8 +386,8 @@ public abstract class AbstraktAggregationsObjekt {
 		Collection<GWert> gueteWerte = new ArrayList<GWert>();
 		for(AggregationsDatum basisDatum:basisDaten){
 			AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
-			if(basisWert.getWert() >= 0){
-				summe += basisWert.getWert();
+			if(basisWert.getWert() >= 0 || basisWert.getWert() == DUAKonstanten.NICHT_ERMITTELBAR){
+				summe += (basisWert.getWert() == DUAKonstanten.FEHLERHAFT?0:basisWert.getWert());
 				anzahl++;
 				gueteWerte.add(basisWert.getGuete());
 				interpoliert |= basisWert.isInterpoliert();

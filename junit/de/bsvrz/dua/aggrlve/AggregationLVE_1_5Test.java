@@ -60,7 +60,7 @@ public class AggregationLVE_1_5Test{
 	/**
 	 * Sollen Assert-Statements benutzt werden?
 	 */
-	private static final boolean USE_ASSERT = true;
+	private static final boolean USE_ASSERT = false;
 		
 	/**
 	 * Mappt Attribut auf relative Posisition in Tabelle
