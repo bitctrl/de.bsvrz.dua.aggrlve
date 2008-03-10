@@ -25,6 +25,8 @@
  */
 package de.bsvrz.dua.aggrlve;
 
+import java.io.IOException;
+
 import com.bitctrl.Constants;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -144,10 +146,14 @@ implements ArchiveAvailabilityListener{
 							}while(archiveDatum != null);
 						}
 					}
-				} catch (Exception e) {
+				} catch (IOException e) {
 					LOGGER.error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
-				}
+				} catch (InterruptedException e) {
+					LOGGER.error(Constants.EMPTY_STRING, e);
+					e.printStackTrace();
+				} 
+				
 			}
 		}
 	}
