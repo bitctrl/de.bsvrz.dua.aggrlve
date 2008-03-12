@@ -60,7 +60,7 @@ public class AggregationLVE_1_5Test{
 	/**
 	 * Sollen Assert-Statements benutzt werden?
 	 */
-	private static final boolean USE_ASSERT = false;
+	private static final boolean USE_ASSERT = true;
 		
 	/**
 	 * Mappt Attribut auf relative Posisition in Tabelle
@@ -160,15 +160,16 @@ public class AggregationLVE_1_5Test{
 						getDatenFuerZeitraum(zeit, startzeit);
 
 				if(daten !=null && !daten.isEmpty()){
+					
 					for(AggregationsAttribut attribut:AggregationsAttribut.getInstanzen()){
 						AggregationsAttributWert wertSoll = getTextDatenSatz(attribut, zeile, f);
-						if(!wertSoll.equals(daten.iterator().next().getWert(attribut)) ){
-							System.out.println("FS" + this.getFsNummer(fsObj) + ", Interv.: " + (a + 1) + " Soll:\n" + wertSoll +   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-										", Ist:\n" + daten.iterator().next().getWert(attribut));  //$NON-NLS-1$
+						if(!this.equalsMitRundungsToleranz(wertSoll, daten.iterator().next().getWert(attribut)) ){
+							System.out.println("FS" + this.getFsNummer(fsObj) + ", Interv.: " + (a + 1) + "\nSoll:\n" + wertSoll +   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+										"\nIst:\n" + daten.iterator().next().getWert(attribut));  //$NON-NLS-1$
 						}
 						if(USE_ASSERT){
-							Assert.assertEquals("FS" + this.getFsNummer(fsObj) + ", Interv.: " + //$NON-NLS-1$//$NON-NLS-2$
-									(a + 1) + " ", wertSoll, daten.iterator().next().getWert(attribut));  //$NON-NLS-1$s
+							Assert.assertTrue("FS" + this.getFsNummer(fsObj) + ", Interv.: " + //$NON-NLS-1$//$NON-NLS-2$
+									(a + 1) + " ", this.equalsMitRundungsToleranz(wertSoll, daten.iterator().next().getWert(attribut)));  //$NON-NLS-1$s
 						}
 					}
 				}
@@ -180,6 +181,20 @@ public class AggregationLVE_1_5Test{
 		
 	}
 	
+	
+	/**
+	 * Wurde eingefuehrt, da die "echte" Vergleichsmethode 
+	 * keine Rundungstoleranz gegenueber den Testdaten aufweist
+	 */
+	public boolean equalsMitRundungsToleranz(AggregationsAttributWert a1, AggregationsAttributWert a2) {
+		return a1.getAttribut().equals(a2.getAttribut()) &&
+				Math.abs(a1.getWert() - a2.getWert()) <= 2 &&
+				a1.isNichtErfasst() == a2.isNichtErfasst() &&
+				a1.isImplausibel() == a2.isImplausibel() &&
+				a1.isInterpoliert() == a2.isInterpoliert() &&
+				a1.getGuete().getIndex() - a2.getGuete().getIndex() < 0.001;
+	}
+
 	
 	/**
 	 * Erfragt die Nummer eines Fahrstreifens (in Bezug 
@@ -212,7 +227,40 @@ public class AggregationLVE_1_5Test{
 		double guete = 1.0;
 		if(status.split(" ").length > 1){ //$NON-NLS-1$
 			guete = Double.parseDouble(status.split(" ")[0].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			wert.setInterpoliert(true);
+
+			if(status != null) {
+				String[] splitStatus = status.trim().split(" "); //$NON-NLS-1$
+				
+				for(int i = 0; i<splitStatus.length;i++) {
+					if(splitStatus[i].equalsIgnoreCase("Impl")){ //$NON-NLS-1$
+						wert.setImplausibel(true);
+					}					
+					if(splitStatus[i].equalsIgnoreCase("Intp")){ //$NON-NLS-1$
+						wert.setInterpoliert(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("nErf")){ //$NON-NLS-1$
+						wert.setNichtErfasst(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("wMaL")){ //$NON-NLS-1$
+						wert.setLogischMax(true);
+					}
+					
+					if(splitStatus[i].equalsIgnoreCase("wMax")){ //$NON-NLS-1$
+						wert.setFormalMax(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("wMiL")){ //$NON-NLS-1$
+						wert.setLogischMin(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("wMin")){ //$NON-NLS-1$
+						wert.setFormalMin(true);
+					}
+	
+				}
+			}
 		}else{
 			guete = Double.parseDouble(status.replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
 		}

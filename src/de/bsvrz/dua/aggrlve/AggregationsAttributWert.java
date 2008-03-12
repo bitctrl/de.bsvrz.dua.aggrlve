@@ -157,21 +157,21 @@ implements Comparable<AggregationsAttributWert>, Cloneable{
 		}		
 
 		nutzDatum.getItem(attributName).getItem("Status").getItem("Erfassung").  //$NON-NLS-1$//$NON-NLS-2$
-										getUnscaledValue("NichtErfasst").set(this.isNichtErfasst()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		getUnscaledValue("NichtErfasst").set(this.isNichtErfasst()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung").  //$NON-NLS-1$//$NON-NLS-2$
-										getUnscaledValue("Implausibel").set(this.isImplausibel()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		getUnscaledValue("Implausibel").set(this.isImplausibel()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung").  //$NON-NLS-1$//$NON-NLS-2$
-										getUnscaledValue("Interpoliert").set(this.isInterpoliert()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		getUnscaledValue("Interpoliert").set(this.isInterpoliert()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
-										getUnscaledValue("WertMax").set(this.isFormalMax()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		getUnscaledValue("WertMax").set(this.isFormalMax()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
-										getUnscaledValue("WertMin").set(this.isFormalMin()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		getUnscaledValue("WertMin").set(this.isFormalMin()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
-										getUnscaledValue("WertMaxLogisch").set(this.isLogischMax()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		getUnscaledValue("WertMaxLogisch").set(this.isLogischMax()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
-										getUnscaledValue("WertMinLogisch").set(this.isLogischMin()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
+		getUnscaledValue("WertMinLogisch").set(this.isLogischMin()?DUAKonstanten.JA:DUAKonstanten.NEIN); //$NON-NLS-1$
 		
 		this.guete.exportiere(nutzDatum, attributName);
 	}

@@ -393,10 +393,6 @@ public abstract class AbstraktAggregationsObjekt {
 				interpoliert |= basisWert.isInterpoliert();
 				nichtErfasst |= basisWert.isNichtErfasst();
 			}
-//			gueteWerte.add(basisWert.getGuete());
-//			else{
-//				gueteWerte.add(GWert.getMinGueteWert(basisWert.getGuete().getVerfahren()));
-//			}
 		}
 
 		AggregationsAttributWert exportWert = new AggregationsAttributWert(
@@ -421,7 +417,7 @@ public abstract class AbstraktAggregationsObjekt {
 				e.printStackTrace();
 			}
 		}
-
+		
 		exportWert.exportiere(nutzDatum, this.isFahrstreifen());
 	}
 	
@@ -460,10 +456,6 @@ public abstract class AbstraktAggregationsObjekt {
 				interpoliert |= basisWert.isInterpoliert();
 				nichtErfasst |= basisWert.isNichtErfasst();
 			}
-//			gueteWerte.add(basisWert.getGuete());
-//			else{
-//				gueteWerte.add(GWert.getMinGueteWert(basisWert.getGuete().getVerfahren()));
-//			}
 		}
 		
 		AggregationsAttributWert exportWert = new AggregationsAttributWert(

@@ -382,7 +382,39 @@ public class AggregationLVE_15_60Test{
 		double guete = 1.0;
 		if(status.split(" ").length > 1){ //$NON-NLS-1$
 			guete = Double.parseDouble(status.split(" ")[0].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			wert.setInterpoliert(true);
+			if(status != null) {
+				String[] splitStatus = status.trim().split(" "); //$NON-NLS-1$
+				
+				for(int i = 0; i<splitStatus.length;i++) {
+					if(splitStatus[i].equalsIgnoreCase("Impl")){ //$NON-NLS-1$
+						wert.setImplausibel(true);
+					}					
+					if(splitStatus[i].equalsIgnoreCase("Intp")){ //$NON-NLS-1$
+						wert.setInterpoliert(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("nErf")){ //$NON-NLS-1$
+						wert.setNichtErfasst(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("wMaL")){ //$NON-NLS-1$
+						wert.setLogischMax(true);
+					}
+					
+					if(splitStatus[i].equalsIgnoreCase("wMax")){ //$NON-NLS-1$
+						wert.setFormalMax(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("wMiL")){ //$NON-NLS-1$
+						wert.setLogischMin(true);
+					}
+
+					if(splitStatus[i].equalsIgnoreCase("wMin")){ //$NON-NLS-1$
+						wert.setFormalMin(true);
+					}
+	
+				}
+			}
 		}else{
 			guete = Double.parseDouble(status.replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
