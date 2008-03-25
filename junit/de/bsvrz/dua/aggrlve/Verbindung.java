@@ -47,7 +47,8 @@ public class Verbindung {
 	/**
 	 * Wurzelverzeichnis der Testdaten
 	 */
-	public static final String WURZEL = ".\\extra\\testDaten\\V_2.7.2(12.03.08)\\"; //$NON-NLS-1$
+	public static final String WURZEL = ".\\extra\\testDaten\\V_2.7.3(20.03.08)\\"; //$NON-NLS-1$
+//	public static final String WURZEL = ".\\extra\\testDaten\\V_2.7.2(12.03.08)\\"; //$NON-NLS-1$
 //	public static final String WURZEL = ".\\extra\\testDaten\\V_2.7.1(05.03.08)\\"; //$NON-NLS-1$
 	
 	
