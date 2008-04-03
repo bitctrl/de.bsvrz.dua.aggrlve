@@ -42,7 +42,6 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteVerfahren;
-import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
@@ -140,7 +139,7 @@ public class AggregationLVE_15_60Test{
 		for(int a = 0; a<3; a++){
 			long startzeit = zeit;
 			for(int i = 0; i<3; i++){
-				Pause.warte(100L);
+				try{ Thread.sleep(100L); }catch(InterruptedException e){}
 				
 				inputImporter.importNaechsteZeile();
 				for(int j = 0; j<2; j++){
@@ -278,7 +277,7 @@ public class AggregationLVE_15_60Test{
 		for(int a = 0; a<3; a++){
 			long startzeit = zeit;
 			for(int i = 0; i<2; i++){
-				Pause.warte(100L);
+				try{ Thread.sleep(50L); }catch(InterruptedException e){}
 				
 				inputImporter.importNaechsteZeile();
 				for(int j = 0; j<2; j++){

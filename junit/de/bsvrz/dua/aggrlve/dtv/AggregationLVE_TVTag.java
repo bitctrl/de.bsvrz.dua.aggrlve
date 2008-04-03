@@ -45,7 +45,6 @@ import de.bsvrz.dua.aggrlve.AggregationsDatum;
 import de.bsvrz.dua.aggrlve.AggregationsIntervall;
 import de.bsvrz.dua.aggrlve.AggregationsMessQuerschnitt;
 import de.bsvrz.dua.aggrlve.Verbindung;
-import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
@@ -89,7 +88,7 @@ extends AbstraktDTVTest{
 		long startzeit = zeit;
 		for(int a = 0; a<24; a++){
 			
-			Pause.warte(50);
+			try{ Thread.sleep(50L); }catch(InterruptedException e){}
 
 			inputImporter.importNaechsteZeile();
 			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getAnalyseDatensatz(true, 0, 0));
