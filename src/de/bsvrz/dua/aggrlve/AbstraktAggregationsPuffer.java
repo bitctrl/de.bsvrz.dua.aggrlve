@@ -148,10 +148,12 @@ public abstract class AbstraktAggregationsPuffer{
 		String s = "Datenart: " + (this.aggregationsIntervall == null?//$NON-NLS-1$
 				"FS-MWE":this.aggregationsIntervall);//$NON-NLS-1$
 		
-		s += "\nMAX: " + this.getMaxPufferInhalt() + "\nInhalt: " + //$NON-NLS-1$//$NON-NLS-2$
+		synchronized (this) {
+			s += "\nMAX: " + this.getMaxPufferInhalt() + "\nInhalt: " + //$NON-NLS-1$//$NON-NLS-2$
 					(this.ringPuffer.isEmpty()?"leer\n":"\n");//$NON-NLS-1$//$NON-NLS-2$
-		for(AggregationsDatum datum:this.ringPuffer){
-			s += datum + "\n"; //$NON-NLS-1$
+			for(AggregationsDatum datum:this.ringPuffer){
+				s += datum + "\n"; //$NON-NLS-1$
+			}			
 		}
 		
 		return s;
