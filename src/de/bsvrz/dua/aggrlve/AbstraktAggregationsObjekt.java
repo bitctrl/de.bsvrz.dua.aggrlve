@@ -405,11 +405,6 @@ public abstract class AbstraktAggregationsObjekt {
 				exportWert.setNichtErfasst(nichtErfasst);
 			}
 			try {
-				
-				if(((long)(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])).getIndex()*100.0)) == 66){
-					System.out.println();
-				}
-				
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (GueteException e) {
 				LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
