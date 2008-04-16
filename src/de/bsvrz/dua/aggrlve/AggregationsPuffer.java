@@ -30,34 +30,37 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 
 /**
- * Speichert alle Aggregationsdaten eines Fahrstreifens bzw. eines Messquerschnitts
- * in einem Ringpuffer die zur Errechnung des jeweils nächsthoeheren Intervalls notwendig
- * sind
+ * Speichert alle Aggregationsdaten eines Fahrstreifens bzw. eines
+ * Messquerschnitts in einem Ringpuffer die zur Errechnung des jeweils
+ * nächsthoeheren Intervalls notwendig sind
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
-public class AggregationsPuffer 
-extends AbstraktAggregationsPuffer{
-	
+public class AggregationsPuffer extends AbstraktAggregationsPuffer {
 
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param obj das Objekt, dessen Daten gepuffert werden sollen
-	 * @param intervall das Aggregationsintervall, fuer das Daten in diesem Puffer
-	 * stehen (<code>null</code> deutet auf messwertersetzte Fahstreifenwerte hin)
-	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht
-	 * vollstaendig initialisiert werden konnte
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param obj
+	 *            das Objekt, dessen Daten gepuffert werden sollen
+	 * @param intervall
+	 *            das Aggregationsintervall, fuer das Daten in diesem Puffer
+	 *            stehen (<code>null</code> deutet auf messwertersetzte
+	 *            Fahstreifenwerte hin)
+	 * @throws DUAInitialisierungsException
+	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
+	 *             konnte
 	 */
 	public AggregationsPuffer(ClientDavInterface dav, SystemObject obj,
 			AggregationsIntervall intervall)
-	throws DUAInitialisierungsException {
+			throws DUAInitialisierungsException {
 		super(dav, obj, intervall);
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */

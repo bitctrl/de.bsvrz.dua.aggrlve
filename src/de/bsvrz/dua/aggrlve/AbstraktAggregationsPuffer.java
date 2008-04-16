@@ -35,127 +35,133 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 
 /**
- * Abstrakte Blaupause fuer einen Ringpuffer, der alle Daten
- * eines bestimmten Aggregationsintervalls speichert, die zur
- * Berechnung des naechstgroesseren Intervalls notwendig sind
+ * Abstrakte Blaupause fuer einen Ringpuffer, der alle Daten eines bestimmten
+ * Aggregationsintervalls speichert, die zur Berechnung des naechstgroesseren
+ * Intervalls notwendig sind
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
-public abstract class AbstraktAggregationsPuffer{
-	
+public abstract class AbstraktAggregationsPuffer {
+
 	/**
 	 * Verbindung zum Datenverteiler
 	 */
 	protected static ClientDavInterface DAV = null;
-	
+
 	/**
-	 * das Aggregationsintervall, fuer das Daten in diesem Puffer
-	 * stehen (<code>null</code> deutet auf messwertersetzte Fahstreifenwerte hin)
+	 * das Aggregationsintervall, fuer das Daten in diesem Puffer stehen (<code>null</code>
+	 * deutet auf messwertersetzte Fahstreifenwerte hin)
 	 */
 	protected AggregationsIntervall aggregationsIntervall = null;
-	
+
 	/**
 	 * Ringpuffer mit den zeitlich aktuellsten Daten
 	 */
 	protected LinkedList<AggregationsDatum> ringPuffer = new LinkedList<AggregationsDatum>();
-	
+
 	/**
 	 * das Systemobjekt, dessen Daten hier gespeichert werden
 	 */
 	protected SystemObject objekt = null;
-		
-	
+
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param obj das Objekt, dessen Daten gepuffert werden sollen
-	 * @param intervall das Aggregationsintervall, fuer das Daten in diesem Puffer
-	 * stehen (<code>null</code> deutet auf messwertersetzte Fahstreifenwerte hin)
-	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht
-	 * vollstaendig initialisiert werden konnte
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param obj
+	 *            das Objekt, dessen Daten gepuffert werden sollen
+	 * @param intervall
+	 *            das Aggregationsintervall, fuer das Daten in diesem Puffer
+	 *            stehen (<code>null</code> deutet auf messwertersetzte
+	 *            Fahstreifenwerte hin)
+	 * @throws DUAInitialisierungsException
+	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
+	 *             konnte
 	 */
 	public AbstraktAggregationsPuffer(final ClientDavInterface dav,
-									  final SystemObject obj,
-									  final AggregationsIntervall intervall)
-	throws DUAInitialisierungsException{
-		if(DAV == null){
+			final SystemObject obj, final AggregationsIntervall intervall)
+			throws DUAInitialisierungsException {
+		if (DAV == null) {
 			DAV = dav;
 		}
 		this.objekt = obj;
 		this.aggregationsIntervall = intervall;
 	}
-	
-	
+
 	/**
 	 * Aktualisiert diesen Puffer mit neuen Daten. Alte Daten werden dabei aus
 	 * dem Puffer gelöscht
 	 * 
-	 * @param resultat ein aktuelles Datum dieses Aggregationsintervalls
+	 * @param resultat
+	 *            ein aktuelles Datum dieses Aggregationsintervalls
 	 */
-	public void aktualisiere(Dataset resultat){
-		if(resultat.getData() != null){
+	public void aktualisiere(Dataset resultat) {
+		if (resultat.getData() != null) {
 			AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
 			synchronized (this) {
 				this.ringPuffer.addFirst(neuesDatum);
-				while(this.ringPuffer.size() > this.getMaxPufferInhalt())
+				while (this.ringPuffer.size() > this.getMaxPufferInhalt())
 					this.ringPuffer.removeLast();
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Erfragt alle in diesem Puffer gespeicherten Datensaetze deren Zeitstempel
 	 * im Intervall [begin, ende[ liegen
 	 * 
-	 * @param begin Begin des Intervalls
-	 * @param ende Ende des Intervalls
+	 * @param begin
+	 *            Begin des Intervalls
+	 * @param ende
+	 *            Ende des Intervalls
 	 * @return alle in diesem Puffer gespeicherten Datensaetze deren Zeitstempel
-	 * im Intervall [begin, ende[ liegen (bzw. eine leere Liste)
+	 *         im Intervall [begin, ende[ liegen (bzw. eine leere Liste)
 	 */
-	public final Collection<AggregationsDatum> getDatenFuerZeitraum(final long begin, 
-																	final long ende){
+	public final Collection<AggregationsDatum> getDatenFuerZeitraum(
+			final long begin, final long ende) {
 		Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
-		
+
 		synchronized (this) {
-			for(AggregationsDatum einzelDatum:this.ringPuffer){
-				if(einzelDatum.getDatenZeit() >= begin && 
-				   einzelDatum.getDatenZeit() < ende){
-					daten.add( (AggregationsDatum)einzelDatum.clone() );
+			for (AggregationsDatum einzelDatum : this.ringPuffer) {
+				if (einzelDatum.getDatenZeit() >= begin
+						&& einzelDatum.getDatenZeit() < ende) {
+					daten.add((AggregationsDatum) einzelDatum.clone());
 				}
 			}
 		}
-		
+
 		return daten;
 	}
-	
-	
+
 	/**
-	 * Erfragt die maximale Anzahl der Elemente, die fuer diesen Puffer zugelassen sind
-	 *  
-	 * @return die maximale Anzahl der Elemente, die fuer diesen Puffer zugelassen sind
+	 * Erfragt die maximale Anzahl der Elemente, die fuer diesen Puffer
+	 * zugelassen sind
+	 * 
+	 * @return die maximale Anzahl der Elemente, die fuer diesen Puffer
+	 *         zugelassen sind
 	 */
 	protected abstract long getMaxPufferInhalt();
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		String s = "Datenart: " + (this.aggregationsIntervall == null?//$NON-NLS-1$
-				"FS-MWE":this.aggregationsIntervall);//$NON-NLS-1$
-		
+		String s = "Datenart: " + (this.aggregationsIntervall == null ? //$NON-NLS-1$
+		"FS-MWE"
+				: this.aggregationsIntervall);//$NON-NLS-1$
+
 		synchronized (this) {
 			s += "\nMAX: " + this.getMaxPufferInhalt() + "\nInhalt: " + //$NON-NLS-1$//$NON-NLS-2$
-					(this.ringPuffer.isEmpty()?"leer\n":"\n");//$NON-NLS-1$//$NON-NLS-2$
-			for(AggregationsDatum datum:this.ringPuffer){
+					(this.ringPuffer.isEmpty() ? "leer\n" : "\n");//$NON-NLS-1$//$NON-NLS-2$
+			for (AggregationsDatum datum : this.ringPuffer) {
 				s += datum + "\n"; //$NON-NLS-1$
-			}			
+			}
 		}
-		
+
 		return s;
 	}
 

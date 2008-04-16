@@ -37,56 +37,57 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
  * vergangenen Stunde in einem Ringpuffer
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
-public class MweAggregationsPuffer
-extends AbstraktAggregationsPuffer{
+public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 
 	/**
 	 * aktuelle maximale Kapazitaet des Ringpuffers
 	 */
 	private long maxPufferAktuell = 61;
 
-
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param obj das Objekt (Fahrstreifen), dessen Daten gepuffert werden sollen
-	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht
-	 * vollstaendig initialisiert werden konnte
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param obj
+	 *            das Objekt (Fahrstreifen), dessen Daten gepuffert werden
+	 *            sollen
+	 * @throws DUAInitialisierungsException
+	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
+	 *             konnte
 	 */
 	public MweAggregationsPuffer(ClientDavInterface dav, SystemObject obj)
 			throws DUAInitialisierungsException {
 		super(dav, obj, null);
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void aktualisiere(Dataset resultat) {
 		super.aktualisiere(resultat);
-		if(resultat.getData() != null){
+		if (resultat.getData() != null) {
 			/**
 			 * hat sich das Erfassungsintervall geaendert?
 			 */
 			synchronized (this) {
-				if(this.ringPuffer.getLast().getT() != 
-				   this.ringPuffer.getFirst().getT()){
+				if (this.ringPuffer.getLast().getT() != this.ringPuffer
+						.getFirst().getT()) {
 					AggregationsDatum erstesDatum = this.ringPuffer.getFirst();
 					this.ringPuffer.clear();
 					this.ringPuffer.add(erstesDatum);
 				}
 			}
-			
+
 			double T = this.ringPuffer.getFirst().getT();
-			this.maxPufferAktuell =
-				Math.round(Math.max(1.0, (double)Constants.MILLIS_PER_HOUR / T)) + 5;
+			this.maxPufferAktuell = Math.round(Math.max(1.0,
+					(double) Constants.MILLIS_PER_HOUR / T)) + 5;
 		}
 	}
-
 
 	/**
 	 * {@inheritDoc}

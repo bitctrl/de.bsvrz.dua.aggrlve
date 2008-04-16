@@ -40,21 +40,21 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
- * Abstrakter DTV-Test
- * Eingabe: extra/testDaten/[Version]/Messwert_Aggregation_unv.csv
- * Soll-Erwartet: extra/testDaten/[Version]/Messwert_Aggregation_TV_DTV_Soll.csv
+ * Abstrakter DTV-Test Eingabe:
+ * extra/testDaten/[Version]/Messwert_Aggregation_unv.csv Soll-Erwartet:
+ * extra/testDaten/[Version]/Messwert_Aggregation_TV_DTV_Soll.csv
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
 public class AbstraktDTVTest {
-	
+
 	/**
 	 * Mappt Attribut auf relative Posisition in Tabelle
 	 */
-	protected final HashMap<AggregationsAttribut, Integer> AGR_MAP = 
-									new HashMap<AggregationsAttribut, Integer>(); 
-	
+	protected final HashMap<AggregationsAttribut, Integer> AGR_MAP = new HashMap<AggregationsAttribut, Integer>();
+
 	/**
 	 * Aggregations-Applikation
 	 */
@@ -70,61 +70,60 @@ public class AbstraktDTVTest {
 	 */
 	protected CSVImporter outputImporter;
 
-	
 	/**
 	 * Bereitet den Test fuer die Aggregation von TV und DTV-Daten vor
 	 */
-	protected final void setup()
-	throws Exception{
+	protected final void setup() throws Exception {
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 		dav.disconnect(false, "Testverbindung beendet"); //$NON-NLS-1$
 		dav = DAVTest.newDav(Verbindung.getConData());
 
 		this.aggregation = new AggregationLVE();
 		this.aggregation.testStart(dav);
-		
+
 		AGR_MAP.put(AggregationsAttribut.Q_KFZ, 0);
 		AGR_MAP.put(AggregationsAttribut.Q_PKW, 1);
 		AGR_MAP.put(AggregationsAttribut.Q_LKW, 2);
-		
-		inputImporter = new AggregationUnvImporter(dav, 
-				Verbindung.WURZEL + "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
 
-		outputImporter = new CSVImporter( 
-				Verbindung.WURZEL + "Messwert_Aggregation_TV_DTV_Soll.csv"); //$NON-NLS-1$
+		inputImporter = new AggregationUnvImporter(dav, Verbindung.WURZEL
+				+ "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
+
+		outputImporter = new CSVImporter(Verbindung.WURZEL
+				+ "Messwert_Aggregation_TV_DTV_Soll.csv"); //$NON-NLS-1$
 	}
-		
-	
+
 	/**
 	 * Extrahiert den Wert und den Status-String (Soll)
 	 * 
-	 * @param attribut das Attribut
-	 * @param zeile eine Tabellenzeile
+	 * @param attribut
+	 *            das Attribut
+	 * @param zeile
+	 *            eine Tabellenzeile
 	 * @return den Wert und den Status-String (Soll)
 	 */
 	protected final AggregationsAttributWert getTextDatenSatz(
-											final AggregationsAttribut attribut,
-						        		  	final String[] zeile){
+			final AggregationsAttribut attribut, final String[] zeile) {
 
 		String wertStr = zeile[AGR_MAP.get(attribut) * 2];
-		AggregationsAttributWert wert = new AggregationsAttributWert(attribut, Long.parseLong(wertStr), 0);
+		AggregationsAttributWert wert = new AggregationsAttributWert(attribut,
+				Long.parseLong(wertStr), 0);
 		String status = zeile[AGR_MAP.get(attribut) * 2 + 1];
 		double guete = 1.0;
-		if(status.split(" ").length > 1){ //$NON-NLS-1$
+		if (status.split(" ").length > 1) { //$NON-NLS-1$
 			guete = Double.parseDouble(status.split(" ")[0].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			wert.setInterpoliert(true);
-		}else{
-			try{
+		} else {
+			try {
 				guete = Double.parseDouble(status.replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
-			}catch(Exception ex){
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
 		GanzZahl g = GanzZahl.getGueteIndex();
 		g.setSkaliertenWert(guete);
-		
+
 		wert.setGuete(new GWert(g, GueteVerfahren.STANDARD, false));
-		
+
 		return wert;
 	}
 

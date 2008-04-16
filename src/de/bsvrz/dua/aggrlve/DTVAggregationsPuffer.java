@@ -48,97 +48,107 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Datenpuffer fuer Daten, die zur Erzeugung von TV- und DTV-Werten
- * (nur fuer Messquerschnitte) benoetigt werden. Im Unterschied zu den normalen
+ * Datenpuffer fuer Daten, die zur Erzeugung von TV- und DTV-Werten (nur fuer
+ * Messquerschnitte) benoetigt werden. Im Unterschied zu den normalen
  * Datenpuffern liest dieser Puffer seine Daten initial aus dem Archiv ein
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
-public class DTVAggregationsPuffer
-extends AggregationsPuffer
-implements ArchiveAvailabilityListener{
-	
-	
+public class DTVAggregationsPuffer extends AggregationsPuffer implements
+		ArchiveAvailabilityListener {
+
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param obj das Objekt, dessen Daten gepuffert werden sollen
-	 * @param intervall das Aggregationsintervall, fuer das Daten in diesem Puffer
-	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht
-	 * vollstaendig initialisiert werden konnte
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param obj
+	 *            das Objekt, dessen Daten gepuffert werden sollen
+	 * @param intervall
+	 *            das Aggregationsintervall, fuer das Daten in diesem Puffer
+	 * @throws DUAInitialisierungsException
+	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
+	 *             konnte
 	 */
-	public DTVAggregationsPuffer(ClientDavInterface dav,
-								 SystemObject obj,
-								 AggregationsIntervall intervall)
-	throws DUAInitialisierungsException {
+	public DTVAggregationsPuffer(ClientDavInterface dav, SystemObject obj,
+			AggregationsIntervall intervall)
+			throws DUAInitialisierungsException {
 		super(dav, obj, intervall);
-		if(DAV.getArchive().isArchiveAvailable()){
+		if (DAV.getArchive().isArchiveAvailable()) {
 			this.archiveAvailabilityChanged(DAV.getArchive());
-		}else{
+		} else {
 			DAV.getArchive().addArchiveAvailabilityListener(this);
-		}		
+		}
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void archiveAvailabilityChanged(ArchiveRequestManager archiv) {
-		if(archiv.isArchiveAvailable() && this.ringPuffer.isEmpty()){
+		if (archiv.isArchiveAvailable() && this.ringPuffer.isEmpty()) {
 			final long jetzt = System.currentTimeMillis();
 			long beginArchivAnfrage = -1;
 			long endeArchivAnfrage = jetzt;
 
-			if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_60MINUTE)){
+			if (this.aggregationsIntervall
+					.equals(AggregationsIntervall.AGG_60MINUTE)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 24 Stunden bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * this.aggregationsIntervall.getMaxPufferGroesse();
-			}else
-			if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_TAG)){
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR
+						* this.aggregationsIntervall.getMaxPufferGroesse();
+			} else if (this.aggregationsIntervall
+					.equals(AggregationsIntervall.AGG_DTV_TAG)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 50 Tage bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L * this.aggregationsIntervall.getMaxPufferGroesse();
-			}else
-			if(this.aggregationsIntervall.equals(AggregationsIntervall.AGG_DTV_MONAT)){
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L
+						* this.aggregationsIntervall.getMaxPufferGroesse();
+			} else if (this.aggregationsIntervall
+					.equals(AggregationsIntervall.AGG_DTV_MONAT)) {
 				/**
-				* Zum Start der Applikation sollen moeglichst die Datensaetze
+				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 15 Monate bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L * 31L * this.aggregationsIntervall.getMaxPufferGroesse();
-			}else{
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L * 370L;
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L
+						* 31L
+						* this.aggregationsIntervall.getMaxPufferGroesse();
+			} else {
+				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L
+						* 370L;
 			}
 
-			if(beginArchivAnfrage > 0){
+			if (beginArchivAnfrage > 0) {
 				ArchiveTimeSpecification zeit = new ArchiveTimeSpecification(
-						TimingType.DATA_TIME, false, beginArchivAnfrage, endeArchivAnfrage);
+						TimingType.DATA_TIME, false, beginArchivAnfrage,
+						endeArchivAnfrage);
 
-				ArchiveDataSpecification archivDatenBeschreibung = 
-					new ArchiveDataSpecification(zeit, 
-							new ArchiveDataKindCombination(ArchiveDataKind.ONLINE),
-							ArchiveOrder.BY_DATA_TIME, 
-							ArchiveRequestOption.NORMAL,
-							aggregationsIntervall.getDatenBeschreibung(false), 
-							this.objekt);
+				ArchiveDataSpecification archivDatenBeschreibung = new ArchiveDataSpecification(
+						zeit, new ArchiveDataKindCombination(
+								ArchiveDataKind.ONLINE),
+						ArchiveOrder.BY_DATA_TIME, ArchiveRequestOption.NORMAL,
+						aggregationsIntervall.getDatenBeschreibung(false),
+						this.objekt);
 
-				try{
-					ArchiveDataQueryResult result = archiv.request(ArchiveQueryPriority.MEDIUM, archivDatenBeschreibung);
+				try {
+					ArchiveDataQueryResult result = archiv.request(
+							ArchiveQueryPriority.MEDIUM,
+							archivDatenBeschreibung);
 					ArchiveDataStream[] streams = result.getStreams();
 					synchronized (this) {
-						for(ArchiveDataStream stream:streams){
+						for (ArchiveDataStream stream : streams) {
 							ArchiveData archiveDatum = null;
-							do{
+							do {
 								archiveDatum = stream.take();
-								if(archiveDatum != null && archiveDatum.getData() != null){
-									this.aktualisiere(archiveDatum);	
+								if (archiveDatum != null
+										&& archiveDatum.getData() != null) {
+									this.aktualisiere(archiveDatum);
 								}
-							}while(archiveDatum != null);
+							} while (archiveDatum != null);
 						}
 					}
 				} catch (IOException e) {
@@ -147,8 +157,8 @@ implements ArchiveAvailabilityListener{
 				} catch (InterruptedException e) {
 					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
-				} 
-				
+				}
+
 			}
 		}
 	}

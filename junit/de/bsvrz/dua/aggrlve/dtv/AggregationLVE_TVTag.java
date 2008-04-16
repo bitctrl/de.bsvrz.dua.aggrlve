@@ -50,28 +50,26 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
  * Testet die Aggregation von TV-Tagesdaten
- *  
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
-public class AggregationLVE_TVTag
-extends AbstraktDTVTest{	
-	
+public class AggregationLVE_TVTag extends AbstraktDTVTest {
+
 	/**
 	 * Testet die Aggregation von TV-Tagesdaten
 	 */
 	@Test
-	public void testTVTag()
-	throws Exception{
+	public void testTVTag() throws Exception {
 		this.setup();
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 
 		SystemObject mq = dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
 
-		DataDescription dd = new DataDescription(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-				AggregationsIntervall.AGG_60MINUTE.getAspekt(),
-				(short)0);
+		DataDescription dd = new DataDescription(dav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				AggregationsIntervall.AGG_60MINUTE.getAspekt(), (short) 0);
 
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, 2000);
@@ -82,32 +80,41 @@ extends AbstraktDTVTest{
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		long zeit = cal.getTimeInMillis();
-		
+
 		outputImporter.getNaechsteZeile();
-		AggregationsMessQuerschnitt mqObj = aggregation.getAggregationsObjekt(mq);
+		AggregationsMessQuerschnitt mqObj = aggregation
+				.getAggregationsObjekt(mq);
 		long startzeit = zeit;
-		for(int a = 0; a<24; a++){
-			
-			try{ Thread.sleep(50L); }catch(InterruptedException e){}
+		for (int a = 0; a < 24; a++) {
+
+			try {
+				Thread.sleep(50L);
+			} catch (InterruptedException e) {
+			}
 
 			inputImporter.importNaechsteZeile();
-			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getAnalyseDatensatz(true, 0, 0));
+			ResultData resultat = new ResultData(mq, dd, startzeit,
+					inputImporter.getAnalyseDatensatz(true, 0, 0));
 			mqObj.getPuffer().aktualisiere(resultat);
 			startzeit += Constants.MILLIS_PER_HOUR;
-				
+
 		}
 		mqObj.aggregiere(zeit, AggregationsIntervall.AGG_DTV_TAG);
-		
-		Collection<AggregationsDatum> daten = mqObj.getPuffer().
-				getPuffer(AggregationsIntervall.AGG_DTV_TAG).getDatenFuerZeitraum(zeit, startzeit);
 
-		if(daten !=null && !daten.isEmpty()){
+		Collection<AggregationsDatum> daten = mqObj.getPuffer().getPuffer(
+				AggregationsIntervall.AGG_DTV_TAG).getDatenFuerZeitraum(zeit,
+				startzeit);
+
+		if (daten != null && !daten.isEmpty()) {
 			String[] zeile = outputImporter.getNaechsteZeile();
 			int i = 1;
-			for(AggregationsAttribut attribut:AGR_MAP.keySet()){
+			for (AggregationsAttribut attribut : AGR_MAP.keySet()) {
 				i++;
-				AggregationsAttributWert wertSoll = getTextDatenSatz(attribut, zeile);
-					Assert.assertEquals("Zeile " + i + ": ", wertSoll, daten.iterator().next().getWert(attribut)); //$NON-NLS-1$ //$NON-NLS-2$
+				AggregationsAttributWert wertSoll = getTextDatenSatz(attribut,
+						zeile);
+				Assert
+						.assertEquals(
+								"Zeile " + i + ": ", wertSoll, daten.iterator().next().getWert(attribut)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

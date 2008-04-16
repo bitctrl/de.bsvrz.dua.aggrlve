@@ -46,23 +46,23 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * anhand der Konsolenausgabe nachgeprueft werden)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
 public class AggregationsIntervallTest {
-		
+
 	/**
-	 * Testet:<br>
-	 * - ob die Berechnungsintervalle in der richtigen Reihenfolge angelegt werden<br>
-	 * - ob die Berechnungszeitpunkte fuer die unterschiedlichen Aggregationsintervalle
-	 * richtig bestimmt werden (dies muss stichprobenartig anhand der Konsolenausgabe
-	 * nachgeprueft werden)
+	 * Testet:<br> - ob die Berechnungsintervalle in der richtigen Reihenfolge
+	 * angelegt werden<br> - ob die Berechnungszeitpunkte fuer die
+	 * unterschiedlichen Aggregationsintervalle richtig bestimmt werden (dies
+	 * muss stichprobenartig anhand der Konsolenausgabe nachgeprueft werden)
 	 */
 	@Test
-	public void testGetInstanzen()
-	throws Exception{
+	public void testGetInstanzen() throws Exception {
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 		AggregationsIntervall.initialisiere(dav);
-		AggregationsIntervall instanzen[] = new AggregationsIntervall[AggregationsIntervall.getInstanzen().size()];
+		AggregationsIntervall instanzen[] = new AggregationsIntervall[AggregationsIntervall
+				.getInstanzen().size()];
 		instanzen[0] = AggregationsIntervall.AGG_1MINUTE;
 		instanzen[1] = AggregationsIntervall.AGG_5MINUTE;
 		instanzen[2] = AggregationsIntervall.AGG_15MINUTE;
@@ -73,30 +73,43 @@ public class AggregationsIntervallTest {
 		instanzen[7] = AggregationsIntervall.AGG_DTV_JAHR;
 
 		int i = 0;
-		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
+		for (AggregationsIntervall intervall : AggregationsIntervall
+				.getInstanzen()) {
 			Assert.assertEquals(instanzen[i++], intervall);
-		}		
-		
+		}
+
 		GregorianCalendar cal = new GregorianCalendar();
 		long jetzt = System.currentTimeMillis();
-		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
-			if(intervall.equals(AggregationsIntervall.AGG_DTV_TAG))break;
+		for (AggregationsIntervall intervall : AggregationsIntervall
+				.getInstanzen()) {
+			if (intervall.equals(AggregationsIntervall.AGG_DTV_TAG))
+				break;
 			cal.setTimeInMillis(jetzt);
-			//cal.set(Calendar.MONTH, -1);
+			// cal.set(Calendar.MONTH, -1);
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 
-			for(long zeitpunkt = cal.getTimeInMillis() + 30 * Constants.MILLIS_PER_SECOND; 
-			zeitpunkt < cal.getTimeInMillis() + Constants.MILLIS_PER_HOUR * 2; zeitpunkt += Constants.MILLIS_PER_MINUTE){
-				if(intervall.isAggregationErforderlich(zeitpunkt)){
-					System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(zeitpunkt)) + ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
-						DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(intervall.getAggregationZeitStempel(zeitpunkt))));
-				}else{
-					System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(zeitpunkt)) + ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
+			for (long zeitpunkt = cal.getTimeInMillis() + 30
+					* Constants.MILLIS_PER_SECOND; zeitpunkt < cal
+					.getTimeInMillis()
+					+ Constants.MILLIS_PER_HOUR * 2; zeitpunkt += Constants.MILLIS_PER_MINUTE) {
+				if (intervall.isAggregationErforderlich(zeitpunkt)) {
+					System.out
+							.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+									.format(new Date(zeitpunkt))
+									+ ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
+									DUAKonstanten.ZEIT_FORMAT_GENAU
+											.format(new Date(
+													intervall
+															.getAggregationZeitStempel(zeitpunkt))));
+				} else {
+					System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+							.format(new Date(zeitpunkt))
+							+ ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			}		
+			}
 		}
 
 		cal.setTimeInMillis(jetzt);
@@ -107,18 +120,27 @@ public class AggregationsIntervallTest {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		AggregationsIntervall intervall = AggregationsIntervall.AGG_DTV_TAG;
-		for(long zeitpunkt = cal.getTimeInMillis() + 30 * Constants.MILLIS_PER_SECOND; 
-		zeitpunkt < cal.getTimeInMillis() + Constants.MILLIS_PER_HOUR * 60; zeitpunkt += Constants.MILLIS_PER_MINUTE){
-			if(intervall.isAggregationErforderlich(zeitpunkt)){
-				System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(zeitpunkt)) + ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
-					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(intervall.getAggregationZeitStempel(zeitpunkt))));
-			}else{
-				System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(zeitpunkt)) + ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
+		for (long zeitpunkt = cal.getTimeInMillis() + 30
+				* Constants.MILLIS_PER_SECOND; zeitpunkt < cal
+				.getTimeInMillis()
+				+ Constants.MILLIS_PER_HOUR * 60; zeitpunkt += Constants.MILLIS_PER_MINUTE) {
+			if (intervall.isAggregationErforderlich(zeitpunkt)) {
+				System.out
+						.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+								.format(new Date(zeitpunkt))
+								+ ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
+								DUAKonstanten.ZEIT_FORMAT_GENAU
+										.format(new Date(
+												intervall
+														.getAggregationZeitStempel(zeitpunkt))));
+			} else {
+				System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+						.format(new Date(zeitpunkt))
+						+ ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		}		
+		}
 
-		
 		dav.disconnect(false, Constants.EMPTY_STRING);
 	}
-	
+
 }

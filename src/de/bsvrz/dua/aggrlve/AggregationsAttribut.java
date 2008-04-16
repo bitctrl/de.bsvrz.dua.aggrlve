@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Container fuer Attribute die zur Aggregation herangezogen werden (jeweils 
+ * Container fuer Attribute die zur Aggregation herangezogen werden (jeweils
  * fuer Fahrstreifen bzw. Messquerschnitte):<br>
  * <code>qKfz</code> bzw. <code>QKfz</code>,<br>
  * <code>qLkw</code> bzw. <code>QLkw</code>,<br>
@@ -39,10 +39,11 @@ import java.util.Set;
  * <code>vPkw</code> bzw. <code>VPkw</code>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
 public class AggregationsAttribut {
-	
+
 	/**
 	 * Wertebereich
 	 */
@@ -51,32 +52,38 @@ public class AggregationsAttribut {
 	/**
 	 * Attribut <code>qKfz</code> bzw. <code>QKfz</code>
 	 */
-	public static final AggregationsAttribut Q_KFZ = new AggregationsAttribut("qKfz", "QKfz"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final AggregationsAttribut Q_KFZ = new AggregationsAttribut(
+			"qKfz", "QKfz"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * Attribut <code>qLkw</code> bzw. <code>QLkw</code>
 	 */
-	public static final AggregationsAttribut Q_LKW = new AggregationsAttribut("qLkw", "QLkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+	public static final AggregationsAttribut Q_LKW = new AggregationsAttribut(
+			"qLkw", "QLkw"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	/**
 	 * Attribut <code>qPkw</code> bzw. <code>QPkw</code>
 	 */
-	public static final AggregationsAttribut Q_PKW = new AggregationsAttribut("qPkw", "QPkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+	public static final AggregationsAttribut Q_PKW = new AggregationsAttribut(
+			"qPkw", "QPkw"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	/**
 	 * Attribut <code>vKfz</code> bzw. <code>VKfz</code>
 	 */
-	public static final AggregationsAttribut V_KFZ = new AggregationsAttribut("vKfz", "VKfz"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+	public static final AggregationsAttribut V_KFZ = new AggregationsAttribut(
+			"vKfz", "VKfz"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	/**
 	 * Attribut <code>vLkw</code> bzw. <code>VLkw</code>
 	 */
-	public static final AggregationsAttribut V_LKW = new AggregationsAttribut("vLkw", "VLkw"); //$NON-NLS-1$ //$NON-NLS-2$
-	
+	public static final AggregationsAttribut V_LKW = new AggregationsAttribut(
+			"vLkw", "VLkw"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	/**
 	 * Attribut <code>vPkw</code> bzw. <code>VPkw</code>
 	 */
-	public static final AggregationsAttribut V_PKW = new AggregationsAttribut("vPkw", "VPkw"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final AggregationsAttribut V_PKW = new AggregationsAttribut(
+			"vPkw", "VPkw"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * der Name des Attributs (FS)
@@ -86,65 +93,61 @@ public class AggregationsAttribut {
 	/**
 	 * der Name des Attributs (MQ)
 	 */
-	private String nameMQ = null;	
-	
+	private String nameMQ = null;
+
 	/**
-	 * indiziert, ob es sich bei diesem Attribut um ein
-	 * Geschwindigkeitsattribut handelt
+	 * indiziert, ob es sich bei diesem Attribut um ein Geschwindigkeitsattribut
+	 * handelt
 	 */
 	private boolean geschwindigkeitsAttribut = false;
-	
-	
+
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param nameFS der Attributname bei Fahrstreifendaten z.B.
-	 * <code>qKfz</code> oder <code>vKfz</code>
-	 * @param nameMQ der Attributname bei Messquerschnittdaten z.B.
-	 * <code>QKfz</code> oder <code>VKfz</code>
+	 * @param nameFS
+	 *            der Attributname bei Fahrstreifendaten z.B. <code>qKfz</code>
+	 *            oder <code>vKfz</code>
+	 * @param nameMQ
+	 *            der Attributname bei Messquerschnittdaten z.B.
+	 *            <code>QKfz</code> oder <code>VKfz</code>
 	 */
-	private AggregationsAttribut(final String nameFS,
-								 final String nameMQ){
+	private AggregationsAttribut(final String nameFS, final String nameMQ) {
 		this.nameFS = nameFS;
 		this.nameMQ = nameMQ;
 		this.geschwindigkeitsAttribut = nameFS.startsWith("v"); //$NON-NLS-1$
 		WERTE_BEREICH.add(this);
 	}
-	
-	
+
 	/**
-	 * Erfragt, ob es sich bei diesem Attribut um ein
-	 * Geschwindigkeitsattribut handelt
+	 * Erfragt, ob es sich bei diesem Attribut um ein Geschwindigkeitsattribut
+	 * handelt
 	 * 
-	 * @return ob es sich bei diesem Attribut um ein
-	 * Geschwindigkeitsattribut handelt
+	 * @return ob es sich bei diesem Attribut um ein Geschwindigkeitsattribut
+	 *         handelt
 	 */
-	public final boolean isGeschwindigkeitsAttribut(){
+	public final boolean isGeschwindigkeitsAttribut() {
 		return this.geschwindigkeitsAttribut;
 	}
-	
-	
+
 	/**
 	 * Erfragt den Namen dieses Attributs
 	 * 
-	 * @param fuerFahrStreifen das Objekt, fuer den der Name dieses
-	 * Attributs erfragt wird
+	 * @param fuerFahrStreifen
+	 *            das Objekt, fuer den der Name dieses Attributs erfragt wird
 	 * @return der Name dieses Attributs
 	 */
-	public String getAttributName(final boolean fuerFahrStreifen){
-		return fuerFahrStreifen?this.nameFS:this.nameMQ;
+	public String getAttributName(final boolean fuerFahrStreifen) {
+		return fuerFahrStreifen ? this.nameFS : this.nameMQ;
 	}
-		
-		
+
 	/**
 	 * Erfragt alle statischen Instanzen dieser Klasse
 	 * 
 	 * @return alle statischen Instanzen dieser Klasse
 	 */
-	public static final Set<AggregationsAttribut> getInstanzen(){
+	public static final Set<AggregationsAttribut> getInstanzen() {
 		return WERTE_BEREICH;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -153,5 +156,5 @@ public class AggregationsAttribut {
 	public String toString() {
 		return this.nameFS + " (" + this.nameMQ + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 }

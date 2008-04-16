@@ -50,27 +50,24 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * Testet die Aggregation von DTV-Jahreswerten
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
-public class AggregationLVE_DTVJahr
-extends AbstraktDTVTest{
-	
-	
+public class AggregationLVE_DTVJahr extends AbstraktDTVTest {
+
 	/**
 	 * Testet die Aggregation von DTV-Jahredaten
 	 */
 	@Test
-	public void testDTVJahr()
-	throws Exception{
+	public void testDTVJahr() throws Exception {
 		this.setup();
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
-		
+
 		SystemObject mq = dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
 
-		DataDescription dd = new DataDescription(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-				AggregationsIntervall.AGG_DTV_MONAT.getAspekt(),
-				(short)0);
+		DataDescription dd = new DataDescription(dav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				AggregationsIntervall.AGG_DTV_MONAT.getAspekt(), (short) 0);
 
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, 2000);
@@ -81,32 +78,38 @@ extends AbstraktDTVTest{
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		long zeit = cal.getTimeInMillis();
-		
+
 		outputImporter.getNaechsteZeile();
-		AggregationsMessQuerschnitt mqObj = aggregation.getAggregationsObjekt(mq);
+		AggregationsMessQuerschnitt mqObj = aggregation
+				.getAggregationsObjekt(mq);
 		long startzeit = zeit;
-		for(int a = 0; a<12; a++){			
+		for (int a = 0; a < 12; a++) {
 			inputImporter.importNaechsteZeile();
-			ResultData resultat = new ResultData(mq, dd, startzeit, inputImporter.getAnalyseDatensatz(true, 0, 0));
+			ResultData resultat = new ResultData(mq, dd, startzeit,
+					inputImporter.getAnalyseDatensatz(true, 0, 0));
 			mqObj.getPuffer().aktualisiere(resultat);
-			
+
 			cal.add(Calendar.MONTH, 1);
 			startzeit = cal.getTimeInMillis();
 		}
 		mqObj.aggregiere(zeit, AggregationsIntervall.AGG_DTV_JAHR);
-		
-		Collection<AggregationsDatum> daten = mqObj.getPuffer().
-				getPuffer(AggregationsIntervall.AGG_DTV_JAHR).getDatenFuerZeitraum(zeit, startzeit);
 
-		if(daten !=null && !daten.isEmpty()){
+		Collection<AggregationsDatum> daten = mqObj.getPuffer().getPuffer(
+				AggregationsIntervall.AGG_DTV_JAHR).getDatenFuerZeitraum(zeit,
+				startzeit);
+
+		if (daten != null && !daten.isEmpty()) {
 			outputImporter.getNaechsteZeile();
 			outputImporter.getNaechsteZeile();
 			String[] zeile = outputImporter.getNaechsteZeile();
 			int i = 1;
-			for(AggregationsAttribut attribut:AGR_MAP.keySet()){
+			for (AggregationsAttribut attribut : AGR_MAP.keySet()) {
 				i++;
-				AggregationsAttributWert wertSoll = getTextDatenSatz(attribut, zeile);
-					Assert.assertEquals("Zeile " + i + ": ", wertSoll, daten.iterator().next().getWert(attribut)); //$NON-NLS-1$ //$NON-NLS-2$
+				AggregationsAttributWert wertSoll = getTextDatenSatz(attribut,
+						zeile);
+				Assert
+						.assertEquals(
+								"Zeile " + i + ": ", wertSoll, daten.iterator().next().getWert(attribut)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

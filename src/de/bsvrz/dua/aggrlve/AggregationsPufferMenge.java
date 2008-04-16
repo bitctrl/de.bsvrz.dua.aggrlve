@@ -42,130 +42,155 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Aggregationsintervalle
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @verison $Id$
  */
 public class AggregationsPufferMenge {
-		
+
 	/**
-	 * Alle Aspekte, deren Daten in diesem Objekt gespeichert werden in aufsteigender
-	 * Reihenfolge
+	 * Alle Aspekte, deren Daten in diesem Objekt gespeichert werden in
+	 * aufsteigender Reihenfolge
 	 */
 	private static Aspect[] ASPEKTE_SORTIERT = null;
-	
+
 	/**
 	 * Menge aller Puffer mit Aggregationsdaten (vom Aspekt aus betrachtet)
 	 */
-	private Map<Aspect, AbstraktAggregationsPuffer> pufferMenge = new HashMap<Aspect, AbstraktAggregationsPuffer>(); 
-	
-	
+	private Map<Aspect, AbstraktAggregationsPuffer> pufferMenge = new HashMap<Aspect, AbstraktAggregationsPuffer>();
+
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param obj das Objekt, dessen Daten gepuffert werden sollen
-	 * @throws DUAInitialisierungsException wenn dieses Objekt nicht
-	 * vollstaendig initialisiert werden konnte
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param obj
+	 *            das Objekt, dessen Daten gepuffert werden sollen
+	 * @throws DUAInitialisierungsException
+	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
+	 *             konnte
 	 */
 	public AggregationsPufferMenge(final ClientDavInterface dav,
-								   final SystemObject obj)
-	throws DUAInitialisierungsException{
-		if(ASPEKTE_SORTIERT == null){
-			ASPEKTE_SORTIERT = new Aspect[AggregationsIntervall.getInstanzen().size() + 1];
+			final SystemObject obj) throws DUAInitialisierungsException {
+		if (ASPEKTE_SORTIERT == null) {
+			ASPEKTE_SORTIERT = new Aspect[AggregationsIntervall.getInstanzen()
+					.size() + 1];
 			ASPEKTE_SORTIERT[0] = AggregationLVE.MWE;
 			int i = 1;
-			for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
+			for (AggregationsIntervall intervall : AggregationsIntervall
+					.getInstanzen()) {
 				ASPEKTE_SORTIERT[i++] = intervall.getAspekt();
 			}
 		}
-		
-		this.pufferMenge.put(AggregationLVE.MWE, new MweAggregationsPuffer(dav, obj));			
-		for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
-			if(intervall.equals(AggregationsIntervall.AGG_60MINUTE) ||
-			   intervall.equals(AggregationsIntervall.AGG_DTV_TAG) ||
-			   intervall.equals(AggregationsIntervall.AGG_DTV_MONAT) ||
-			   intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)){
-				if(!obj.getType().equals(AggregationLVE.TYP_FAHRSTREIFEN)){
-					this.pufferMenge.put(intervall.getAspekt(), new DTVAggregationsPuffer(dav, obj, intervall));
+
+		this.pufferMenge.put(AggregationLVE.MWE, new MweAggregationsPuffer(dav,
+				obj));
+		for (AggregationsIntervall intervall : AggregationsIntervall
+				.getInstanzen()) {
+			if (intervall.equals(AggregationsIntervall.AGG_60MINUTE)
+					|| intervall.equals(AggregationsIntervall.AGG_DTV_TAG)
+					|| intervall.equals(AggregationsIntervall.AGG_DTV_MONAT)
+					|| intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)) {
+				if (!obj.getType().equals(AggregationLVE.TYP_FAHRSTREIFEN)) {
+					this.pufferMenge.put(intervall.getAspekt(),
+							new DTVAggregationsPuffer(dav, obj, intervall));
 				}
-			}else{
-				this.pufferMenge.put(intervall.getAspekt(), new AggregationsPuffer(dav, obj, intervall));
+			} else {
+				this.pufferMenge.put(intervall.getAspekt(),
+						new AggregationsPuffer(dav, obj, intervall));
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Aktualisiert diese Menge von Aggregationspuffern mit neuen Daten. Alte
 	 * Daten werden dabei ggf. aus dem betroffenen Puffer gelöscht
 	 * 
-	 * @param resultat ein aktuelles Datum mit Aggregations- oder messwertersetzten
-	 * Fahrstreifendaten
+	 * @param resultat
+	 *            ein aktuelles Datum mit Aggregations- oder messwertersetzten
+	 *            Fahrstreifendaten
 	 */
-	public void aktualisiere(ResultData resultat){
-		if(resultat.getData() != null){
-			AbstraktAggregationsPuffer puffer = this.pufferMenge.get(resultat.getDataDescription().getAspect());
-			if(puffer != null){
+	public void aktualisiere(ResultData resultat) {
+		if (resultat.getData() != null) {
+			AbstraktAggregationsPuffer puffer = this.pufferMenge.get(resultat
+					.getDataDescription().getAspect());
+			if (puffer != null) {
 				puffer.aktualisiere(resultat);
-			}else{
-				Debug.getLogger().error("Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
-						resultat.getDataDescription().getAspect() + " existiert nicht"); //$NON-NLS-1$
+			} else {
+				Debug
+						.getLogger()
+						.error(
+								"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
+										resultat.getDataDescription()
+												.getAspect()
+										+ " existiert nicht"); //$NON-NLS-1$
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * Erfragt alle in dieser Puffermenge gespeicherten Datensaetze <b>eines</b> Unterpuffers,
-	 * deren Zeitstempel im Intervall [begin, ende[ liegen und deren Erfassungs- bzw.
-	 * Aggregationsintervall kleiner dem uebergebenen Aggregationsintervall ist<br>
+	 * Erfragt alle in dieser Puffermenge gespeicherten Datensaetze <b>eines</b>
+	 * Unterpuffers, deren Zeitstempel im Intervall [begin, ende[ liegen und
+	 * deren Erfassungs- bzw. Aggregationsintervall kleiner dem uebergebenen
+	 * Aggregationsintervall ist<br>
 	 * 
-	 * @param begin Begin des Intervalls
-	 * @param ende Ende des Intervalls
-	 * @param aggregationsIntervall das Intervall, fuer dessen Aggregation Daten gesucht werden
+	 * @param begin
+	 *            Begin des Intervalls
+	 * @param ende
+	 *            Ende des Intervalls
+	 * @param aggregationsIntervall
+	 *            das Intervall, fuer dessen Aggregation Daten gesucht werden
 	 * @return alle in diesem Puffer gespeicherten Datensaetze deren Zeitstempel
-	 * im Intervall [begin, ende[ liegen (bzw. eine leere Liste)
+	 *         im Intervall [begin, ende[ liegen (bzw. eine leere Liste)
 	 */
-	public final Collection<AggregationsDatum> getDatenFuerZeitraum(final long begin, 
-																	final long ende,
-																	final AggregationsIntervall aggregationsIntervall){
+	public final Collection<AggregationsDatum> getDatenFuerZeitraum(
+			final long begin, final long ende,
+			final AggregationsIntervall aggregationsIntervall) {
 		Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
-		
-		AggregationsIntervall ausgangsIntervall = aggregationsIntervall.getVorgaenger(); 
-		if(ausgangsIntervall == null){
-			daten = this.pufferMenge.get(AggregationLVE.MWE).getDatenFuerZeitraum(begin, ende);
-		}else{
-			int start = 0; 
-			for(int i = 0; i<ASPEKTE_SORTIERT.length; i++){
-				if(ASPEKTE_SORTIERT[i].equals(ausgangsIntervall.getDatenBeschreibung(true).getAspect())){
+
+		AggregationsIntervall ausgangsIntervall = aggregationsIntervall
+				.getVorgaenger();
+		if (ausgangsIntervall == null) {
+			daten = this.pufferMenge.get(AggregationLVE.MWE)
+					.getDatenFuerZeitraum(begin, ende);
+		} else {
+			int start = 0;
+			for (int i = 0; i < ASPEKTE_SORTIERT.length; i++) {
+				if (ASPEKTE_SORTIERT[i].equals(ausgangsIntervall
+						.getDatenBeschreibung(true).getAspect())) {
 					start = i;
 				}
 			}
-	
-			for(int i = start; i>=0; i--){
-				AbstraktAggregationsPuffer puffer = this.pufferMenge.get(ASPEKTE_SORTIERT[i]);
-				if(puffer != null){
+
+			for (int i = start; i >= 0; i--) {
+				AbstraktAggregationsPuffer puffer = this.pufferMenge
+						.get(ASPEKTE_SORTIERT[i]);
+				if (puffer != null) {
 					daten = puffer.getDatenFuerZeitraum(begin, ende);
-					if(aggregationsIntervall.isDTVorTV() ||
-					  !daten.isEmpty()){
+					if (aggregationsIntervall.isDTVorTV() || !daten.isEmpty()) {
 						break;
 					}
 				}
 			}
 		}
-					
+
 		return daten;
 	}
-	
-	
+
 	/**
-	 * Erfragt den Datenpuffer fuer Daten des uebergebenen Aggregationsintervalls
+	 * Erfragt den Datenpuffer fuer Daten des uebergebenen
+	 * Aggregationsintervalls
 	 * 
-	 * @param intervall ein Aggregationsintervall (<code>null</code> erfragt den
-	 * Datenpuffer fuer messwertersetzte Fahrstreifendaten)
-	 * @return den Datenpuffer fuer Daten des uebergebenen Aggregationsintervalls
+	 * @param intervall
+	 *            ein Aggregationsintervall (<code>null</code> erfragt den
+	 *            Datenpuffer fuer messwertersetzte Fahrstreifendaten)
+	 * @return den Datenpuffer fuer Daten des uebergebenen
+	 *         Aggregationsintervalls
 	 */
-	public final AbstraktAggregationsPuffer getPuffer(final AggregationsIntervall intervall){
-		if(intervall == null)return this.pufferMenge.get(AggregationLVE.MWE);
-		return this.pufferMenge.get(intervall.getDatenBeschreibung(true).getAspect());
+	public final AbstraktAggregationsPuffer getPuffer(
+			final AggregationsIntervall intervall) {
+		if (intervall == null)
+			return this.pufferMenge.get(AggregationLVE.MWE);
+		return this.pufferMenge.get(intervall.getDatenBeschreibung(true)
+				.getAspect());
 	}
 }
