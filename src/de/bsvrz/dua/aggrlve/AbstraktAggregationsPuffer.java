@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -37,37 +38,37 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 /**
  * Abstrakte Blaupause fuer einen Ringpuffer, der alle Daten eines bestimmten
  * Aggregationsintervalls speichert, die zur Berechnung des naechstgroesseren
- * Intervalls notwendig sind
+ * Intervalls notwendig sind.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public abstract class AbstraktAggregationsPuffer {
 
 	/**
-	 * Verbindung zum Datenverteiler
+	 * Verbindung zum Datenverteiler.
 	 */
-	protected static ClientDavInterface DAV = null;
+	protected static ClientDavInterface sDAV = null;
 
 	/**
 	 * das Aggregationsintervall, fuer das Daten in diesem Puffer stehen (<code>null</code>
-	 * deutet auf messwertersetzte Fahstreifenwerte hin)
+	 * deutet auf messwertersetzte Fahstreifenwerte hin).
 	 */
 	protected AggregationsIntervall aggregationsIntervall = null;
 
 	/**
-	 * Ringpuffer mit den zeitlich aktuellsten Daten
+	 * Ringpuffer mit den zeitlich aktuellsten Daten.
 	 */
 	protected LinkedList<AggregationsDatum> ringPuffer = new LinkedList<AggregationsDatum>();
 
 	/**
-	 * das Systemobjekt, dessen Daten hier gespeichert werden
+	 * das Systemobjekt, dessen Daten hier gespeichert werden.
 	 */
 	protected SystemObject objekt = null;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
@@ -84,8 +85,8 @@ public abstract class AbstraktAggregationsPuffer {
 	public AbstraktAggregationsPuffer(final ClientDavInterface dav,
 			final SystemObject obj, final AggregationsIntervall intervall)
 			throws DUAInitialisierungsException {
-		if (DAV == null) {
-			DAV = dav;
+		if (sDAV == null) {
+			sDAV = dav;
 		}
 		this.objekt = obj;
 		this.aggregationsIntervall = intervall;
@@ -103,15 +104,16 @@ public abstract class AbstraktAggregationsPuffer {
 			AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
 			synchronized (this) {
 				this.ringPuffer.addFirst(neuesDatum);
-				while (this.ringPuffer.size() > this.getMaxPufferInhalt())
+				while (this.ringPuffer.size() > this.getMaxPufferInhalt()) {
 					this.ringPuffer.removeLast();
+				}
 			}
 		}
 	}
 
 	/**
 	 * Erfragt alle in diesem Puffer gespeicherten Datensaetze deren Zeitstempel
-	 * im Intervall [begin, ende[ liegen
+	 * im Intervall [begin, ende[ liegen.
 	 * 
 	 * @param begin
 	 *            Begin des Intervalls
@@ -138,7 +140,7 @@ public abstract class AbstraktAggregationsPuffer {
 
 	/**
 	 * Erfragt die maximale Anzahl der Elemente, die fuer diesen Puffer
-	 * zugelassen sind
+	 * zugelassen sind.
 	 * 
 	 * @return die maximale Anzahl der Elemente, die fuer diesen Puffer
 	 *         zugelassen sind
@@ -152,11 +154,11 @@ public abstract class AbstraktAggregationsPuffer {
 	public String toString() {
 		String s = "Datenart: " + (this.aggregationsIntervall == null ? //$NON-NLS-1$
 		"FS-MWE"
-				: this.aggregationsIntervall);//$NON-NLS-1$
+				: this.aggregationsIntervall);
 
 		synchronized (this) {
 			s += "\nMAX: " + this.getMaxPufferInhalt() + "\nInhalt: " + //$NON-NLS-1$//$NON-NLS-2$
-					(this.ringPuffer.isEmpty() ? "leer\n" : "\n");//$NON-NLS-1$//$NON-NLS-2$
+					(this.ringPuffer.isEmpty() ? "leer\n" : "\n");
 			for (AggregationsDatum datum : this.ringPuffer) {
 				s += datum + "\n"; //$NON-NLS-1$
 			}

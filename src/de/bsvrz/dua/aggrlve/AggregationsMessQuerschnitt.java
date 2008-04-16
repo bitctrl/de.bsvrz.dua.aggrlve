@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -58,22 +59,22 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
+public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 
 	/**
-	 * der hier betrachtete Messquerschnitt
+	 * der hier betrachtete Messquerschnitt.
 	 */
 	private MessQuerschnitt mq = null;
 
 	/**
-	 * Menge der Fahrstreifen, die an diesem Messquerschnitt konfiguriert sind
+	 * Menge der Fahrstreifen, die an diesem Messquerschnitt konfiguriert sind.
 	 */
 	private Map<SystemObject, AggregationsFahrStreifen> fsMenge = new HashMap<SystemObject, AggregationsFahrStreifen>();
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
@@ -129,14 +130,14 @@ public class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 				GregorianCalendar cal = new GregorianCalendar();
 				cal.setTimeInMillis(zeitStempel);
 
-				if (intervall.equals(AggregationsIntervall.AGG_DTV_TAG)) {
+				if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 					cal.add(Calendar.DAY_OF_YEAR, 1);
 					ende = cal.getTimeInMillis();
 				} else if (intervall
-						.equals(AggregationsIntervall.AGG_DTV_MONAT)) {
+						.equals(AggregationsIntervall.aGGDTVMONAT)) {
 					cal.add(Calendar.MONTH, 1);
 					ende = cal.getTimeInMillis();
-				} else if (intervall.equals(AggregationsIntervall.AGG_DTV_JAHR)) {
+				} else if (intervall.equals(AggregationsIntervall.aGGDTVJAHR)) {
 					cal.add(Calendar.YEAR, 1);
 					ende = cal.getTimeInMillis();
 				}
@@ -146,7 +147,7 @@ public class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 					.getDatenFuerZeitraum(begin, ende, intervall);
 			Data nutzDatum = null;
 
-			if (intervall.equals(AggregationsIntervall.AGG_DTV_TAG)) {
+			if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 				if (!mqDaten.isEmpty()) {
 					/**
 					 * Daten koennen aus naechstkleinerem Intervall aggregiert
@@ -235,10 +236,12 @@ public class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 
 	/**
 	 * Erfragt ein Aggregationsobjekt unterhalb dieses Objektes (nur fuer
-	 * Testzwecke)
+	 * Testzwecke).
 	 * 
 	 * @param obj
 	 *            das assoziierte Systemobjekt
+	 * @return ein Aggregationsobjekt unterhalb dieses Objektes (nur fuer
+	 * Testzwecke).
 	 */
 	public AggregationsFahrStreifen getAggregationsObjekt(final SystemObject obj) {
 		return this.fsMenge.get(obj);
@@ -246,7 +249,7 @@ public class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 
 	/**
 	 * Aggregiert das erste Aggregationsintervall fuer diesen Messquerschnitt
-	 * aus Basis der uebergebenen messwertersetzten Fahrstreifendaten
+	 * aus Basis der uebergebenen messwertersetzten Fahrstreifendaten.
 	 * 
 	 * @param nutzDatum
 	 *            ein veraenderbares Nutzdatum
@@ -258,7 +261,7 @@ public class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 	 * @param intervall
 	 *            das Aggregationsintervall
 	 */
-	private final void aggregiereBasisDatum(
+	private void aggregiereBasisDatum(
 			Data nutzDatum,
 			Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten,
 			long zeitStempel, AggregationsIntervall intervall) {

@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.io.IOException;
@@ -54,13 +55,13 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class DTVAggregationsPuffer extends AggregationsPuffer implements
 		ArchiveAvailabilityListener {
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
@@ -76,10 +77,10 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 			AggregationsIntervall intervall)
 			throws DUAInitialisierungsException {
 		super(dav, obj, intervall);
-		if (DAV.getArchive().isArchiveAvailable()) {
-			this.archiveAvailabilityChanged(DAV.getArchive());
+		if (sDAV.getArchive().isArchiveAvailable()) {
+			this.archiveAvailabilityChanged(sDAV.getArchive());
 		} else {
-			DAV.getArchive().addArchiveAvailabilityListener(this);
+			sDAV.getArchive().addArchiveAvailabilityListener(this);
 		}
 	}
 
@@ -93,7 +94,7 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 			long endeArchivAnfrage = jetzt;
 
 			if (this.aggregationsIntervall
-					.equals(AggregationsIntervall.AGG_60MINUTE)) {
+					.equals(AggregationsIntervall.aGG60MINUTE)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 24 Stunden bereitstehen
@@ -101,7 +102,7 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR
 						* this.aggregationsIntervall.getMaxPufferGroesse();
 			} else if (this.aggregationsIntervall
-					.equals(AggregationsIntervall.AGG_DTV_TAG)) {
+					.equals(AggregationsIntervall.aGGDTVTAG)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 50 Tage bereitstehen
@@ -109,7 +110,7 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L
 						* this.aggregationsIntervall.getMaxPufferGroesse();
 			} else if (this.aggregationsIntervall
-					.equals(AggregationsIntervall.AGG_DTV_MONAT)) {
+					.equals(AggregationsIntervall.aGGDTVMONAT)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 15 Monate bereitstehen

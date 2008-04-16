@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import com.bitctrl.Constants;
@@ -34,21 +35,21 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 
 /**
  * Speichert alle messwerterstetzten Fahrstreifendaten eines Fahrstreifens der
- * vergangenen Stunde in einem Ringpuffer
+ * vergangenen Stunde in einem Ringpuffer.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 
 	/**
-	 * aktuelle maximale Kapazitaet des Ringpuffers
+	 * aktuelle maximale Kapazitaet des Ringpuffers.
 	 */
 	private long maxPufferAktuell = 61;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
@@ -83,9 +84,9 @@ public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 				}
 			}
 
-			double T = this.ringPuffer.getFirst().getT();
+			double t = this.ringPuffer.getFirst().getT();
 			this.maxPufferAktuell = Math.round(Math.max(1.0,
-					(double) Constants.MILLIS_PER_HOUR / T)) + 5;
+					(double) Constants.MILLIS_PER_HOUR / t)) + 5;
 		}
 	}
 

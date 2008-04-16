@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -51,22 +52,22 @@ import de.bsvrz.sys.funclib.debug.Debug;
 /**
  * Aggregiert aus den fuer diesen Fahrstreifen gespeicherten Daten die
  * Aggregationswerte aller Aggregationsstufen aus der jeweils darunterliegenden
- * Stufe
+ * Stufe.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 		implements ClientReceiverInterface {
 
 	/**
-	 * der hier betrachtete Fahrstreifen
+	 * der hier betrachtete Fahrstreifen.
 	 */
 	private FahrStreifen fs = null;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
@@ -147,7 +148,7 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 
 	/**
 	 * Aggregiert das niedrigstmoegliche Aggregationsintervalldatum aus
-	 * messwertersetzten Fahrstreifendaten (nur fuer Verkehrsstaerke-Werte)
+	 * messwertersetzten Fahrstreifendaten (nur fuer Verkehrsstaerke-Werte).
 	 * 
 	 * @param attribut
 	 *            das Attribut, das berechnet werden soll

@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.Calendar;
@@ -47,86 +48,86 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * <code>asp.agregation60Minuten</code>,<br> -
  * <code>asp.agregationDtvMonat</code> und<br> -
  * <code>asp.agregationDtvJahr</code><br>
- * <br>
+ * .<br>
  * <b>Achtung:</b> Bevor auf die statischen Member dieser Klasse zugegriffen
  * werden kann, muss diese Klasse initialisiert werden
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class AggregationsIntervall implements Comparable<AggregationsIntervall> {
+public final class AggregationsIntervall implements Comparable<AggregationsIntervall> {
 
 	/**
-	 * <code>asp.agregation1Minute</code>
+	 * <code>asp.agregation1Minute</code>.
 	 */
-	public static AggregationsIntervall AGG_1MINUTE = null;
+	public static AggregationsIntervall aGG1MINUTE = null;
 
 	/**
-	 * <code>asp.agregation5Minuten</code>
+	 * <code>asp.agregation5Minuten</code>.
 	 */
-	public static AggregationsIntervall AGG_5MINUTE = null;
+	public static AggregationsIntervall aGG5MINUTE = null;
 
 	/**
-	 * <code>asp.agregation15Minuten</code>
+	 * <code>asp.agregation15Minuten</code>.
 	 */
-	public static AggregationsIntervall AGG_15MINUTE = null;
+	public static AggregationsIntervall aGG15MINUTE = null;
 
 	/**
-	 * <code>asp.agregation30Minuten</code>
+	 * <code>asp.agregation30Minuten</code>.
 	 */
-	public static AggregationsIntervall AGG_30MINUTE = null;
+	public static AggregationsIntervall aGG30MINUTE = null;
 
 	/**
-	 * <code>asp.agregation60Minuten</code>
+	 * <code>asp.agregation60Minuten</code>.
 	 */
-	public static AggregationsIntervall AGG_60MINUTE = null;
+	public static AggregationsIntervall aGG60MINUTE = null;
 
 	/**
-	 * <code>asp.agregationDtvTag</code>
+	 * <code>asp.agregationDtvTag</code>.
 	 */
-	public static AggregationsIntervall AGG_DTV_TAG = null;
+	public static AggregationsIntervall aGGDTVTAG = null;
 
 	/**
-	 * <code>asp.agregationDtvMonat</code>
+	 * <code>asp.agregationDtvMonat</code>.
 	 */
-	public static AggregationsIntervall AGG_DTV_MONAT = null;
+	public static AggregationsIntervall aGGDTVMONAT = null;
 
 	/**
-	 * <code>asp.agregationDtvJahr</code>
+	 * <code>asp.agregationDtvJahr</code>.
 	 */
-	public static AggregationsIntervall AGG_DTV_JAHR = null;
+	public static AggregationsIntervall aGGDTVJAHR = null;
 
 	/**
-	 * der Wertebereich dieses Typs
+	 * der Wertebereich dieses Typs.
 	 */
-	private static SortedSet<AggregationsIntervall> WERTE_BEREICH = new TreeSet<AggregationsIntervall>();
+	private static SortedSet<AggregationsIntervall> werteBereich = new TreeSet<AggregationsIntervall>();
 
 	/**
 	 * die Datenbeschreibung der Publikationsdaten dieses Aggregations-
-	 * Intervalls (fuer FS)
+	 * Intervalls (fuer FS).
 	 */
 	private DataDescription datenBeschreibungFs = null;
 
 	/**
 	 * die Datenbeschreibung der Publikationsdaten dieses Aggregations-
-	 * Intervalls (fuer MQ)
+	 * Intervalls (fuer MQ).
 	 */
 	private DataDescription datenBeschreibungMq = null;
 
 	/**
-	 * die Laenge des Aggregationsintervalls in ms
+	 * die Laenge des Aggregationsintervalls in ms.
 	 */
 	private long intervallLaengeInMillis = -1;
 
 	/**
 	 * die maximale Anzahl der Elemente, die in einem Puffer mit Daten dieser
-	 * Aggregationsstufe vorgehalten werden muessen
+	 * Aggregationsstufe vorgehalten werden muessen.
 	 */
 	private long maxPufferGroesse = 0;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param atgFs
 	 *            die Attributgruppe der Publikationsdaten dieses Aggregations-
@@ -150,59 +151,59 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 		this.datenBeschreibungMq = new DataDescription(atgMq, asp);
 		this.intervallLaengeInMillis = intervall;
 		this.maxPufferGroesse = maxPufferGroesse;
-		WERTE_BEREICH.add(this);
+		werteBereich.add(this);
 	}
 
 	/**
-	 * Initialisiert die statischen Instanzen dieser Klasse
+	 * Initialisiert die statischen Instanzen dieser Klasse.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 */
-	public static final void initialisiere(final ClientDavInterface dav) {
-		AGG_1MINUTE = new AggregationsIntervall(dav.getDataModel()
+	public static void initialisiere(final ClientDavInterface dav) {
+		aGG1MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
 				.getDataModel().getAspect("asp.agregation1Minute"), //$NON-NLS-1$
 				Constants.MILLIS_PER_MINUTE, 5);
 
-		AGG_5MINUTE = new AggregationsIntervall(dav.getDataModel()
+		aGG5MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
 				.getDataModel().getAspect("asp.agregation5Minuten"), //$NON-NLS-1$
 				5 * Constants.MILLIS_PER_MINUTE, 3);
-		AGG_15MINUTE = new AggregationsIntervall(dav.getDataModel()
+		aGG15MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
 				.getDataModel().getAspect("asp.agregation15Minuten"), //$NON-NLS-1$
 				15 * Constants.MILLIS_PER_MINUTE, 2);
-		AGG_30MINUTE = new AggregationsIntervall(dav.getDataModel()
+		aGG30MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
 				.getDataModel().getAspect("asp.agregation30Minuten"), //$NON-NLS-1$
 				30 * Constants.MILLIS_PER_MINUTE, 2);
-		AGG_60MINUTE = new AggregationsIntervall(dav.getDataModel()
+		aGG60MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
 				.getDataModel().getAspect("asp.agregation60Minuten"), //$NON-NLS-1$
 				60 * Constants.MILLIS_PER_MINUTE, 40);
 
-		AGG_DTV_TAG = new AggregationsIntervall(dav.getDataModel()
+		aGGDTVTAG = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav
 				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 				dav.getDataModel().getAspect("asp.agregationDtvTag"), //$NON-NLS-1$
 				60 * 24 * Constants.MILLIS_PER_MINUTE, 50);
-		AGG_DTV_MONAT = new AggregationsIntervall(dav.getDataModel()
+		aGGDTVMONAT = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav
 				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 				dav.getDataModel().getAspect("asp.agregationDtvMonat"), //$NON-NLS-1$
 				61 * 24 * Constants.MILLIS_PER_MINUTE, 15);
-		AGG_DTV_JAHR = new AggregationsIntervall(dav.getDataModel()
+		aGGDTVJAHR = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav
 				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
 				dav.getDataModel().getAspect("asp.agregationDtvJahr"), //$NON-NLS-1$
@@ -217,45 +218,45 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 	 * <code>asp.agregation30Minuten</code>,<br> -
 	 * <code>asp.agregation60Minuten</code>,<br> -
 	 * <code>asp.agregationDtvMonat</code> und<br> -
-	 * <code>asp.agregationDtvJahr</code><br>
+	 * <code>asp.agregationDtvJahr</code>.<br>
 	 * <br>
 	 * 
 	 * @return die Menge aller statischen Instanzen dieser Klasse
 	 */
-	public static final SortedSet<AggregationsIntervall> getInstanzen() {
-		return WERTE_BEREICH;
+	public static SortedSet<AggregationsIntervall> getInstanzen() {
+		return werteBereich;
 	}
 
 	/**
 	 * Erfragt die maximale Anzahl der Elemente, die in einem Puffer mit Daten
-	 * dieser Aggregationsstufe vorgehalten werden muessen
+	 * dieser Aggregationsstufe vorgehalten werden muessen.
 	 * 
 	 * @return die maximale Anzahl der Elemente, die in einem Puffer mit Daten
 	 *         dieser Aggregationsstufe vorgehalten werden muessen
 	 */
-	public final long getMaxPufferGroesse() {
+	public long getMaxPufferGroesse() {
 		return this.maxPufferGroesse;
 	}
 
 	/**
-	 * Erfragt den Publikationsaspekt der Daten fuer FS und MQ
+	 * Erfragt den Publikationsaspekt der Daten fuer FS und MQ.
 	 * 
 	 * @return der Publikationsaspekt der Daten fuer FS und MQ
 	 */
-	public final Aspect getAspekt() {
+	public Aspect getAspekt() {
 		return this.datenBeschreibungFs.getAspect();
 	}
 
 	/**
 	 * Erfragt die Datenbeschreibung der Publikationsdaten dieses Aggregations-
-	 * Intervalls
+	 * Intervalls.
 	 * 
 	 * @param fuerFahrstreifen
 	 *            fuer Fahrstreifen?
 	 * @return die Datenbeschreibung der Publikationsdaten dieses Aggregations-
 	 *         Intervalls
 	 */
-	public final DataDescription getDatenBeschreibung(boolean fuerFahrstreifen) {
+	public DataDescription getDatenBeschreibung(boolean fuerFahrstreifen) {
 		if (fuerFahrstreifen) {
 			return this.datenBeschreibungFs;
 		}
@@ -263,17 +264,18 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 	}
 
 	/**
-	 * Erfragt das naechstkleinere Aggregationsintervall
+	 * Erfragt das naechstkleinere Aggregationsintervall.
 	 * 
 	 * @return das naechstkleinere Aggregationsintervall oder <code>null</code>,
 	 *         wenn vom Intervall <code>eine Minute</code> aus gesucht wird
 	 */
-	public final AggregationsIntervall getVorgaenger() {
+	public AggregationsIntervall getVorgaenger() {
 		AggregationsIntervall vorgaenger = null;
 
 		for (AggregationsIntervall intervall : getInstanzen()) {
-			if (intervall.equals(this))
+			if (intervall.equals(this)) {
 				break;
+			}
 			vorgaenger = intervall;
 		}
 
@@ -293,15 +295,15 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 	 *         sollte oder <code>-1</code>, wenn zum uebergebenen Zeitpunkt
 	 *         keine Aggregation notwendig ist
 	 */
-	public final long getAggregationZeitStempel(long zeitpunkt) {
+	public long getAggregationZeitStempel(long zeitpunkt) {
 		long zeitStempel = -1;
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(zeitpunkt);
 		final long minuteJetzt = cal.get(Calendar.MINUTE);
 
-		if (this.equals(AGG_1MINUTE) || this.equals(AGG_5MINUTE)
-				|| this.equals(AGG_15MINUTE) || this.equals(AGG_30MINUTE)
-				|| this.equals(AGG_60MINUTE)) {
+		if (this.equals(aGG1MINUTE) || this.equals(aGG5MINUTE)
+				|| this.equals(aGG15MINUTE) || this.equals(aGG30MINUTE)
+				|| this.equals(aGG60MINUTE)) {
 			long intervallLaengeInMinuten = this.getIntervall()
 					/ Constants.MILLIS_PER_MINUTE;
 			if (minuteJetzt % intervallLaengeInMinuten == 0) {
@@ -310,7 +312,7 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 				cal.set(Calendar.MILLISECOND, 0);
 				zeitStempel = cal.getTimeInMillis();
 			}
-		} else if (this.equals(AGG_DTV_TAG)) {
+		} else if (this.equals(aGGDTVTAG)) {
 			/**
 			 * Versuche noch 12 Stunden im neuen Tag DTV-Tag des Vorgaengertages
 			 * zu berechnen
@@ -324,7 +326,7 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 				cal.set(Calendar.MILLISECOND, 0);
 				zeitStempel = cal.getTimeInMillis();
 			}
-		} else if (this.equals(AGG_DTV_JAHR)) {
+		} else if (this.equals(aGGDTVJAHR)) {
 			final long stundeJetzt = cal.get(Calendar.HOUR_OF_DAY);
 			final long tagJetzt = cal.get(Calendar.DAY_OF_YEAR);
 			/**
@@ -339,7 +341,7 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 				cal.set(Calendar.MILLISECOND, 0);
 				zeitStempel = cal.getTimeInMillis();
 			}
-		} else if (this.equals(AGG_DTV_MONAT)) {
+		} else if (this.equals(aGGDTVMONAT)) {
 			/**
 			 * Versuche noch 20 Tage im neuen Monat DTV-Monat des
 			 * Vorgaengermonats zu berechnen
@@ -366,27 +368,28 @@ public class AggregationsIntervall implements Comparable<AggregationsIntervall> 
 	 * @return ob es sich bei diesem Intervall um ein DTV- bzw. TV-Intervall
 	 *         handelt
 	 */
-	public final boolean isDTVorTV() {
-		return this.equals(AggregationsIntervall.AGG_DTV_JAHR)
-				|| this.equals(AggregationsIntervall.AGG_DTV_MONAT)
-				|| this.equals(AggregationsIntervall.AGG_DTV_TAG);
+	public boolean isDTVorTV() {
+		return this.equals(AggregationsIntervall.aGGDTVJAHR)
+				|| this.equals(AggregationsIntervall.aGGDTVMONAT)
+				|| this.equals(AggregationsIntervall.aGGDTVTAG);
 	}
 
 	/**
-	 * Erfragt, ob zum uebergebenen Zeitpunkt eine Aggregation notwendig ist
+	 * Erfragt, ob zum uebergebenen Zeitpunkt eine Aggregation notwendig ist.
 	 * 
+	 * @param zeitpunkt der Zeitpunkt
 	 * @return ob zum uebergebenen Zeitpunkt eine Aggregation notwendig ist
 	 */
-	public final boolean isAggregationErforderlich(long zeitpunkt) {
+	public boolean isAggregationErforderlich(long zeitpunkt) {
 		return getAggregationZeitStempel(zeitpunkt) != -1;
 	}
 
 	/**
-	 * Erfragt die Laenge des Aggregationsintervalls in ms
+	 * Erfragt die Laenge des Aggregationsintervalls in ms.
 	 * 
 	 * @return die Laenge des Aggregationsintervalls in ms
 	 */
-	public final long getIntervall() {
+	public long getIntervall() {
 		return this.intervallLaengeInMillis;
 	}
 

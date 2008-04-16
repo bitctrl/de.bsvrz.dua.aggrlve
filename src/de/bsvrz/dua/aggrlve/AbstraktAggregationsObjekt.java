@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
-
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public abstract class AbstraktAggregationsObjekt {
 
@@ -175,10 +175,10 @@ public abstract class AbstraktAggregationsObjekt {
 	 */
 	protected final void fuelleRest(ResultData resultat,
 			AggregationsIntervall intervall) {
-		String[][] REST_ATTRIBUTE = REST_ATTRIBUTE_AGGR;
+		String[][] restAttribute = REST_ATTRIBUTE_AGGR;
 
 		if (intervall.isDTVorTV()) {
-			REST_ATTRIBUTE = REST_ATTRIBUTE_DTV;
+			restAttribute = REST_ATTRIBUTE_DTV;
 		}
 
 		if (this.isFahrstreifen()) {
@@ -186,10 +186,10 @@ public abstract class AbstraktAggregationsObjekt {
 					.getTimeValue("T").setMillis(intervall.getIntervall()); //$NON-NLS-1$
 		}
 
-		for (int i = 0; i < REST_ATTRIBUTE.length; i++) {
-			String attributName = REST_ATTRIBUTE[i][1];
+		for (int i = 0; i < restAttribute.length; i++) {
+			String attributName = restAttribute[i][1];
 			if (this.isFahrstreifen()) {
-				attributName = REST_ATTRIBUTE[i][0];
+				attributName = restAttribute[i][0];
 			}
 
 			if (attributName != null) {
@@ -198,39 +198,39 @@ public abstract class AbstraktAggregationsObjekt {
 				resultat
 						.getData()
 						.getItem(attributName)
-						.getItem("Status").getItem("Erfassung"). //$NON-NLS-1$//$NON-NLS-2$
+						.getItem("Status").getItem("Erfassung").
 						getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 				resultat.getData().getItem(attributName)
-						.getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$//$NON-NLS-2$
+						.getItem("Status").getItem("MessWertErsetzung").
 						getUnscaledValue("Implausibel").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 				resultat
 						.getData()
 						.getItem(attributName)
-						.getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$//$NON-NLS-2$
+						.getItem("Status").getItem("MessWertErsetzung").
 						getUnscaledValue("Interpoliert").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 
 				resultat.getData().getItem(attributName)
-						.getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+						.getItem("Status").getItem("PlFormal").
 						getUnscaledValue("WertMax").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 				resultat.getData().getItem(attributName)
-						.getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+						.getItem("Status").getItem("PlFormal").
 						getUnscaledValue("WertMin").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 
 				resultat
 						.getData()
 						.getItem(attributName)
-						.getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+						.getItem("Status").getItem("PlLogisch").
 						getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 				resultat
 						.getData()
 						.getItem(attributName)
-						.getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+						.getItem("Status").getItem("PlLogisch").
 						getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 				resultat.getData().getItem(attributName)
-						.getItem("Güte").getUnscaledValue("Index"). //$NON-NLS-1$ //$NON-NLS-2$
+						.getItem("Güte").getUnscaledValue("Index").
 						set(DUAKonstanten.NICHT_ERMITTELBAR);
 				resultat.getData().getItem(attributName)
-						.getItem("Güte").getUnscaledValue("Verfahren"). //$NON-NLS-1$ //$NON-NLS-2$
+						.getItem("Güte").getUnscaledValue("Verfahren").
 						set(GueteVerfahren.STANDARD.getCode());
 			}
 		}
@@ -280,16 +280,16 @@ public abstract class AbstraktAggregationsObjekt {
 		Collection<AggregationsAttributWert> zielDaten = new ArrayList<AggregationsAttributWert>();
 
 		double anzahlSoll = -1;
-		if (intervall.equals(AggregationsIntervall.AGG_1MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_5MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_15MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_30MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_60MINUTE)) {
+		if (intervall.equals(AggregationsIntervall.aGG1MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG5MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG15MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG30MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG60MINUTE)) {
 			anzahlSoll = (double) intervall.getIntervall()
 					/ (double) quellDaten.iterator().next().getT();
-		} else if (intervall.equals(AggregationsIntervall.AGG_DTV_TAG)) {
+		} else if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 			anzahlSoll = DUAUtensilien.getStundenVonTag(zeitStempel);
-		} else if (intervall.equals(AggregationsIntervall.AGG_DTV_MONAT)) {
+		} else if (intervall.equals(AggregationsIntervall.aGGDTVMONAT)) {
 			anzahlSoll = 12;
 		}
 
@@ -328,7 +328,7 @@ public abstract class AbstraktAggregationsObjekt {
 					if (wertAnzahl > 0) {
 						if (attribut.isGeschwindigkeitsAttribut()) {
 							zielDaten.add(new AggregationsAttributWert(
-									attribut, mittelWert, AggregationLVE.GUETE
+									attribut, mittelWert, AggregationLVE.guete
 											* mittelWertGuete));
 						} else {
 							/**
@@ -341,13 +341,13 @@ public abstract class AbstraktAggregationsObjekt {
 								zielDaten
 										.add(new AggregationsAttributWert(
 												attribut, teilMittelWert,
-												AggregationLVE.GUETE
+												AggregationLVE.guete
 														* mittelWertGuete));
 							} else {
 								zielDaten
 										.add(new AggregationsAttributWert(
 												attribut, mittelWert,
-												AggregationLVE.GUETE
+												AggregationLVE.guete
 														* mittelWertGuete));
 							}
 							first = false;
@@ -389,11 +389,11 @@ public abstract class AbstraktAggregationsObjekt {
 			final AggregationsIntervall intervall) {
 		boolean berechnen = false;
 
-		if (intervall.equals(AggregationsIntervall.AGG_1MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_5MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_15MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_30MINUTE)
-				|| intervall.equals(AggregationsIntervall.AGG_60MINUTE)) {
+		if (intervall.equals(AggregationsIntervall.aGG1MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG5MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG15MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG30MINUTE)
+				|| intervall.equals(AggregationsIntervall.aGG60MINUTE)) {
 			berechnen = true;
 		} else {
 			if (!this.isFahrstreifen()) {
@@ -493,7 +493,7 @@ public abstract class AbstraktAggregationsObjekt {
 			Data nutzDatum, Collection<AggregationsDatum> basisDaten,
 			long zeitStempel, AggregationsIntervall intervall) {
 		double anzahlSoll = -1;
-		if (intervall.equals(AggregationsIntervall.AGG_DTV_TAG)) {
+		if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 			anzahlSoll = DUAUtensilien.getStundenVonTag(zeitStempel + 2
 					* Constants.MILLIS_PER_HOUR);
 		}

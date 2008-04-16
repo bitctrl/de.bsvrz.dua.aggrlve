@@ -108,7 +108,7 @@ public class AggregationLVE_1_5Test {
 
 		DataDescription dd1min = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				AggregationsIntervall.AGG_1MINUTE.getAspekt(), (short) 0);
+				AggregationsIntervall.aGG1MINUTE.getAspekt(), (short) 0);
 
 		TestErgebnisAnalyseImporter inputImporter = new TestErgebnisAnalyseImporter(
 				dav, Verbindung.WURZEL + "Analysewerte.csv"); //$NON-NLS-1$
@@ -152,7 +152,7 @@ public class AggregationLVE_1_5Test {
 
 				startzeit += Constants.MILLIS_PER_MINUTE;
 			}
-			mqObj.aggregiere(zeit, AggregationsIntervall.AGG_5MINUTE);
+			mqObj.aggregiere(zeit, AggregationsIntervall.aGG5MINUTE);
 
 			/**
 			 * vergleiche die für die Fahrstreifen aggregierten Daten mit den
@@ -163,7 +163,7 @@ public class AggregationLVE_1_5Test {
 			for (SystemObject fsObj : fs) {
 				Collection<AggregationsDatum> daten = mqObj
 						.getAggregationsObjekt(fsObj).getPuffer().getPuffer(
-								AggregationsIntervall.AGG_5MINUTE)
+								AggregationsIntervall.aGG5MINUTE)
 						.getDatenFuerZeitraum(zeit, startzeit);
 
 				if (daten != null && !daten.isEmpty()) {

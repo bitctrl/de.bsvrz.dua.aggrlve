@@ -161,7 +161,7 @@ public class AggregationLVE_15_60Test {
 
 				startzeit += 5 * Constants.MILLIS_PER_MINUTE;
 			}
-			mqObj.aggregiere(zeit, AggregationsIntervall.AGG_15MINUTE);
+			mqObj.aggregiere(zeit, AggregationsIntervall.aGG15MINUTE);
 
 			/**
 			 * vergleiche die für die Fahrstreifen aggregierten Daten mit den
@@ -176,7 +176,7 @@ public class AggregationLVE_15_60Test {
 			for (SystemObject fsObj : fs) {
 				Collection<AggregationsDatum> daten = mqObj
 						.getAggregationsObjekt(fsObj).getPuffer().getPuffer(
-								AggregationsIntervall.AGG_15MINUTE)
+								AggregationsIntervall.aGG15MINUTE)
 						.getDatenFuerZeitraum(zeit, startzeit);
 
 				if (daten != null && !daten.isEmpty()) {
@@ -208,7 +208,7 @@ public class AggregationLVE_15_60Test {
 			 * Überprüfe Aggregation des MQ
 			 */
 			Collection<AggregationsDatum> daten = mqObj.getPuffer().getPuffer(
-					AggregationsIntervall.AGG_15MINUTE).getDatenFuerZeitraum(
+					AggregationsIntervall.aGG15MINUTE).getDatenFuerZeitraum(
 					zeit, startzeit);
 
 			if (daten != null && !daten.isEmpty()) {
@@ -322,7 +322,7 @@ public class AggregationLVE_15_60Test {
 
 				startzeit += 15 * Constants.MILLIS_PER_MINUTE;
 			}
-			mqObj.aggregiere(zeit, AggregationsIntervall.AGG_30MINUTE);
+			mqObj.aggregiere(zeit, AggregationsIntervall.aGG30MINUTE);
 
 			/**
 			 * vergleiche die für die Fahrstreifen aggregierten Daten mit den
@@ -337,7 +337,7 @@ public class AggregationLVE_15_60Test {
 			for (SystemObject fsObj : fs) {
 				Collection<AggregationsDatum> daten = mqObj
 						.getAggregationsObjekt(fsObj).getPuffer().getPuffer(
-								AggregationsIntervall.AGG_15MINUTE)
+								AggregationsIntervall.aGG15MINUTE)
 						.getDatenFuerZeitraum(zeit, startzeit);
 
 				if (daten != null && !daten.isEmpty()) {
@@ -369,7 +369,7 @@ public class AggregationLVE_15_60Test {
 			 * Überprüfe Aggregation des MQ
 			 */
 			Collection<AggregationsDatum> daten = mqObj.getPuffer().getPuffer(
-					AggregationsIntervall.AGG_30MINUTE).getDatenFuerZeitraum(
+					AggregationsIntervall.aGG30MINUTE).getDatenFuerZeitraum(
 					zeit, startzeit);
 
 			if (daten != null && !daten.isEmpty()) {

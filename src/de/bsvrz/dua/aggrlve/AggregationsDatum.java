@@ -1,3 +1,29 @@
+/**
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.Date;
@@ -18,40 +44,40 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		Cloneable {
 
 	/**
-	 * Erfragt, ob dieses Datum auf Stunden normiert ist
+	 * Erfragt, ob dieses Datum auf Stunden normiert ist.
 	 */
 	private boolean normiert = true;
 
 	/**
-	 * die Datenzeit dieses Datums
+	 * die Datenzeit dieses Datums.
 	 */
 	private long datenZeit = -1;
 
 	/**
-	 * Erfassungs- bzw. Aggregationsintervall dieses Datensatzes
+	 * Erfassungs- bzw. Aggregationsintervall dieses Datensatzes.
 	 */
-	private long T = -1;
+	private long tT = -1;
 
 	/**
-	 * die Werte aller innerhalb der Messwertaggregation betrachteten Attribute
+	 * die Werte aller innerhalb der Messwertaggregation betrachteten Attribute.
 	 */
 	private Map<AggregationsAttribut, AggregationsAttributWert> werte = new HashMap<AggregationsAttribut, AggregationsAttributWert>();
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 */
 	private AggregationsDatum() {
 		//
 	}
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param resultat
 	 *            ein <code>ResultData</code>-Objekt eines messwertersetzten
@@ -62,18 +88,18 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	 */
 	public AggregationsDatum(final Dataset resultat) {
 		this.datenZeit = resultat.getDataTime();
-		if (resultat.getObject().isOfType(AggregationLVE.TYP_FAHRSTREIFEN)) {
+		if (resultat.getObject().isOfType(AggregationLVE.typFahrstreifen)) {
 			if (resultat.getDataDescription().getAspect().equals(
-					AggregationLVE.MWE)) {
+					AggregationLVE.mwe)) {
 				this.normiert = false;
 			}
-			this.T = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
+			this.tT = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
 		} else {
 			for (AggregationsIntervall intervall : AggregationsIntervall
 					.getInstanzen()) {
 				if (intervall.getAspekt().equals(
 						resultat.getDataDescription().getAspect())) {
-					this.T = intervall.getIntervall();
+					this.tT = intervall.getIntervall();
 				}
 			}
 		}
@@ -92,7 +118,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 
 		kopie.normiert = this.normiert;
 		kopie.datenZeit = this.datenZeit;
-		kopie.T = this.T;
+		kopie.tT = this.tT;
 		for (AggregationsAttribut attribut : AggregationsAttribut
 				.getInstanzen()) {
 			kopie.werte.put(attribut, this.getWert(attribut).clone());
@@ -102,7 +128,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	}
 
 	/**
-	 * Erfragt, ob die Werte dieses Datums auf ganze Stunden normiert sind
+	 * Erfragt, ob die Werte dieses Datums auf ganze Stunden normiert sind.
 	 * 
 	 * @return ob die Werte dieses Datums auf ganze Stunden normiert sind
 	 */
@@ -111,13 +137,14 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	}
 
 	/**
-	 * Erfragt den Wert eines Attributs
+	 * Erfragt den Wert eines Attributs.
 	 * 
+	 * @param attribut1 das Attribut
 	 * @return der Wert eines Attributs
 	 */
 	public final AggregationsAttributWert getWert(
-			final AggregationsAttribut attribut) {
-		return this.werte.get(attribut);
+			final AggregationsAttribut attribut1) {
+		return this.werte.get(attribut1);
 	}
 
 	/**
@@ -128,7 +155,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	}
 
 	/**
-	 * Erfragt die Datenzeit dieses Datums
+	 * Erfragt die Datenzeit dieses Datums.
 	 * 
 	 * @return die Datenzeit dieses Datums
 	 */
@@ -137,12 +164,12 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	}
 
 	/**
-	 * Erfragt das Erfassungs- bzw. Aggregationsintervall dieses Datensatzes
+	 * Erfragt das Erfassungs- bzw. Aggregationsintervall dieses Datensatzes.
 	 * 
 	 * @return das Erfassungs- bzw. Aggregationsintervall dieses Datensatzes
 	 */
 	public final long getT() {
-		return this.T;
+		return this.tT;
 	}
 
 	/**
@@ -163,7 +190,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 						.format(new Date(this.datenZeit))
 				+ " (" + this.datenZeit + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
-		s += "\nT: " + T; //$NON-NLS-1$
+		s += "\nT: " + tT; //$NON-NLS-1$
 		for (AggregationsAttribut attribut : this.werte.keySet()) {
 			s += "\n" + attribut + ":\n" + this.werte.get(attribut); //$NON-NLS-1$//$NON-NLS-2$
 		}

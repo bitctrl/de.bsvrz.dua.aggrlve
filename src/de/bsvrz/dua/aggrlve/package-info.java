@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
-
+ 
 /**
  * Alle Klassen der SWE Aggregation LVE
  */

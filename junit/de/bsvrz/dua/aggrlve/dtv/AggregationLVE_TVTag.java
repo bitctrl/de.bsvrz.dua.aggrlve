@@ -69,7 +69,7 @@ public class AggregationLVE_TVTag extends AbstraktDTVTest {
 
 		DataDescription dd = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-				AggregationsIntervall.AGG_60MINUTE.getAspekt(), (short) 0);
+				AggregationsIntervall.aGG60MINUTE.getAspekt(), (short) 0);
 
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, 2000);
@@ -99,10 +99,10 @@ public class AggregationLVE_TVTag extends AbstraktDTVTest {
 			startzeit += Constants.MILLIS_PER_HOUR;
 
 		}
-		mqObj.aggregiere(zeit, AggregationsIntervall.AGG_DTV_TAG);
+		mqObj.aggregiere(zeit, AggregationsIntervall.aGGDTVTAG);
 
 		Collection<AggregationsDatum> daten = mqObj.getPuffer().getPuffer(
-				AggregationsIntervall.AGG_DTV_TAG).getDatenFuerZeitraum(zeit,
+				AggregationsIntervall.aGGDTVTAG).getDatenFuerZeitraum(zeit,
 				startzeit);
 
 		if (daten != null && !daten.isEmpty()) {

@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.HashSet;
@@ -40,14 +41,14 @@ import java.util.Set;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class AggregationsAttribut {
+public final class AggregationsAttribut {
 
 	/**
-	 * Wertebereich
+	 * Wertebereich.
 	 */
-	private static Set<AggregationsAttribut> WERTE_BEREICH = new HashSet<AggregationsAttribut>();
+	private static final Set<AggregationsAttribut> WERTE_BEREICH = new HashSet<AggregationsAttribut>();
 
 	/**
 	 * Attribut <code>qKfz</code> bzw. <code>QKfz</code>
@@ -86,23 +87,23 @@ public class AggregationsAttribut {
 			"vPkw", "VPkw"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * der Name des Attributs (FS)
+	 * der Name des Attributs (FS).
 	 */
 	private String nameFS = null;
 
 	/**
-	 * der Name des Attributs (MQ)
+	 * der Name des Attributs (MQ).
 	 */
 	private String nameMQ = null;
 
 	/**
 	 * indiziert, ob es sich bei diesem Attribut um ein Geschwindigkeitsattribut
-	 * handelt
+	 * handelt.
 	 */
 	private boolean geschwindigkeitsAttribut = false;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param nameFS
 	 *            der Attributname bei Fahrstreifendaten z.B. <code>qKfz</code>
@@ -120,17 +121,17 @@ public class AggregationsAttribut {
 
 	/**
 	 * Erfragt, ob es sich bei diesem Attribut um ein Geschwindigkeitsattribut
-	 * handelt
+	 * handelt.
 	 * 
 	 * @return ob es sich bei diesem Attribut um ein Geschwindigkeitsattribut
 	 *         handelt
 	 */
-	public final boolean isGeschwindigkeitsAttribut() {
+	public boolean isGeschwindigkeitsAttribut() {
 		return this.geschwindigkeitsAttribut;
 	}
 
 	/**
-	 * Erfragt den Namen dieses Attributs
+	 * Erfragt den Namen dieses Attributs.
 	 * 
 	 * @param fuerFahrStreifen
 	 *            das Objekt, fuer den der Name dieses Attributs erfragt wird
@@ -141,11 +142,11 @@ public class AggregationsAttribut {
 	}
 
 	/**
-	 * Erfragt alle statischen Instanzen dieser Klasse
+	 * Erfragt alle statischen Instanzen dieser Klasse.
 	 * 
 	 * @return alle statischen Instanzen dieser Klasse
 	 */
-	public static final Set<AggregationsAttribut> getInstanzen() {
+	public static Set<AggregationsAttribut> getInstanzen() {
 		return WERTE_BEREICH;
 	}
 

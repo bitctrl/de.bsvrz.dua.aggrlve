@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -68,9 +69,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
+public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		implements IObjektWeckerListener {
 
 	/***************************************************************************
@@ -82,24 +83,24 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	 * Systemzeit orientieren. Dadurch wird der Zeitrafferbetrieb dieser SWE
 	 * ermoeglicht.
 	 */
-	private static boolean ZEIT_RAFFER = false;
+	private static boolean zeitRaffer = false;
 
 	/**
-	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehören
+	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehören.
 	 */
 	private Map<SystemObject, SystemObject> fsMq = new HashMap<SystemObject, SystemObject>();
 	/**
-	 * alle Messquerschnitte, mit den Fahrstreifen, zu denen sie gehören
+	 * alle Messquerschnitte, mit den Fahrstreifen, zu denen sie gehören.
 	 */
 	private Map<SystemObject, Set<SystemObject>> mqFs = new HashMap<SystemObject, Set<SystemObject>>();
 
 	/**
-	 * Letztes Fahrstreifendatum pro Fahrstreifen
+	 * Letztes Fahrstreifendatum pro Fahrstreifen.
 	 */
 	private Map<SystemObject, ResultData> fsDataHist = new HashMap<SystemObject, ResultData>();
 
 	/**
-	 * Zweite Datenverteiler-Verbindung fuer Testzwecke
+	 * Zweite Datenverteiler-Verbindung fuer Testzwecke.
 	 */
 	private ClientDavInterface dav2 = null;
 
@@ -109,7 +110,7 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * indiziert, ob diese das Flag <code>nicht erfasst</code> uebernommen
-	 * werden soll
+	 * werden soll.
 	 */
 	public static final boolean NICHT_ERFASST = false;
 
@@ -120,30 +121,30 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	public static final boolean APPROX_REST = true;
 
 	/**
-	 * der Guetefaktor dieser SWE
+	 * der Guetefaktor dieser SWE.
 	 */
-	public static double GUETE;
+	public static double guete;
 
 	/**
-	 * der Systemobjekttyp Fahrstreifen
+	 * der Systemobjekttyp Fahrstreifen.
 	 */
-	public static SystemObjectType TYP_FAHRSTREIFEN = null;
+	public static SystemObjectType typFahrstreifen = null;
 
 	/**
-	 * Aspekt der messwertersetzten Fahrstreifendaten
+	 * Aspekt der messwertersetzten Fahrstreifendaten.
 	 */
-	public static Aspect MWE = null;
+	public static Aspect mwe = null;
 
 	/**
 	 * der interne Kontrollprozess dient der zeitlichen Steuerung der
 	 * Aggregationsberechnungen (1min, …, 60min). Nach dem Starten führt dieser
 	 * Prozess immer 30s nach jeder vollen Minute eine Ueberprüfung für alle
-	 * Fahrstreifen bzw. Messquerschnitte
+	 * Fahrstreifen bzw. Messquerschnitte.
 	 */
 	private ObjektWecker wecker = new ObjektWecker();
 
 	/**
-	 * alle Messquerschnitte, fuer die Daten aggregiert werden sollen
+	 * alle Messquerschnitte, fuer die Daten aggregiert werden sollen.
 	 */
 	private Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = new HashMap<SystemObject, AggregationsMessQuerschnitt>();
 
@@ -164,10 +165,10 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		 */
 		AggregationsIntervall.initialisiere(this.verbindung);
 
-		GUETE = this.getGueteFaktor();
-		TYP_FAHRSTREIFEN = this.verbindung.getDataModel().getType(
+		guete = this.getGueteFaktor();
+		typFahrstreifen = this.verbindung.getDataModel().getType(
 				DUAKonstanten.TYP_FAHRSTREIFEN);
-		MWE = this.verbindung.getDataModel().getAspect(
+		mwe = this.verbindung.getDataModel().getAspect(
 				DUAKonstanten.ASP_MESSWERTERSETZUNG);
 
 		Collection<SystemObject> alleMqObjImKB = DUAUtensilien
@@ -195,7 +196,7 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 			}
 		}
 
-		if (!ZEIT_RAFFER) {
+		if (!zeitRaffer) {
 			wecker.setWecker(this, getNaechstenWeckZeitPunkt());
 		} else {
 			/**
@@ -226,15 +227,15 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	}
 
 	/**
-	 * Startet diese Applikation nur fuer Testzwecke
+	 * Startet diese Applikation nur fuer Testzwecke.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @throws Exception
 	 *             wenn die Initialisierung fehlschlaegt
 	 */
-	public final void testStart(final ClientDavInterface dav) throws Exception {
-		ZEIT_RAFFER = true;
+	public void testStart(final ClientDavInterface dav) throws Exception {
+		zeitRaffer = true;
 		Debug.getLogger().config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
 		this.komArgumente = new ArrayList<String>();
 		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
@@ -262,10 +263,11 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	}
 
 	/**
-	 * Erfragt ein Aggregationsobjekt (nur fuer Testzwecke)
+	 * Erfragt ein Aggregationsobjekt (nur fuer Testzwecke).
 	 * 
 	 * @param obj
 	 *            das assoziierte Systemobjekt
+	 * @return ein Aggregationsobjekt (nur fuer Testzwecke).
 	 */
 	public AggregationsMessQuerschnitt getAggregationsObjekt(
 			final SystemObject obj) {
@@ -274,12 +276,12 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Erfragt den Zeitpunkt, der exakt 30s nach der Minute liegt, in der diese
-	 * Methode aufgerufen wird (Absolute Zeit ohne Sommer- und Winterzeit)
+	 * Methode aufgerufen wird (Absolute Zeit ohne Sommer- und Winterzeit).
 	 * 
 	 * @return der Zeitpunkt, der exakt 30s nach der Minute liegt, in der diese
 	 *         Methode aufgerufen wird
 	 */
-	private final long getNaechstenWeckZeitPunkt() {
+	private long getNaechstenWeckZeitPunkt() {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());
 
@@ -293,12 +295,12 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	}
 
 	/**
-	 * Startet diese Applikation
+	 * Startet diese Applikation.
 	 * 
 	 * @param argumente
 	 *            Argumente der Kommandozeile
 	 */
-	public static void main(String argumente[]) {
+	public static void main(String[] argumente) {
 		StandardApplicationRunner.run(new AggregationLVE(), argumente);
 	}
 
@@ -350,7 +352,7 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Leitet eine Berechnung mit allen bis zum uebergebenen Zeitpunkt
-	 * eingetroffenen Daten fuer den uebergebenen Zeitpunkt aus
+	 * eingetroffenen Daten fuer den uebergebenen Zeitpunkt aus.
 	 * 
 	 * @param mqObj
 	 *            der Messquerschnitt, fuer den die Berechnung (Aggregation)
@@ -358,7 +360,7 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	 * @param jetzt
 	 *            der Zeitpunkt der Berechnung
 	 */
-	private final void loeseBerechnungAus(final SystemObject mqObj,
+	private void loeseBerechnungAus(final SystemObject mqObj,
 			final long jetzt) {
 		synchronized (dav2) {
 			AggregationsMessQuerschnitt mqZiel = null;
@@ -386,12 +388,12 @@ public class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Löscht den aktuellen Fahrstreifen-Datenpuffer fuer einen bestimmten
-	 * Messquerschnitt
+	 * Messquerschnitt.
 	 * 
 	 * @param mq
 	 *            ein Messquerschnitt
 	 */
-	private final void loescheMqPuffer(final SystemObject mq) {
+	private void loescheMqPuffer(final SystemObject mq) {
 		if (mq != null && this.mqFs.get(mq) != null) {
 			for (SystemObject fs : this.mqFs.get(mq)) {
 				this.fsDataHist.put(fs, null);

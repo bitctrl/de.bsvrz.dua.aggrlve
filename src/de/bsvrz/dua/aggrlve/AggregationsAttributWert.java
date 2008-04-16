@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.Data;
@@ -40,28 +41,28 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertMarkierung;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class AggregationsAttributWert extends MesswertMarkierung implements
 		Comparable<AggregationsAttributWert>, Cloneable {
 
 	/**
-	 * das Attribut
+	 * das Attribut.
 	 */
 	private AggregationsAttribut attr = null;
 
 	/**
-	 * der Wert dieses Attributs
+	 * der Wert dieses Attributs.
 	 */
 	private long wert = -4;
 
 	/**
-	 * die Guete
+	 * die Guete.
 	 */
 	private GWert guete = null;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param attr
 	 *            das Attribut
@@ -79,40 +80,40 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 		}
 
 		String attributName = attr.getAttributName(resultat.getObject()
-				.isOfType(AggregationLVE.TYP_FAHRSTREIFEN));
+				.isOfType(AggregationLVE.typFahrstreifen));
 
 		this.attr = attr;
 		this.wert = datenSatz.getItem(attributName)
 				.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
 		this.nichtErfasst = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("Erfassung"). //$NON-NLS-1$//$NON-NLS-2$
+				.getItem("Status").getItem("Erfassung").
 				getUnscaledValue("NichtErfasst").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
 		this.implausibel = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$//$NON-NLS-2$
+				.getItem("Status").getItem("MessWertErsetzung").
 				getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
 		this.interpoliert = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$//$NON-NLS-2$
+				.getItem("Status").getItem("MessWertErsetzung").
 				getUnscaledValue("Interpoliert").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
 
 		this.formalMax = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlFormal").
 				getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
 		this.formalMin = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlFormal").
 				getUnscaledValue("WertMin").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
 
 		this.logischMax = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlLogisch").
 				getUnscaledValue("WertMaxLogisch").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
 		this.logischMin = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlLogisch").
 				getUnscaledValue("WertMinLogisch").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
 
 		this.guete = new GWert(datenSatz, attributName);
 	}
 
 	/**
-	 * Konstruktor fuer Zwischenergebnisse
+	 * Konstruktor fuer Zwischenergebnisse.
 	 * 
 	 * @param attribut
 	 *            das Attribut
@@ -149,7 +150,7 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	/**
 	 * Exportiert den Inhalt dieses Objektes in ein veraenderbares Nutzdatum der
 	 * Attributgruppe <code>atg.verkehrsDatenKurzZeitFs</code> oder
-	 * <code>atg.verkehrsDatenKurzZeitMq</code>
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
 	 * 
 	 * @param nutzDatum
 	 *            ein veraenderbare Instanz einer Attributgruppe
@@ -173,34 +174,34 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 		}
 
 		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("Erfassung"). //$NON-NLS-1$//$NON-NLS-2$
+				.getItem("Status").getItem("Erfassung").
 				getUnscaledValue("NichtErfasst").set(this.isNichtErfasst() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$//$NON-NLS-2$
+				.getItem("Status").getItem("MessWertErsetzung").
 				getUnscaledValue("Implausibel").set(this.isImplausibel() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$//$NON-NLS-2$
+				.getItem("Status").getItem("MessWertErsetzung").
 				getUnscaledValue("Interpoliert").set(this.isInterpoliert() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
 
 		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlFormal").
 				getUnscaledValue("WertMax").set(this.isFormalMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlFormal").
 				getUnscaledValue("WertMin").set(this.isFormalMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
 
 		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlLogisch").
 				getUnscaledValue("WertMaxLogisch").set(this.isLogischMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
 		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch"). //$NON-NLS-1$ //$NON-NLS-2$
+				.getItem("Status").getItem("PlLogisch").
 				getUnscaledValue("WertMinLogisch").set(this.isLogischMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
 
 		this.guete.exportiere(nutzDatum, attributName);
 	}
 
 	/**
-	 * Erfragt das Attribut
+	 * Erfragt das Attribut.
 	 * 
 	 * @return das Attribut
 	 */
@@ -209,7 +210,7 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	}
 
 	/**
-	 * Setzt den Wert dieses Attributs
+	 * Setzt den Wert dieses Attributs.
 	 * 
 	 * @param wert
 	 *            der Wert dieses Attributs
@@ -220,7 +221,7 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	}
 
 	/**
-	 * Erfragt den Wert dieses Attributs
+	 * Erfragt den Wert dieses Attributs.
 	 * 
 	 * @return der Wert dieses Attributs
 	 */
@@ -229,7 +230,7 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	}
 
 	/**
-	 * Erfragt die Guete dieses Attributwertes
+	 * Erfragt die Guete dieses Attributwertes.
 	 * 
 	 * @return die Guete dieses Attributwertes
 	 */
@@ -238,7 +239,7 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	}
 
 	/**
-	 * Setzte die Guete dieses Attributwertes
+	 * Setzte die Guete dieses Attributwertes.
 	 * 
 	 * @param guete
 	 *            die Guete dieses Attributwertes

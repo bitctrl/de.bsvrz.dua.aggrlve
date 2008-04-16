@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+ 
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -36,12 +37,12 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class AggregationsPuffer extends AbstraktAggregationsPuffer {
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler

@@ -63,14 +63,14 @@ public class AggregationsIntervallTest {
 		AggregationsIntervall.initialisiere(dav);
 		AggregationsIntervall instanzen[] = new AggregationsIntervall[AggregationsIntervall
 				.getInstanzen().size()];
-		instanzen[0] = AggregationsIntervall.AGG_1MINUTE;
-		instanzen[1] = AggregationsIntervall.AGG_5MINUTE;
-		instanzen[2] = AggregationsIntervall.AGG_15MINUTE;
-		instanzen[3] = AggregationsIntervall.AGG_30MINUTE;
-		instanzen[4] = AggregationsIntervall.AGG_60MINUTE;
-		instanzen[5] = AggregationsIntervall.AGG_DTV_TAG;
-		instanzen[6] = AggregationsIntervall.AGG_DTV_MONAT;
-		instanzen[7] = AggregationsIntervall.AGG_DTV_JAHR;
+		instanzen[0] = AggregationsIntervall.aGG1MINUTE;
+		instanzen[1] = AggregationsIntervall.aGG5MINUTE;
+		instanzen[2] = AggregationsIntervall.aGG15MINUTE;
+		instanzen[3] = AggregationsIntervall.aGG30MINUTE;
+		instanzen[4] = AggregationsIntervall.aGG60MINUTE;
+		instanzen[5] = AggregationsIntervall.aGGDTVTAG;
+		instanzen[6] = AggregationsIntervall.aGGDTVMONAT;
+		instanzen[7] = AggregationsIntervall.aGGDTVJAHR;
 
 		int i = 0;
 		for (AggregationsIntervall intervall : AggregationsIntervall
@@ -82,7 +82,7 @@ public class AggregationsIntervallTest {
 		long jetzt = System.currentTimeMillis();
 		for (AggregationsIntervall intervall : AggregationsIntervall
 				.getInstanzen()) {
-			if (intervall.equals(AggregationsIntervall.AGG_DTV_TAG))
+			if (intervall.equals(AggregationsIntervall.aGGDTVTAG))
 				break;
 			cal.setTimeInMillis(jetzt);
 			// cal.set(Calendar.MONTH, -1);
@@ -119,7 +119,7 @@ public class AggregationsIntervallTest {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 
-		AggregationsIntervall intervall = AggregationsIntervall.AGG_DTV_TAG;
+		AggregationsIntervall intervall = AggregationsIntervall.aGGDTVTAG;
 		for (long zeitpunkt = cal.getTimeInMillis() + 30
 				* Constants.MILLIS_PER_SECOND; zeitpunkt < cal
 				.getTimeInMillis()
