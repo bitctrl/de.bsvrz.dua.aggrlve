@@ -58,11 +58,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DTVAggregationsPuffer
 extends AggregationsPuffer
 implements ArchiveAvailabilityListener{
-
-	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
 	
 	
 	/**
@@ -147,10 +142,10 @@ implements ArchiveAvailabilityListener{
 						}
 					}
 				} catch (IOException e) {
-					LOGGER.error(Constants.EMPTY_STRING, e);
+					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					LOGGER.error(Constants.EMPTY_STRING, e);
+					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
 				} 
 				

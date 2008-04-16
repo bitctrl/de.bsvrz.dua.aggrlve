@@ -54,6 +54,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Die SWE Aggregation LVE meldet sich auf alle messwertersetzten Kurzzeitdaten
@@ -235,7 +236,7 @@ implements IObjektWeckerListener{
 	public final void testStart(final ClientDavInterface dav)
 	throws Exception{
 		ZEIT_RAFFER = true;
-		LOGGER.config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
+		Debug.getLogger().config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
 		this.komArgumente = new ArrayList<String>();
 		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
 				"kb.duaTestObjekte"); //$NON-NLS-1$
@@ -303,7 +304,7 @@ implements IObjektWeckerListener{
         				UncaughtExceptionHandler(){
             public void uncaughtException(@SuppressWarnings("unused")
 			Thread t, Throwable e) {
-                LOGGER.error("Applikation wird wegen" +  //$NON-NLS-1$
+            	Debug.getLogger().error("Applikation wird wegen" +  //$NON-NLS-1$
                 		" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
             	e.printStackTrace();
                 Runtime.getRuntime().exit(0);

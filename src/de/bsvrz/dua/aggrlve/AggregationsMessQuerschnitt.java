@@ -48,6 +48,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Aggregiert aus den fuer diesen Messquerschnitt (bzw. dessen Fahrstreifen) gespeicherten
@@ -159,7 +160,7 @@ extends AbstraktAggregationsObjekt{
 						}
 					}
 				}else{
-					LOGGER.warning(intervall + " fuer " + this.objekt +  //$NON-NLS-1$
+					Debug.getLogger().warning(intervall + " fuer " + this.objekt +  //$NON-NLS-1$
 							" kann nicht berechnet werden, da keine Basisdaten (Intervall: " + //$NON-NLS-1$
 							intervall.getVorgaenger() + ") zur Verfuegung stehen"); //$NON-NLS-1$
 				}
@@ -280,7 +281,7 @@ extends AbstraktAggregationsObjekt{
 					try {
 						gueteWerte.add(GueteVerfahren.summe(gueteWerteInFs.toArray(new GWert[0])));
 					} catch (GueteException e) {
-						LOGGER.warning("Guete von " + fahrStreifen.getObjekt() + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+						Debug.getLogger().warning("Guete von " + fahrStreifen.getObjekt() + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 								attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 						e.printStackTrace();
 					}
@@ -324,7 +325,7 @@ extends AbstraktAggregationsObjekt{
 				try {
 					exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 				} catch (GueteException e) {
-					LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+					Debug.getLogger().warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 							attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 					e.printStackTrace();
 				}				
@@ -341,7 +342,7 @@ extends AbstraktAggregationsObjekt{
 	@Override
 	protected void finalize()
 	throws Throwable {
-		LOGGER.warning("Der MQ " + this.mq +  //$NON-NLS-1$
+		Debug.getLogger().warning("Der MQ " + this.mq +  //$NON-NLS-1$
 						" wird nicht mehr aggregiert"); //$NON-NLS-1$
 	}
 	

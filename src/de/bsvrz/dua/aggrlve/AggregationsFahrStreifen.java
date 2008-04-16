@@ -46,6 +46,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Aggregiert aus den fuer diesen Fahrstreifen gespeicherten Daten die Aggregationswerte 
@@ -193,7 +194,7 @@ implements ClientReceiverInterface{
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (GueteException e) {
-				LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+				Debug.getLogger().warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 				e.printStackTrace();
 			}
@@ -223,7 +224,7 @@ implements ClientReceiverInterface{
 	@Override
 	protected void finalize()
 	throws Throwable {
-		LOGGER.warning("Der FS " + this.fs +  //$NON-NLS-1$
+		Debug.getLogger().warning("Der FS " + this.fs +  //$NON-NLS-1$
 						" wird nicht mehr aggregiert"); //$NON-NLS-1$
 	}
 	

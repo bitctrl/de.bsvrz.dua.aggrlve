@@ -53,11 +53,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  */
 public abstract class AbstraktAggregationsObjekt {
-
-	/**
-	 * Debug-Logger
-	 */
-	protected static final Debug LOGGER = Debug.getLogger();
 	
 	/**
 	 * die restlichen auszufuellenden Attribute der Attributgruppen
@@ -318,7 +313,7 @@ public abstract class AbstraktAggregationsObjekt {
 				}
 			}
 		}else{
-			LOGGER.warning("Die Anzahl der benoetigten Intervalle sollte nicht kleiner 0 sein"); //$NON-NLS-1$
+			Debug.getLogger().warning("Die Anzahl der benoetigten Intervalle sollte nicht kleiner 0 sein"); //$NON-NLS-1$
 		}
 		
 		return zielDaten;
@@ -354,7 +349,7 @@ public abstract class AbstraktAggregationsObjekt {
 					berechnen = puffer.getDatenFuerZeitraum(zeitStempel,
 							  								zeitStempel + 1000).isEmpty();															
 				}else{
-					LOGGER.warning("Datenpuffer fuer " + this.objekt + " und " +  //$NON-NLS-1$ //$NON-NLS-2$
+					Debug.getLogger().warning("Datenpuffer fuer " + this.objekt + " und " +  //$NON-NLS-1$ //$NON-NLS-2$
 							intervall + " konnte nicht ermittelt werden"); //$NON-NLS-1$
 				}
 			}
@@ -407,7 +402,7 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (GueteException e) {
-				LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+				Debug.getLogger().warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 				e.printStackTrace();
 			}
@@ -464,7 +459,7 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (GueteException e) {
-				LOGGER.warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+				Debug.getLogger().warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 				e.printStackTrace();
 			}
