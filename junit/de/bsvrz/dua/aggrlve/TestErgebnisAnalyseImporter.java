@@ -35,31 +35,31 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
- * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein
+ * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein.
  * 
  * @author BitCtrl Systems GmbH, Görlitz
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class TestErgebnisAnalyseImporter extends CSVImporter {
+public final class TestErgebnisAnalyseImporter extends CSVImporter {
 
 	/**
-	 * Verbindung zum Datenverteiler
+	 * Verbindung zum Datenverteiler.
 	 */
-	protected static ClientDavInterface DAV = null;
+	protected static ClientDavInterface sDav = null;
 
 	/**
-	 * Hält aktuelle Daten des FS 1-3
+	 * Hält aktuelle Daten des FS 1-3.
 	 */
-	protected String ZEILE[];
+	protected String[] zeile;
 
 	/**
-	 * T
+	 * T.
 	 */
-	protected static long INTERVALL = Constants.MILLIS_PER_MINUTE;
+	protected static long iNTERVALL = Constants.MILLIS_PER_MINUTE;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param dav
 	 *            Datenverteier-Verbindung
@@ -72,8 +72,8 @@ public class TestErgebnisAnalyseImporter extends CSVImporter {
 	public TestErgebnisAnalyseImporter(final ClientDavInterface dav,
 			final String csvQuelle) throws Exception {
 		super(csvQuelle);
-		if (DAV == null) {
-			DAV = dav;
+		if (sDav == null) {
+			sDav = dav;
 		}
 
 		/**
@@ -83,72 +83,72 @@ public class TestErgebnisAnalyseImporter extends CSVImporter {
 	}
 
 	/**
-	 * Setzt Datenintervall
+	 * Setzt Datenintervall.
 	 * 
 	 * @param t
 	 *            Datenintervall
 	 */
-	public static final void setT(final long t) {
-		INTERVALL = t;
+	public static void setT(final long t) {
+		iNTERVALL = t;
 	}
 
 	/**
-	 * Importiert die nächste Zeile aus der CSV-Datei
+	 * Importiert die nächste Zeile aus der CSV-Datei.
 	 * 
 	 */
-	public final void importNaechsteZeile() {
-		ZEILE = this.getNaechsteZeile();
+	public void importNaechsteZeile() {
+		zeile = this.getNaechsteZeile();
 	}
 
 	/**
 	 * Bildet einen Ausgabe-Datensatz der MQ-Analysewerte aus den Daten der
-	 * aktuellen CSV-Zeile
+	 * aktuellen CSV-Zeile.
 	 * 
 	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der
 	 *         nächsten Zeile oder <code>null</code>, wenn der Dateizeiger am
 	 *         Ende ist
 	 */
-	public final Data getMQAnalyseDatensatz() {
-		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup(
+	public Data getMQAnalyseDatensatz() {
+		Data datensatz = sDav.createData(sDav.getDataModel().getAttributeGroup(
 				"atg.verkehrsDatenKurzZeitMq")); //$NON-NLS-1$
 
 		if (datensatz != null) {
-			if (ZEILE != null) {
+			if (zeile != null) {
 				try {
-					int QKfz = Integer.parseInt(ZEILE[84]);
-					String QKfzStatus = ZEILE[85];
-					int QLkw = Integer.parseInt(ZEILE[86]);
-					String QLkwStatus = ZEILE[87];
-					int QPkw = Integer.parseInt(ZEILE[88]);
-					String QPkwStatus = ZEILE[89];
-					int VKfz = Integer.parseInt(ZEILE[90]);
-					String VKfzStatus = ZEILE[91];
-					int VLkw = Integer.parseInt(ZEILE[92]);
-					String VLkwStatus = ZEILE[93];
-					int VPkw = Integer.parseInt(ZEILE[94]);
-					String VPkwStatus = ZEILE[95];
-					int VgKfz = Integer.parseInt(ZEILE[96]);
-					String VgKfzStatus = ZEILE[97];
-					int B = Integer.parseInt(ZEILE[98]);
-					String BStatus = ZEILE[99];
-					int BMax = Integer.parseInt(ZEILE[100]);
-					String BMaxStatus = ZEILE[101];
-					int SKfz = Integer.parseInt(ZEILE[100]);
-					String SKfzStatus = ZEILE[101];
-					int ALkw = Integer.parseInt(ZEILE[102]);
-					String ALkwStatus = ZEILE[103];
-					int KKfz = Integer.parseInt(ZEILE[104]);
-					String KKfzStatus = ZEILE[105];
-					int KLkw = Integer.parseInt(ZEILE[106]);
-					String KLkwStatus = ZEILE[107];
-					int KPkw = Integer.parseInt(ZEILE[108]);
-					String KPkwStatus = ZEILE[109];
-					int QB = Integer.parseInt(ZEILE[110]);
-					String QBStatus = ZEILE[111];
-					int KB = Integer.parseInt(ZEILE[112]);
-					String KBStatus = ZEILE[113];
-					int VDelta = Integer.parseInt(ZEILE[114]);
-					String VDeltaStatus = ZEILE[115];
+					int QKfz = Integer.parseInt(zeile[84]);
+					String QKfzStatus = zeile[85];
+					int QLkw = Integer.parseInt(zeile[86]);
+					String QLkwStatus = zeile[87];
+					int QPkw = Integer.parseInt(zeile[88]);
+					String QPkwStatus = zeile[89];
+					int VKfz = Integer.parseInt(zeile[90]);
+					String VKfzStatus = zeile[91];
+					int VLkw = Integer.parseInt(zeile[92]);
+					String VLkwStatus = zeile[93];
+					int VPkw = Integer.parseInt(zeile[94]);
+					String VPkwStatus = zeile[95];
+					int VgKfz = Integer.parseInt(zeile[96]);
+					String VgKfzStatus = zeile[97];
+					int B = Integer.parseInt(zeile[98]);
+					String BStatus = zeile[99];
+					int BMax = Integer.parseInt(zeile[100]);
+					String BMaxStatus = zeile[101];
+					int SKfz = Integer.parseInt(zeile[100]);
+					String SKfzStatus = zeile[101];
+					int ALkw = Integer.parseInt(zeile[102]);
+					String ALkwStatus = zeile[103];
+					int KKfz = Integer.parseInt(zeile[104]);
+					String KKfzStatus = zeile[105];
+					int KLkw = Integer.parseInt(zeile[106]);
+					String KLkwStatus = zeile[107];
+					int KPkw = Integer.parseInt(zeile[108]);
+					String KPkwStatus = zeile[109];
+					int QB = Integer.parseInt(zeile[110]);
+					String QBStatus = zeile[111];
+					int KB = Integer.parseInt(zeile[112]);
+					String KBStatus = zeile[113];
+					int VDelta = Integer.parseInt(zeile[114]);
+					String VDeltaStatus = zeile[115];
 
 					datensatz = setAttribut("QKfz", QKfz, QKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("QLkw", QLkw, QLkwStatus, datensatz); //$NON-NLS-1$
@@ -183,55 +183,55 @@ public class TestErgebnisAnalyseImporter extends CSVImporter {
 
 	/**
 	 * Bildet einen Ausgabe-Datensatz der FS-Analysewerte aus den Daten der
-	 * aktuellen CSV-Zeile
+	 * aktuellen CSV-Zeile.
 	 * 
-	 * @param FS
+	 * @param fs
 	 *            Fahrstreifen (1-3)
 	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der
 	 *         nächsten Zeile oder <code>null</code>, wenn der Dateizeiger am
 	 *         Ende ist
 	 */
-	public final Data getFSAnalyseDatensatz(final int FS) {
-		Data datensatz = DAV.createData(DAV.getDataModel().getAttributeGroup(
+	public Data getFSAnalyseDatensatz(final int fs) {
+		Data datensatz = sDav.createData(sDav.getDataModel().getAttributeGroup(
 				"atg.verkehrsDatenKurzZeitFs")); //$NON-NLS-1$
 
-		int fsMulti = FS - 1;
+		int fsMulti = fs - 1;
 
 		if (datensatz != null) {
 
-			if (ZEILE != null) {
+			if (zeile != null) {
 				try {
-					int qKfz = Integer.parseInt(ZEILE[0 + (fsMulti * 2)]);
-					String qKfzStatus = ZEILE[1 + (fsMulti * 2)];
-					int qPkw = Integer.parseInt(ZEILE[6 + (fsMulti * 2)]);
-					String qPkwStatus = ZEILE[7 + (fsMulti * 2)];
-					int qLkw = Integer.parseInt(ZEILE[12 + (fsMulti * 2)]);
-					String qLkwStatus = ZEILE[13 + (fsMulti * 2)];
-					int vKfz = Integer.parseInt(ZEILE[18 + (fsMulti * 2)]);
-					String vKfzStatus = ZEILE[19 + (fsMulti * 2)];
-					int vPkw = Integer.parseInt(ZEILE[24 + (fsMulti * 2)]);
-					String vPkwStatus = ZEILE[25 + (fsMulti * 2)];
-					int vLkw = Integer.parseInt(ZEILE[30 + (fsMulti * 2)]);
-					String vLkwStatus = ZEILE[31 + (fsMulti * 2)];
-					int vgKfz = Integer.parseInt(ZEILE[36 + (fsMulti * 2)]);
-					String vgKfzStatus = ZEILE[37 + (fsMulti * 2)];
-					int b = Integer.parseInt(ZEILE[42 + (fsMulti * 2)]);
-					String bStatus = ZEILE[43 + (fsMulti * 2)];
-					int aLkw = Integer.parseInt(ZEILE[48 + (fsMulti * 2)]);
-					String aLkwStatus = ZEILE[49 + (fsMulti * 2)];
-					int kKfz = Integer.parseInt(ZEILE[54 + (fsMulti * 2)]);
-					String kKfzStatus = ZEILE[55 + (fsMulti * 2)];
-					int kLkw = Integer.parseInt(ZEILE[60 + (fsMulti * 2)]);
-					String kLkwStatus = ZEILE[61 + (fsMulti * 2)];
-					int kPkw = Integer.parseInt(ZEILE[66 + (fsMulti * 2)]);
-					String kPkwStatus = ZEILE[67 + (fsMulti * 2)];
-					int qB = Integer.parseInt(ZEILE[72 + (fsMulti * 2)]);
-					String qBStatus = ZEILE[73 + (fsMulti * 2)];
-					int kB = Integer.parseInt(ZEILE[78 + (fsMulti * 2)]);
-					String kBStatus = ZEILE[79 + (fsMulti * 2)];
+					int qKfz = Integer.parseInt(zeile[0 + (fsMulti * 2)]);
+					String qKfzStatus = zeile[1 + (fsMulti * 2)];
+					int qPkw = Integer.parseInt(zeile[6 + (fsMulti * 2)]);
+					String qPkwStatus = zeile[7 + (fsMulti * 2)];
+					int qLkw = Integer.parseInt(zeile[12 + (fsMulti * 2)]);
+					String qLkwStatus = zeile[13 + (fsMulti * 2)];
+					int vKfz = Integer.parseInt(zeile[18 + (fsMulti * 2)]);
+					String vKfzStatus = zeile[19 + (fsMulti * 2)];
+					int vPkw = Integer.parseInt(zeile[24 + (fsMulti * 2)]);
+					String vPkwStatus = zeile[25 + (fsMulti * 2)];
+					int vLkw = Integer.parseInt(zeile[30 + (fsMulti * 2)]);
+					String vLkwStatus = zeile[31 + (fsMulti * 2)];
+					int vgKfz = Integer.parseInt(zeile[36 + (fsMulti * 2)]);
+					String vgKfzStatus = zeile[37 + (fsMulti * 2)];
+					int b = Integer.parseInt(zeile[42 + (fsMulti * 2)]);
+					String bStatus = zeile[43 + (fsMulti * 2)];
+					int aLkw = Integer.parseInt(zeile[48 + (fsMulti * 2)]);
+					String aLkwStatus = zeile[49 + (fsMulti * 2)];
+					int kKfz = Integer.parseInt(zeile[54 + (fsMulti * 2)]);
+					String kKfzStatus = zeile[55 + (fsMulti * 2)];
+					int kLkw = Integer.parseInt(zeile[60 + (fsMulti * 2)]);
+					String kLkwStatus = zeile[61 + (fsMulti * 2)];
+					int kPkw = Integer.parseInt(zeile[66 + (fsMulti * 2)]);
+					String kPkwStatus = zeile[67 + (fsMulti * 2)];
+					int qB = Integer.parseInt(zeile[72 + (fsMulti * 2)]);
+					String qBStatus = zeile[73 + (fsMulti * 2)];
+					int kB = Integer.parseInt(zeile[78 + (fsMulti * 2)]);
+					String kBStatus = zeile[79 + (fsMulti * 2)];
 					int sKfz = 1;
 
-					datensatz.getTimeValue("T").setMillis(INTERVALL); //$NON-NLS-1$
+					datensatz.getTimeValue("T").setMillis(iNTERVALL); //$NON-NLS-1$
 					datensatz = setAttribut("qKfz", qKfz, qKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qPkw", qPkw, qPkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qLkw", qLkw, qLkwStatus, datensatz); //$NON-NLS-1$
@@ -261,17 +261,19 @@ public class TestErgebnisAnalyseImporter extends CSVImporter {
 	}
 
 	/**
-	 * Setzt Attribut in Datensatz
+	 * Setzt Attribut in Datensatz.
 	 * 
 	 * @param attributName
 	 *            Name des Attributs
 	 * @param wert
 	 *            Wert des Attributs
+	 * @param status
+	 *            der Status
 	 * @param datensatz
 	 *            der Datensatz
 	 * @return der veränderte Datensatz
 	 */
-	private final Data setAttribut(final String attributName, long wert,
+	private Data setAttribut(final String attributName, long wert,
 			String status, Data datensatz) {
 		Data data = datensatz;
 
@@ -300,32 +302,41 @@ public class TestErgebnisAnalyseImporter extends CSVImporter {
 			String[] splitStatus = status.trim().split(" "); //$NON-NLS-1$
 
 			for (int i = 0; i < splitStatus.length; i++) {
-				if (splitStatus[i].equalsIgnoreCase("Fehl")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("Fehl")) {
 					errCode = errCode - 2;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("nErm")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("nErm")) {
 					errCode = errCode - 1;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("Impl")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("Impl")) {
 					impl = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("Intp")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("Intp")) {
 					intp = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("nErf")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("nErf")) {
 					nErf = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("wMaL")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("wMaL")) {
 					wMaL = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("wMax")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("wMax")) {
 					wMax = DUAKonstanten.JA;
-
-				if (splitStatus[i].equalsIgnoreCase("wMiL")) //$NON-NLS-1$
+				}
+					
+				if (splitStatus[i].equalsIgnoreCase("wMiL")) {
 					wMiL = DUAKonstanten.JA;
-
-				if (splitStatus[i].equalsIgnoreCase("wMin")) //$NON-NLS-1$
+				}
+					
+				if (splitStatus[i].equalsIgnoreCase("wMin")) {
 					wMin = DUAKonstanten.JA;
+				}
 
 				try {
 					guete = Float.parseFloat(splitStatus[i].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -335,8 +346,9 @@ public class TestErgebnisAnalyseImporter extends CSVImporter {
 			}
 		}
 
-		if (errCode < 0)
+		if (errCode < 0) {
 			wert = errCode;
+		}
 
 		DUAUtensilien
 				.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert); //$NON-NLS-1$

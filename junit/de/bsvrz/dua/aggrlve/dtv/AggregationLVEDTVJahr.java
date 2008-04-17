@@ -47,16 +47,18 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
- * Testet die Aggregation von DTV-Jahreswerten
+ * Testet die Aggregation von DTV-Jahreswerten.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class AggregationLVE_DTVJahr extends AbstraktDTVTest {
+public class AggregationLVEDTVJahr extends AbstraktDTVTest {
 
 	/**
-	 * Testet die Aggregation von DTV-Jahredaten
+	 * Testet die Aggregation von DTV-Jahredaten.
+	 * 
+	 * @throws Exception wird weitergereicht
 	 */
 	@Test
 	public void testDTVJahr() throws Exception {
@@ -103,7 +105,7 @@ public class AggregationLVE_DTVJahr extends AbstraktDTVTest {
 			outputImporter.getNaechsteZeile();
 			String[] zeile = outputImporter.getNaechsteZeile();
 			int i = 1;
-			for (AggregationsAttribut attribut : AGR_MAP.keySet()) {
+			for (AggregationsAttribut attribut : agrMap.keySet()) {
 				i++;
 				AggregationsAttributWert wertSoll = getTextDatenSatz(attribut,
 						zeile);

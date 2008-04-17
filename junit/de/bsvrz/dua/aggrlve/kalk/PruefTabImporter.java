@@ -1,5 +1,5 @@
-/** 
- * Segment 4 Datenübernahme und Aufbereitung (DUA)
+/**
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -39,17 +39,17 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class PruefTabImporter {
+public final class PruefTabImporter {
 
 	/**
-	 * Tabelleninhalt
+	 * Tabelleninhalt.
 	 */
 	private Map<String, Element[]> tabContent = new HashMap<String, Element[]>();
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param csvDateiName
 	 *            Name der zu importierenden CSV-Datei
@@ -92,7 +92,7 @@ public class PruefTabImporter {
 	}
 
 	/**
-	 * Erfragt ein Element einer bestimmten Spalte / Zeile
+	 * Erfragt ein Element einer bestimmten Spalte / Zeile.
 	 * 
 	 * @param spaltenName
 	 *            der Name der Spalte
@@ -100,7 +100,7 @@ public class PruefTabImporter {
 	 *            die Zeile
 	 * @return ein Element einer bestimmten Spalte / Zeile
 	 */
-	public final Element getElement(String spaltenName, int line) {
+	public Element getElement(String spaltenName, int line) {
 		return this.tabContent.get(spaltenName)[line];
 	}
 
@@ -128,12 +128,13 @@ public class PruefTabImporter {
 	}
 
 	/**
-	 * Berechnet die Summe
+	 * Berechnet die Summe.
 	 * 
 	 * @param elemente
 	 *            Elemente ueber denen die Summe berechnt werden soll
+	 * @return die Summe
 	 */
-	protected static final Element summe(Element... elemente) {
+	protected static Element summe(Element... elemente) {
 		Element summeElement = new Element("0", "1"); //$NON-NLS-1$//$NON-NLS-2$
 		double wert = 0.0;
 		double guete = 0.0;
@@ -163,12 +164,13 @@ public class PruefTabImporter {
 	}
 
 	/**
-	 * Berechnet den Durchschnitt
+	 * Berechnet den Durchschnitt.
 	 * 
 	 * @param elemente
 	 *            Elemente ueber denen der Durchschnitt berechnt werden soll
+	 * @return der Durchschnitt 
 	 */
-	protected static final Element durchschnitt(Element... elemente) {
+	protected static Element durchschnitt(Element... elemente) {
 		Element durchschnittElement = new Element("0", "1"); //$NON-NLS-1$//$NON-NLS-2$
 		double wert = 0.0;
 		double guete = 0.0;
@@ -198,27 +200,60 @@ public class PruefTabImporter {
 	}
 
 	/**
-	 * Ein Tabellenelement: (Wert, Status)-Paar
+	 * Ein Tabellenelement: (Wert, Status)-Paar.
 	 * 
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 * 
 	 */
-	public static class Element {
+	public static final class Element {
 
+		/**
+		 * der Wert.
+		 */
 		public double wert = Double.NaN;
 
+		/**
+		 * die Guete.
+		 */
 		public double guete = Double.NaN;
 
+		/**
+		 * DUA-Flag.
+		 */
 		public boolean nErf = false;
+
+		/**
+		 * DUA-Flag.
+		 */
 		public boolean wMax = false;
+
+		/**
+		 * DUA-Flag.
+		 */
 		public boolean wMin = false;
+
+		/**
+		 * DUA-Flag.
+		 */
 		public boolean wMaL = false;
+
+		/**
+		 * DUA-Flag.
+		 */
 		public boolean wMiL = false;
+
+		/**
+		 * DUA-Flag.
+		 */
 		public boolean impl = false;
+
+		/**
+		 * DUA-Flag.
+		 */
 		public boolean intp = false;
 
 		/**
-		 * Standardkonstruktor
+		 * Standardkonstruktor.
 		 * 
 		 * @param wertStr
 		 *            der wertStr
@@ -235,24 +270,33 @@ public class PruefTabImporter {
 				String[] splitStatus = statusStr.trim().split(" "); //$NON-NLS-1$
 
 				for (int i = 0; i < splitStatus.length; i++) {
-					if (splitStatus[i].equalsIgnoreCase("Fehl")) //$NON-NLS-1$
+					if (splitStatus[i].equalsIgnoreCase("Fehl")) {
 						errCode = errCode - 2;
-					if (splitStatus[i].equalsIgnoreCase("nErm")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("nErm")) {
 						errCode = errCode - 1;
-					if (splitStatus[i].equalsIgnoreCase("Impl")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("Impl")) {
 						impl = true;
-					if (splitStatus[i].equalsIgnoreCase("Intp")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("Intp")) {
 						intp = true;
-					if (splitStatus[i].equalsIgnoreCase("nErf")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("nErf")) {
 						nErf = true;
-					if (splitStatus[i].equalsIgnoreCase("wMaL")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("wMaL")) {
 						wMaL = true;
-					if (splitStatus[i].equalsIgnoreCase("wMax")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("wMax")) {
 						wMax = true;
-					if (splitStatus[i].equalsIgnoreCase("wMiL")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("wMiL")) {
 						wMiL = true;
-					if (splitStatus[i].equalsIgnoreCase("wMin")) //$NON-NLS-1$
+					}
+					if (splitStatus[i].equalsIgnoreCase("wMin")) {
 						wMin = true;
+					}
 
 					try {
 						guete = Double.parseDouble(splitStatus[i].replace(
@@ -263,25 +307,26 @@ public class PruefTabImporter {
 				}
 			}
 
-			if (errCode < 0)
+			if (errCode < 0) {
 				wert = errCode;
+			}
 		}
 
 		/**
-		 * Erfragt den ersten Wert
+		 * Erfragt den ersten Wert.
 		 * 
 		 * @return der erste Wert
 		 */
-		public final String getWert() {
+		public String getWert() {
 			return new Long(Math.round(this.wert)).toString();
 		}
 
 		/**
-		 * Erfragt den ersten Statuswert
+		 * Erfragt den ersten Statuswert.
 		 * 
 		 * @return der erste Wert
 		 */
-		public final String getStatus() {
+		public String getStatus() {
 			String s = new Double(guete).toString();
 			if (impl) {
 				s += " Impl"; //$NON-NLS-1$

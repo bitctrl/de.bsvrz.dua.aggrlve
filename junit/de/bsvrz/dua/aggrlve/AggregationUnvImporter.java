@@ -83,7 +83,7 @@ public class AggregationUnvImporter extends CSVImporter {
 	}
 
 	/**
-	 * Setzt Datenintervall
+	 * Setzt Datenintervall.
 	 * 
 	 * @param t
 	 *            Datenintervall
@@ -93,7 +93,7 @@ public class AggregationUnvImporter extends CSVImporter {
 	}
 
 	/**
-	 * Importiert die nächste Zeile aus der CSV-Datei
+	 * Importiert die nächste Zeile aus der CSV-Datei.
 	 * 
 	 */
 	public final void importNaechsteZeile() {
@@ -102,7 +102,7 @@ public class AggregationUnvImporter extends CSVImporter {
 
 	/**
 	 * Bildet einen Ausgabe-Datensatz der Analysewerte aus den Daten der
-	 * aktuellen CSV-Zeile
+	 * aktuellen CSV-Zeile.
 	 * 
 	 * @param mq
 	 *            Ob es sich um einen Messquerschnitt handelt
@@ -225,10 +225,8 @@ public class AggregationUnvImporter extends CSVImporter {
 
 	/**
 	 * Bildet einen Ausgabe-Datensatz der Analysewerte aus den Daten der
-	 * aktuellen CSV-Zeile
+	 * aktuellen CSV-Zeile.
 	 * 
-	 * @param mq
-	 *            Ob es sich um einen Messquerschnitt handelt
 	 * @param intervallLaenge
 	 *            Intervalllaenge bei Fahrstreifendaten
 	 * @param fsIndex
@@ -317,13 +315,13 @@ public class AggregationUnvImporter extends CSVImporter {
 	}
 
 	/**
-	 * Erfragt den Zahlenwert der geparsten Zeichenkette
+	 * Erfragt den Zahlenwert der geparsten Zeichenkette.
 	 * 
 	 * @param zahl
 	 *            eine Zahl als Zeichenkette
 	 * @return den Zahlenwert der geparsten Zeichenkette
 	 */
-	private final int parseAlsPositiveZahl(String zahl) {
+	private int parseAlsPositiveZahl(String zahl) {
 		int a = Integer.parseInt(zahl);
 		if (a < 0) {
 			a = -3;
@@ -332,17 +330,19 @@ public class AggregationUnvImporter extends CSVImporter {
 	}
 
 	/**
-	 * Setzt Attribut in Datensatz
+	 * Setzt Attribut in Datensatz.
 	 * 
 	 * @param attributName
 	 *            Name des Attributs
 	 * @param wert
 	 *            Wert des Attributs
+	 * @param status 
+	 * 			  der Status
 	 * @param datensatz
 	 *            der Datensatz
 	 * @return der veränderte Datensatz
 	 */
-	private final Data setAttribut(final String attributName, long wert,
+	private Data setAttribut(final String attributName, long wert,
 			String status, Data datensatz) {
 		Data data = datensatz;
 
@@ -371,32 +371,41 @@ public class AggregationUnvImporter extends CSVImporter {
 			String[] splitStatus = status.trim().split(" "); //$NON-NLS-1$
 
 			for (int i = 0; i < splitStatus.length; i++) {
-				if (splitStatus[i].equalsIgnoreCase("Fehl")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("Fehl")) {
 					errCode = errCode - 2;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("nErm")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("nErm")) {
 					errCode = errCode - 1;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("Impl")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("Impl")) {
 					impl = DUAKonstanten.JA;
+				}					
 
-				if (splitStatus[i].equalsIgnoreCase("Intp")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("Intp")) {
 					intp = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("nErf")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("nErf")) {
 					nErf = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("wMaL")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("wMaL")) {
 					wMaL = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("wMax")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("wMax")) {
 					wMax = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("wMiL")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("wMiL")) {
 					wMiL = DUAKonstanten.JA;
+				}
 
-				if (splitStatus[i].equalsIgnoreCase("wMin")) //$NON-NLS-1$
+				if (splitStatus[i].equalsIgnoreCase("wMin")) {
 					wMin = DUAKonstanten.JA;
+				}
 
 				try {
 					guete = Float.parseFloat(splitStatus[i].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -406,8 +415,9 @@ public class AggregationUnvImporter extends CSVImporter {
 			}
 		}
 
-		if (errCode < 0)
+		if (errCode < 0) {
 			wert = errCode;
+		}
 
 		DUAUtensilien
 				.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert); //$NON-NLS-1$

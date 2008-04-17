@@ -40,38 +40,40 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
- * Abstrakter DTV-Test Eingabe:
+ * Abstrakter DTV-Test Eingabe.
  * extra/testDaten/[Version]/Messwert_Aggregation_unv.csv Soll-Erwartet:
  * extra/testDaten/[Version]/Messwert_Aggregation_TV_DTV_Soll.csv
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class AbstraktDTVTest {
 
 	/**
-	 * Mappt Attribut auf relative Posisition in Tabelle
+	 * Mappt Attribut auf relative Posisition in Tabelle.
 	 */
-	protected final HashMap<AggregationsAttribut, Integer> AGR_MAP = new HashMap<AggregationsAttribut, Integer>();
+	protected final HashMap<AggregationsAttribut, Integer> agrMap = new HashMap<AggregationsAttribut, Integer>();
 
 	/**
-	 * Aggregations-Applikation
+	 * Aggregations-Applikation.
 	 */
 	protected AggregationLVE aggregation = null;
 
 	/**
-	 * Input-Werte
+	 * Input-Werte.
 	 */
 	protected AggregationUnvImporter inputImporter;
 
 	/**
-	 * Soll-Werte
+	 * Soll-Werte.
 	 */
 	protected CSVImporter outputImporter;
 
 	/**
-	 * Bereitet den Test fuer die Aggregation von TV und DTV-Daten vor
+	 * Bereitet den Test fuer die Aggregation von TV und DTV-Daten vor.
+	 * 
+	 * @throws Exception wird weitergereicht
 	 */
 	protected final void setup() throws Exception {
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
@@ -81,9 +83,9 @@ public class AbstraktDTVTest {
 		this.aggregation = new AggregationLVE();
 		this.aggregation.testStart(dav);
 
-		AGR_MAP.put(AggregationsAttribut.Q_KFZ, 0);
-		AGR_MAP.put(AggregationsAttribut.Q_PKW, 1);
-		AGR_MAP.put(AggregationsAttribut.Q_LKW, 2);
+		agrMap.put(AggregationsAttribut.Q_KFZ, 0);
+		agrMap.put(AggregationsAttribut.Q_PKW, 1);
+		agrMap.put(AggregationsAttribut.Q_LKW, 2);
 
 		inputImporter = new AggregationUnvImporter(dav, Verbindung.WURZEL
 				+ "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
@@ -93,7 +95,7 @@ public class AbstraktDTVTest {
 	}
 
 	/**
-	 * Extrahiert den Wert und den Status-String (Soll)
+	 * Extrahiert den Wert und den Status-String (Soll).
 	 * 
 	 * @param attribut
 	 *            das Attribut
@@ -104,10 +106,10 @@ public class AbstraktDTVTest {
 	protected final AggregationsAttributWert getTextDatenSatz(
 			final AggregationsAttribut attribut, final String[] zeile) {
 
-		String wertStr = zeile[AGR_MAP.get(attribut) * 2];
+		String wertStr = zeile[agrMap.get(attribut) * 2];
 		AggregationsAttributWert wert = new AggregationsAttributWert(attribut,
 				Long.parseLong(wertStr), 0);
-		String status = zeile[AGR_MAP.get(attribut) * 2 + 1];
+		String status = zeile[agrMap.get(attribut) * 2 + 1];
 		double guete = 1.0;
 		if (status.split(" ").length > 1) { //$NON-NLS-1$
 			guete = Double.parseDouble(status.split(" ")[0].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

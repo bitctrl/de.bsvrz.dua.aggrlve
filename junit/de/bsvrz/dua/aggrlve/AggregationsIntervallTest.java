@@ -43,11 +43,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * Allgemeine Tests<br>
  * Testet insbesondere, ob die Berechnungszeitpunkte fuer die unterschiedlichen
  * Aggregationsintervalle richtig bestimmt werden (dies muss stichprobenartig
- * anhand der Konsolenausgabe nachgeprueft werden)
+ * anhand der Konsolenausgabe nachgeprueft werden).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
 public class AggregationsIntervallTest {
 
@@ -55,13 +55,15 @@ public class AggregationsIntervallTest {
 	 * Testet:<br> - ob die Berechnungsintervalle in der richtigen Reihenfolge
 	 * angelegt werden<br> - ob die Berechnungszeitpunkte fuer die
 	 * unterschiedlichen Aggregationsintervalle richtig bestimmt werden (dies
-	 * muss stichprobenartig anhand der Konsolenausgabe nachgeprueft werden)
+	 * muss stichprobenartig anhand der Konsolenausgabe nachgeprueft werden).
+	 * 
+	 * @throws Exception wird weitergereicht
 	 */
 	@Test
 	public void testGetInstanzen() throws Exception {
 		ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 		AggregationsIntervall.initialisiere(dav);
-		AggregationsIntervall instanzen[] = new AggregationsIntervall[AggregationsIntervall
+		AggregationsIntervall[] instanzen = new AggregationsIntervall[AggregationsIntervall
 				.getInstanzen().size()];
 		instanzen[0] = AggregationsIntervall.aGG1MINUTE;
 		instanzen[1] = AggregationsIntervall.aGG5MINUTE;
@@ -82,8 +84,9 @@ public class AggregationsIntervallTest {
 		long jetzt = System.currentTimeMillis();
 		for (AggregationsIntervall intervall : AggregationsIntervall
 				.getInstanzen()) {
-			if (intervall.equals(AggregationsIntervall.aGGDTVTAG))
+			if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 				break;
+			}
 			cal.setTimeInMillis(jetzt);
 			// cal.set(Calendar.MONTH, -1);
 			cal.set(Calendar.HOUR_OF_DAY, 0);

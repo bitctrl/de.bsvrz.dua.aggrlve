@@ -49,16 +49,19 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
- * Testet die Aggregation von TV-Tagesdaten
+ * Testet die Aggregation von TV-Tagesdaten.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class AggregationLVE_TVTag extends AbstraktDTVTest {
+public class AggregationLVETVTag extends AbstraktDTVTest {
 
 	/**
-	 * Testet die Aggregation von TV-Tagesdaten
+	 * Testet die Aggregation von TV-Tagesdaten.
+	 * 
+	 * 
+	 * @throws Exception wird weitergereicht
 	 */
 	@Test
 	public void testTVTag() throws Exception {
@@ -90,6 +93,7 @@ public class AggregationLVE_TVTag extends AbstraktDTVTest {
 			try {
 				Thread.sleep(50L);
 			} catch (InterruptedException e) {
+				//
 			}
 
 			inputImporter.importNaechsteZeile();
@@ -108,7 +112,7 @@ public class AggregationLVE_TVTag extends AbstraktDTVTest {
 		if (daten != null && !daten.isEmpty()) {
 			String[] zeile = outputImporter.getNaechsteZeile();
 			int i = 1;
-			for (AggregationsAttribut attribut : AGR_MAP.keySet()) {
+			for (AggregationsAttribut attribut : agrMap.keySet()) {
 				i++;
 				AggregationsAttributWert wertSoll = getTextDatenSatz(attribut,
 						zeile);

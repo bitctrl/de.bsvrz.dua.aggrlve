@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.aggrlve.kalk;
 
 import java.io.File;
@@ -35,17 +36,17 @@ import de.bsvrz.dua.aggrlve.Verbindung;
 /**
  * Dieses Programm produziert die Tabellen <code>5-6</code> und
  * <code>5-7</code> aus der Prüfspezifikation V 2.0 auf Basis der Tabelle
- * <code>Messwert_Aggregation_unv</code>
+ * <code>Messwert_Aggregation_unv</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class Kalkulation {
+public final class Kalkulation {
 
 	/**
 	 * Alle Attribute, die geschrieben werden sollen und die Art, wie sie
-	 * Berechnet werden (nachdem der Mittelwert gebildet wurde)
+	 * Berechnet werden (nachdem der Mittelwert gebildet wurde).
 	 */
 	private static final RechenVorschrift[] ATTRIBUTE = new RechenVorschrift[] {
 			new RechenVorschrift("qKfz(t)(1)", false, null), //$NON-NLS-1$
@@ -74,12 +75,12 @@ public class Kalkulation {
 					"VLkw(Mq)", false, new String[] { "vLkw(t)(1)", "vLkw(t)(2)" }) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	/**
-	 * Datenimporter
+	 * Datenimporter.
 	 */
 	private PruefTabImporter importer = null;
 
 	/**
-	 * Startet dieses Programm
+	 * Startet dieses Programm.
 	 * 
 	 * @param args
 	 *            Kommandozeilenparameter
@@ -100,7 +101,7 @@ public class Kalkulation {
 	}
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param messwertAggregationUnvDatei
 	 *            Datei der Tabelle <code>Messwert_Aggregation_unv</code>
@@ -113,7 +114,7 @@ public class Kalkulation {
 	}
 
 	/**
-	 * Berechnet aus der Eingabedatei
+	 * Berechnet aus der Eingabedatei.
 	 * 
 	 * @param anzahlDatenSaetze
 	 *            Anzahl der Datensaetze, aus denen die Aggregations daten
@@ -123,7 +124,7 @@ public class Kalkulation {
 	 * @throws Exception
 	 *             wenn es Probleme beim Lesen oder Schreiben gab
 	 */
-	private final void erzeugeTab(final int anzahlDatenSaetze,
+	private void erzeugeTab(int anzahlDatenSaetze,
 			final String dateiName) throws Exception {
 		File file = new File(dateiName);
 
@@ -223,7 +224,7 @@ public class Kalkulation {
 	}
 
 	/**
-	 * Hilfklasse zur Beschreibung der Ermittlung der Werte in der Zieltabelle
+	 * Hilfklasse zur Beschreibung der Ermittlung der Werte in der Zieltabelle.
 	 * 
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 * 
@@ -231,22 +232,22 @@ public class Kalkulation {
 	private static class RechenVorschrift {
 
 		/**
-		 * Name der Ausgabespalte
+		 * Name der Ausgabespalte.
 		 */
 		public String name = null;
 
 		/**
-		 * Ansonsten wird der Durchschnitt berechnet
+		 * Ansonsten wird der Durchschnitt berechnet.
 		 */
 		public boolean summe = true;
 
 		/**
-		 * die Daten aus denen sich die Ergebnisse ermitteln (Spaltennamen)
+		 * die Daten aus denen sich die Ergebnisse ermitteln (Spaltennamen).
 		 */
 		public String[] quellen = null;
 
 		/**
-		 * Standardkonstruktor
+		 * Standardkonstruktor.
 		 * 
 		 * @param name
 		 *            Name der Ausgabespalte

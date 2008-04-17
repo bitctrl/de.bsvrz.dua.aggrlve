@@ -29,16 +29,23 @@ package de.bsvrz.dua.aggrlve;
 import java.io.File;
 
 /**
- * Speichert die Verbindungsdaten
+ * Speichert die Verbindungsdaten.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class Verbindung {
+public final class Verbindung {
 
 	/**
-	 * Verbindungsdaten
+	 * Standardkonstruktor.
+	 */
+	private Verbindung() {
+		//
+	}
+	
+	/**
+	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] {
 			"-datenverteiler=localhost:8083", //$NON-NLS-1$
@@ -58,7 +65,7 @@ public class Verbindung {
 	// "-debugLevelFileText=WARNING"}; //$NON-NLS-1$
 
 	/**
-	 * Wurzelverzeichnis der Testdaten
+	 * Wurzelverzeichnis der Testdaten.
 	 */
 	// public static final String WURZEL = "extra\\testDaten\\V_2.7.9(05.04.08)"
 	// + File.separator; //$NON-NLS-1$
@@ -77,15 +84,16 @@ public class Verbindung {
 	// //$NON-NLS-2$ //$NON-NLS-3$
 
 	/**
-	 * Erfragt eine Kopie der Verbindungsdaten
+	 * Erfragt eine Kopie der Verbindungsdaten.
 	 * 
 	 * @return eine Kopie der Verbindungsdaten
 	 */
-	public static final String[] getConData() {
+	public static String[] getConData() {
 		String[] conDataKopie = new String[CON_DATA.length];
 
-		for (int i = 0; i < conDataKopie.length; i++)
+		for (int i = 0; i < conDataKopie.length; i++) {
 			conDataKopie[i] = CON_DATA[i];
+		}
 
 		return conDataKopie;
 	}

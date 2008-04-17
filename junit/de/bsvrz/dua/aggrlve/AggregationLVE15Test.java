@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.Calendar;
@@ -54,9 +55,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @verison $Id$
+ * @version $Id$
  */
-public class AggregationLVE_1_5Test {
+public class AggregationLVE15Test {
 
 	/**
 	 * Sollen Assert-Statements benutzt werden?
@@ -64,19 +65,21 @@ public class AggregationLVE_1_5Test {
 	private static final boolean USE_ASSERT = true;
 
 	/**
-	 * Mappt Attribut auf relative Posisition in Tabelle
+	 * Mappt Attribut auf relative Posisition in Tabelle.
 	 */
-	private final HashMap<AggregationsAttribut, Integer> AGR_MAP = new HashMap<AggregationsAttribut, Integer>();
+	private final HashMap<AggregationsAttribut, Integer> agrMap = new HashMap<AggregationsAttribut, Integer>();
 
 	/**
-	 * Menge aller Fahrstreifen
+	 * Menge aller Fahrstreifen.
 	 */
 	private SystemObject[] fs = new SystemObject[3];
 
 	/**
 	 * Testet, ob die 1 Minuten-Intervalle korrekt zu fünf-Minuten Intervallen
 	 * zusammengerechnet und die Fahrstreifen korrekt zu Messquerschnitten
-	 * zusammengerechnet werden
+	 * zusammengerechnet werden.
+	 * 
+	 * @throws Exception wird weitergereicht
 	 */
 	@Test
 	public void test1und5MinutenFSundMQ() throws Exception {
@@ -99,12 +102,12 @@ public class AggregationLVE_1_5Test {
 		 */
 		SystemObject mq = dav.getDataModel().getObject("mq.a100.0000"); //$NON-NLS-1$
 
-		AGR_MAP.put(AggregationsAttribut.Q_KFZ, 0);
-		AGR_MAP.put(AggregationsAttribut.Q_PKW, 1);
-		AGR_MAP.put(AggregationsAttribut.Q_LKW, 2);
-		AGR_MAP.put(AggregationsAttribut.V_KFZ, 3);
-		AGR_MAP.put(AggregationsAttribut.V_PKW, 4);
-		AGR_MAP.put(AggregationsAttribut.V_LKW, 5);
+		agrMap.put(AggregationsAttribut.Q_KFZ, 0);
+		agrMap.put(AggregationsAttribut.Q_PKW, 1);
+		agrMap.put(AggregationsAttribut.Q_LKW, 2);
+		agrMap.put(AggregationsAttribut.V_KFZ, 3);
+		agrMap.put(AggregationsAttribut.V_PKW, 4);
+		agrMap.put(AggregationsAttribut.V_LKW, 5);
 
 		DataDescription dd1min = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
@@ -135,6 +138,7 @@ public class AggregationLVE_1_5Test {
 				try {
 					Thread.sleep(100L);
 				} catch (InterruptedException e) {
+					//
 				}
 
 				inputImporter.importNaechsteZeile();
@@ -198,7 +202,11 @@ public class AggregationLVE_1_5Test {
 
 	/**
 	 * Wurde eingefuehrt, da die "echte" Vergleichsmethode keine
-	 * Rundungstoleranz gegenueber den Testdaten aufweist
+	 * Rundungstoleranz gegenueber den Testdaten aufweist.
+	 * 
+	 * @param a1 Variable #1
+	 * @param a2 Variable #1
+	 * @return Gleichheit
 	 */
 	public boolean equalsMitRundungsToleranz(AggregationsAttributWert a1,
 			AggregationsAttributWert a2) {
@@ -212,37 +220,40 @@ public class AggregationLVE_1_5Test {
 
 	/**
 	 * Erfragt die Nummer eines Fahrstreifens (in Bezug auf die
-	 * PruefSpez-Tabelle der Ein- und Ausgangswerte)
+	 * PruefSpez-Tabelle der Ein- und Ausgangswerte).
 	 * 
 	 * @param fsObjekt
 	 *            ein hier getesteter Fahrstreifen
 	 * @return dessen Nummer (in Bezug auf die PruefSpez-Tabelle der Ein- und
 	 *         Ausgangswerte)
 	 */
-	private final int getFsNummer(final SystemObject fsObjekt) {
+	private int getFsNummer(final SystemObject fsObjekt) {
 		int i;
 		for (i = 0; i < this.fs.length; i++) {
-			if (fsObjekt.equals(this.fs[i]))
+			if (fsObjekt.equals(this.fs[i])) {
 				break;
+			}
 		}
 		return i + 1;
 	}
 
 	/**
-	 * Extrahiert den Wert und den Status-String (Soll)
+	 * Extrahiert den Wert und den Status-String (Soll).
 	 * 
 	 * @param attribut
 	 *            das Attribut
 	 * @param zeile
 	 *            eine Tabellenzeile
+	 * @param fs1
+	 *            der Fahrstreifen
 	 * @return den Wert und den Status-String (Soll)
 	 */
-	private final AggregationsAttributWert getTextDatenSatz(
-			final AggregationsAttribut attribut, final String[] zeile, int fs) {
+	private AggregationsAttributWert getTextDatenSatz(
+			final AggregationsAttribut attribut, final String[] zeile, int fs1) {
 		AggregationsAttributWert wert = new AggregationsAttributWert(attribut,
-				Long.parseLong(zeile[26 + 11 + AGR_MAP.get(attribut) * 6 - 1
-						+ fs * 2]), 0);
-		String status = zeile[26 + 11 + AGR_MAP.get(attribut) * 6 + fs * 2];
+				Long.parseLong(zeile[26 + 11 + agrMap.get(attribut) * 6 - 1
+						+ fs1 * 2]), 0);
+		String status = zeile[26 + 11 + agrMap.get(attribut) * 6 + fs1 * 2];
 		double guete = 1.0;
 		if (status.split(" ").length > 1) { //$NON-NLS-1$
 			guete = Double.parseDouble(status.split(" ")[0].replace(",", ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
