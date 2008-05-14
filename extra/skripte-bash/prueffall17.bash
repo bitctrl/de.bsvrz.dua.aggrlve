@@ -21,19 +21,19 @@ appname=aggrlve
 #     Testroutinen     #
 ########################
 
-tests[$index]="dtv.AggregationLVE_DTVJahr"
+tests[$index]="dtv.AggregationLVEDTVJahr"
 testTexts[$index]="Testet die Aggregation von DTV-Jahreswerten"
 index=$(($index+1))
 
-tests[$index]="dtv.AggregationLVE_DTVMonat"
+tests[$index]="dtv.AggregationLVEDTVMonat"
 testTexts[$index]="Testet die Aggregation von DTV-Monatswerten"
 index=$(($index+1))
 
-tests[$index]="dtv.AggregationLVE_TVTag"
+tests[$index]="dtv.AggregationLVETVTag"
 testTexts[$index]="Testet die Aggregation von TV-Tageswerten"
 index=$(($index+1))
 
-tests[$index]="AggregationLVE_1_5Test"
+tests[$index]="AggregationLVE15Test"
 testTexts[$index]="Allgemeine Tests fuer 1- und 5-Minuten-Intervall (entspricht den Testvorschriften aus PruefSpez Version 2.0 Abschnitt 5.1.10.2 u. 5.1.10.3 erster Abschnitt)"
 index=$(($index+1))
 

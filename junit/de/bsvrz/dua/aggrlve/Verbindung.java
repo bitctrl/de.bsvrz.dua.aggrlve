@@ -51,7 +51,7 @@ public final class Verbindung {
 			"-datenverteiler=localhost:8083", //$NON-NLS-1$
 			"-benutzer=Tester", //$NON-NLS-1$
 			"-authentifizierung=passwd", //$NON-NLS-1$
-			"-debugLevelStdErrText=WARNING", //$NON-NLS-1$
+			"-debugLevelStdErrText=OFF", //$NON-NLS-1$
 			"-debugLevelFileText=WARNING" }; //$NON-NLS-1$
 
 	// /**

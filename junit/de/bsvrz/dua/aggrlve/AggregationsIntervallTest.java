@@ -99,18 +99,18 @@ public class AggregationsIntervallTest {
 					.getTimeInMillis()
 					+ Constants.MILLIS_PER_HOUR * 2; zeitpunkt += Constants.MILLIS_PER_MINUTE) {
 				if (intervall.isAggregationErforderlich(zeitpunkt)) {
-					System.out
-							.println(DUAKonstanten.ZEIT_FORMAT_GENAU
-									.format(new Date(zeitpunkt))
-									+ ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
-									DUAKonstanten.ZEIT_FORMAT_GENAU
-											.format(new Date(
-													intervall
-															.getAggregationZeitStempel(zeitpunkt))));
+//					System.out
+//							.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+//									.format(new Date(zeitpunkt))
+//									+ ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
+//									DUAKonstanten.ZEIT_FORMAT_GENAU
+//											.format(new Date(
+//													intervall
+//															.getAggregationZeitStempel(zeitpunkt))));
 				} else {
-					System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU
-							.format(new Date(zeitpunkt))
-							+ ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
+//					System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+//							.format(new Date(zeitpunkt))
+//							+ ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -128,18 +128,18 @@ public class AggregationsIntervallTest {
 				.getTimeInMillis()
 				+ Constants.MILLIS_PER_HOUR * 60; zeitpunkt += Constants.MILLIS_PER_MINUTE) {
 			if (intervall.isAggregationErforderlich(zeitpunkt)) {
-				System.out
-						.println(DUAKonstanten.ZEIT_FORMAT_GENAU
-								.format(new Date(zeitpunkt))
-								+ ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
-								DUAKonstanten.ZEIT_FORMAT_GENAU
-										.format(new Date(
-												intervall
-														.getAggregationZeitStempel(zeitpunkt))));
+//				System.out
+//						.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+//								.format(new Date(zeitpunkt))
+//								+ ", " + intervall + ": " + //$NON-NLS-1$ //$NON-NLS-2$
+//								DUAKonstanten.ZEIT_FORMAT_GENAU
+//										.format(new Date(
+//												intervall
+//														.getAggregationZeitStempel(zeitpunkt))));
 			} else {
-				System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU
-						.format(new Date(zeitpunkt))
-						+ ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
+//				System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU
+//						.format(new Date(zeitpunkt))
+//						+ ", " + intervall + ": nicht erforderlich"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
