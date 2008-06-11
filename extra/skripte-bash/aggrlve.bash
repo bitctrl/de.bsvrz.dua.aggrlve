@@ -27,7 +27,7 @@ kb="kb.MQ_Konfig_A5,kb.MQ_Konfig_A6,kb.MQ_Konfig_A656,kb.MQ_Konfig_A7,kb.MQ_Konf
 ################################################################################
 
 # Applikation starten
-java $jvmArgs -jar ../de.bsvrz.dua.aggrlve-runtime.jar \
+$java $jvmArgs -jar ../de.bsvrz.dua.aggrlve-runtime.jar \
 	$dav1 \
 	-KonfigurationsBereichsPid=$kb \
 	-debugLevelStdErrText=ERROR \

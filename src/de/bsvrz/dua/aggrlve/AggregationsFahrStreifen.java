@@ -202,7 +202,7 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 						.toArray(new GWert[0])));
 			} catch (GueteException e) {
-				Debug.getLogger().warning(
+				Debug.getLogger().error(
 						"Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 								attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 				e.printStackTrace();

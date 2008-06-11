@@ -308,7 +308,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					} catch (GueteException e) {
 						Debug
 								.getLogger()
-								.warning(
+								.error(
 										"Guete von " + fahrStreifen.getObjekt() + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 												attribut
 												+ " konnte nicht berechnet werden", e); //$NON-NLS-1$
@@ -361,7 +361,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 				} catch (GueteException e) {
 					Debug
 							.getLogger()
-							.warning(
+							.error(
 									"Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 											attribut
 											+ " konnte nicht berechnet werden", e); //$NON-NLS-1$
