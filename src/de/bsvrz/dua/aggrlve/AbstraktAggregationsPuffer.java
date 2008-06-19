@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -100,13 +100,11 @@ public abstract class AbstraktAggregationsPuffer {
 	 *            ein aktuelles Datum dieses Aggregationsintervalls
 	 */
 	public void aktualisiere(Dataset resultat) {
-		if (resultat.getData() != null) {
-			AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
-			synchronized (this) {
-				this.ringPuffer.addFirst(neuesDatum);
-				while (this.ringPuffer.size() > this.getMaxPufferInhalt()) {
-					this.ringPuffer.removeLast();
-				}
+		AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
+		synchronized (this) {
+			this.ringPuffer.addFirst(neuesDatum);
+			while (this.ringPuffer.size() > this.getMaxPufferInhalt()) {
+				this.ringPuffer.removeLast();
 			}
 		}
 	}

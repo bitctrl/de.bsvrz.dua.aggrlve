@@ -336,7 +336,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 								fsZaehler++;
 							}
 						}
-
+						
 						if (fsZaehler == this.mqFs.get(mq).size()) {
 							/**
 							 * fuer alle Fs des Mq sind Daten im Puffer

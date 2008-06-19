@@ -145,6 +145,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 
 			Collection<AggregationsDatum> mqDaten = this.datenPuffer
 					.getDatenFuerZeitraum(begin, ende, intervall);
+			
 			Data nutzDatum = null;
 
 			if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {

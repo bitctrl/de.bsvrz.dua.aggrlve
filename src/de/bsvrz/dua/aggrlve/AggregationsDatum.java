@@ -48,7 +48,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  */
 public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		Cloneable {
-
+	
 	/**
 	 * Erfragt, ob dieses Datum auf Stunden normiert ist.
 	 */
@@ -93,7 +93,9 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 					AggregationLVE.mwe)) {
 				this.normiert = false;
 			}
-			this.tT = resultat.getData().getTimeValue("T").getMillis(); //$NON-NLS-1$
+			if(resultat.getData() != null) {
+				this.tT = resultat.getData().getTimeValue("T").getMillis();
+			}
 		} else {
 			for (AggregationsIntervall intervall : AggregationsIntervall
 					.getInstanzen()) {
@@ -105,8 +107,8 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		}
 		for (AggregationsAttribut attribut : AggregationsAttribut
 				.getInstanzen()) {
-			this.werte.put(attribut, new AggregationsAttributWert(attribut,
-					resultat));
+			this.werte.put(attribut, resultat.getData() != null?new AggregationsAttributWert(attribut,
+					resultat):null);
 		}
 	}
 
@@ -146,6 +148,15 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 			final AggregationsAttribut attribut1) {
 		return this.werte.get(attribut1);
 	}
+	
+	/**
+	 * Erfragt, ob in diesem Datensatz keine Nutzdaten enthalten sind.
+	 * 
+	 * @return ob in diesem Datensatz keine Nutzdaten enthalten sind.
+	 */
+	public final boolean isKeineDaten(){
+		return this.werte.values().iterator().next() == null;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -179,7 +190,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	public boolean equals(Object obj) {
 		return super.equals(obj);
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */

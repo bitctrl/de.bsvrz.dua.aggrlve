@@ -220,6 +220,13 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 			for (ResultData resultat : resultate) {
 				if (resultat != null) {
 					this.datenPuffer.aktualisiere(resultat);
+					if(resultat.getData() == null) {
+						for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
+							this.sende(new ResultData(this.fs.getSystemObject(),
+									intervall.getDatenBeschreibung(true), resultat.getDataTime(),
+									null));							
+						}
+					}
 				}
 			}
 		}

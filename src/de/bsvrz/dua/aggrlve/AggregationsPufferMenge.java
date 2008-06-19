@@ -111,20 +111,17 @@ public class AggregationsPufferMenge {
 	 *            Fahrstreifendaten
 	 */
 	public void aktualisiere(ResultData resultat) {
-		if (resultat.getData() != null) {
-			AbstraktAggregationsPuffer puffer = this.pufferMenge.get(resultat
-					.getDataDescription().getAspect());
-			if (puffer != null) {
-				puffer.aktualisiere(resultat);
-			} else {
-				Debug
-						.getLogger()
-						.error(
-								"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
-										resultat.getDataDescription()
-												.getAspect()
-										+ " existiert nicht"); //$NON-NLS-1$
-			}
+		AbstraktAggregationsPuffer puffer = this.pufferMenge.get(resultat
+				.getDataDescription().getAspect());
+		if (puffer != null) {
+			puffer.aktualisiere(resultat);
+		} else {
+			Debug
+					.getLogger()
+					.error(
+							"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
+									resultat.getDataDescription().getAspect()
+									+ " existiert nicht"); //$NON-NLS-1$
 		}
 	}
 
