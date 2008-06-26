@@ -67,8 +67,8 @@ public final class Verbindung {
 	/**
 	 * Wurzelverzeichnis der Testdaten.
 	 */
-	// public static final String WURZEL = "extra\\testDaten\\V_2.7.9(05.04.08)"
-	// + File.separator; //$NON-NLS-1$
+//	 public static final String WURZEL = "extra\\testDaten\\V_2.7.9(05.04.08)"
+//	 + File.separator; //$NON-NLS-1$
 	public static final String WURZEL = ".." + File.separator + "testDaten" + File.separator + "V_2.7.9(05.04.08)" + File.separator; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	// public static final String WURZEL = ".." + File.separator + "testDaten" +
 	// File.separator + "V_2.7.6(01.04.08)" + File.separator; //$NON-NLS-1$
