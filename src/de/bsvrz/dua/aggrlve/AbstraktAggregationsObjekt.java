@@ -403,7 +403,7 @@ public abstract class AbstraktAggregationsObjekt {
 					berechnen = puffer.getDatenFuerZeitraum(zeitStempel,
 							zeitStempel + 1000).isEmpty();
 				} else {
-					Debug.getLogger().error(
+					throw new NullPointerException(
 							"Datenpuffer fuer " + this.objekt + " und " + //$NON-NLS-1$ //$NON-NLS-2$
 									intervall
 									+ " konnte nicht ermittelt werden"); //$NON-NLS-1$
