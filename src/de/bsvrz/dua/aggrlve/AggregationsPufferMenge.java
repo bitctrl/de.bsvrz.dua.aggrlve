@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -116,12 +116,10 @@ public class AggregationsPufferMenge {
 		if (puffer != null) {
 			puffer.aktualisiere(resultat);
 		} else {
-			Debug
-					.getLogger()
-					.error(
-							"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
-									resultat.getDataDescription().getAspect()
-									+ " existiert nicht"); //$NON-NLS-1$
+			throw new NullPointerException(
+					"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
+							resultat.getDataDescription().getAspect()
+							+ " existiert nicht"); //$NON-NLS-1$
 		}
 	}
 
