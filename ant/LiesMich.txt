@@ -17,14 +17,19 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
-1.0.0b
+1.0.1
 
-  - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
+  - Zwei Error-Messages zu Laufzeitfehlern umgebaut. Die Fehler sollten zum
+    kontrollierten Absturz des System führen, welcher sowieso nach diesem Fehler
+    stattfinden würde.
 
 1.0.0
 
   - Erste vollständige Auslieferung 
+  
+1.0.0b
 
+  - Erste Auslieferung (beta, nur teilweise nach Prüfspezifikation getestet)
 
 Bemerkungen
 ===========
