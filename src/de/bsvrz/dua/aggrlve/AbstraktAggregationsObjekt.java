@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -198,40 +198,41 @@ public abstract class AbstraktAggregationsObjekt {
 				resultat
 						.getData()
 						.getItem(attributName)
-						.getItem("Status").getItem("Erfassung").
-						getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN); //$NON-NLS-1$
-				resultat.getData().getItem(attributName)
-						.getItem("Status").getItem("MessWertErsetzung").
-						getUnscaledValue("Implausibel").set(DUAKonstanten.NEIN); //$NON-NLS-1$
-				resultat
-						.getData()
-						.getItem(attributName)
-						.getItem("Status").getItem("MessWertErsetzung").
-						getUnscaledValue("Interpoliert").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+						.getItem("Status")
+						.getItem("Erfassung")
+						.getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status")
+						.getItem("MessWertErsetzung").getUnscaledValue(
+								"Implausibel").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status")
+						.getItem("MessWertErsetzung").getUnscaledValue(
+								"Interpoliert").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 
-				resultat.getData().getItem(attributName)
-						.getItem("Status").getItem("PlFormal").
-						getUnscaledValue("WertMax").set(DUAKonstanten.NEIN); //$NON-NLS-1$
-				resultat.getData().getItem(attributName)
-						.getItem("Status").getItem("PlFormal").
-						getUnscaledValue("WertMin").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status")
+						.getItem("PlFormal")
+						.getUnscaledValue("WertMax").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Status")
+						.getItem("PlFormal")
+						.getUnscaledValue("WertMin").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 
 				resultat
 						.getData()
 						.getItem(attributName)
-						.getItem("Status").getItem("PlLogisch").
-						getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+						.getItem("Status")
+						.getItem("PlLogisch")
+						.getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
 				resultat
 						.getData()
 						.getItem(attributName)
-						.getItem("Status").getItem("PlLogisch").
-						getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
-				resultat.getData().getItem(attributName)
-						.getItem("Güte").getUnscaledValue("Index").
-						set(DUAKonstanten.NICHT_ERMITTELBAR);
-				resultat.getData().getItem(attributName)
-						.getItem("Güte").getUnscaledValue("Verfahren").
-						set(GueteVerfahren.STANDARD.getCode());
+						.getItem("Status")
+						.getItem("PlLogisch")
+						.getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName).getItem("Güte")
+						.getUnscaledValue("Index").set(
+								DUAKonstanten.NICHT_ERMITTELBAR);
+				resultat.getData().getItem(attributName).getItem("Güte")
+						.getUnscaledValue("Verfahren").set(
+								GueteVerfahren.STANDARD.getCode());
 			}
 		}
 	}
@@ -402,11 +403,6 @@ public abstract class AbstraktAggregationsObjekt {
 				if (puffer != null) {
 					berechnen = puffer.getDatenFuerZeitraum(zeitStempel,
 							zeitStempel + 1000).isEmpty();
-				} else {
-					throw new NullPointerException(
-							"Datenpuffer fuer " + this.objekt + " und " + //$NON-NLS-1$ //$NON-NLS-2$
-									intervall
-									+ " konnte nicht ermittelt werden"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -463,9 +459,8 @@ public abstract class AbstraktAggregationsObjekt {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 						.toArray(new GWert[0])));
 			} catch (GueteException e) {
-				Debug.getLogger().error(
-						"Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-								attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+				Debug.getLogger().error("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 				e.printStackTrace();
 			}
 		}
@@ -528,9 +523,8 @@ public abstract class AbstraktAggregationsObjekt {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 						.toArray(new GWert[0])));
 			} catch (GueteException e) {
-				Debug.getLogger().error(
-						"Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-								attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+				Debug.getLogger().error("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 				e.printStackTrace();
 			}
 		}

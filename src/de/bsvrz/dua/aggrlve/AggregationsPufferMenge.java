@@ -116,7 +116,7 @@ public class AggregationsPufferMenge {
 		if (puffer != null) {
 			puffer.aktualisiere(resultat);
 		} else {
-			throw new NullPointerException(
+			Debug.getLogger().fine(
 					"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
 							resultat.getDataDescription().getAspect()
 							+ " existiert nicht"); //$NON-NLS-1$

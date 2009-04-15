@@ -17,6 +17,14 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.0.3
+  - Der Versuch einen 60-Minuten Puffer fuer Fahrstreifen zu fuellen
+    wird ignoriert (vorher Exception). Fuer Fahrstreifen gibt es keine 
+    Aggregation auf hoeheren Stufen als 60 Min (im Ggs. zu MQs).  
+
+1.0.2
+  - Fehlerausgabe-Patch
+
 1.0.1
 
   - Zwei Error-Messages zu Laufzeitfehlern umgebaut. Die Fehler sollten zum
