@@ -81,7 +81,7 @@ public class AbstraktDTVTest {
 		dav = DAVTest.newDav(Verbindung.getConData());
 
 		this.aggregation = new AggregationLVE();
-		this.aggregation.testStart(dav);
+		this.aggregation.testStart(dav, "1.0");
 
 		agrMap.put(AggregationsAttribut.Q_KFZ, 0);
 		agrMap.put(AggregationsAttribut.Q_PKW, 1);

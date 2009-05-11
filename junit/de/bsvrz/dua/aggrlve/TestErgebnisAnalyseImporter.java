@@ -231,13 +231,18 @@ public final class TestErgebnisAnalyseImporter extends CSVImporter {
 					String kBStatus = zeile[79 + (fsMulti * 2)];
 					int sKfz = 1;
 
+					if(vLkw == -1 && vLkwStatus.equals("0 nErm ")) {
+						datensatz = setAttribut("vLkw", 0, "0", datensatz); //$NON-NLS-1$
+					} else {
+						datensatz = setAttribut("vLkw", vLkw, vLkwStatus, datensatz); //$NON-NLS-1$
+					}
 					datensatz.getTimeValue("T").setMillis(iNTERVALL); //$NON-NLS-1$
 					datensatz = setAttribut("qKfz", qKfz, qKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qPkw", qPkw, qPkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("qLkw", qLkw, qLkwStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("vKfz", vKfz, vKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("vPkw", vPkw, vPkwStatus, datensatz); //$NON-NLS-1$
-					datensatz = setAttribut("vLkw", vLkw, vLkwStatus, datensatz); //$NON-NLS-1$
+					
 					datensatz = setAttribut(
 							"vgKfz", vgKfz, vgKfzStatus, datensatz); //$NON-NLS-1$
 					datensatz = setAttribut("b", b, bStatus, datensatz); //$NON-NLS-1$
@@ -276,7 +281,7 @@ public final class TestErgebnisAnalyseImporter extends CSVImporter {
 	private Data setAttribut(final String attributName, long wert,
 			String status, Data datensatz) {
 		Data data = datensatz;
-
+		
 		if ((attributName.startsWith("v") || attributName.startsWith("V")) //$NON-NLS-1$ //$NON-NLS-2$
 				&& wert >= 255) {
 			wert = -1;

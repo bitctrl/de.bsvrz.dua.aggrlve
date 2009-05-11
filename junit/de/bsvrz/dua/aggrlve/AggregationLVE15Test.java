@@ -88,7 +88,7 @@ public class AggregationLVE15Test {
 		dav = DAVTest.newDav(Verbindung.getConData());
 
 		AggregationLVE aggregation = new AggregationLVE();
-		aggregation.testStart(dav);
+		aggregation.testStart(dav, "1.0");
 
 		/**
 		 * drei Fahrstreifen

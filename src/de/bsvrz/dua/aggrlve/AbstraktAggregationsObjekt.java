@@ -27,11 +27,11 @@
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.bitctrl.Constants;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -273,7 +273,6 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @return eine Menge mit so vielen Attribut-Datensaetzen, wie fuer dieses
 	 *         Intervall zur Verfuegung stehen muessen
 	 */
-	@Deprecated
 	protected final Collection<AggregationsAttributWert> ersetzteAusgefalleneWerte(
 			final AggregationsAttribut attribut,
 			final Collection<AggregationsDatum> quellDaten,
@@ -291,6 +290,10 @@ public abstract class AbstraktAggregationsObjekt {
 		} else if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 			anzahlSoll = DUAUtensilien.getStundenVonTag(zeitStempel);
 		} else if (intervall.equals(AggregationsIntervall.aGGDTVMONAT)) {
+			Calendar c = new GregorianCalendar();
+			c.setTimeInMillis(zeitStempel);
+			anzahlSoll = c.getActualMaximum(Calendar.DAY_OF_MONTH);;
+		} else if (intervall.equals(AggregationsIntervall.aGGDTVJAHR)) {
 			anzahlSoll = 12;
 		}
 
@@ -324,8 +327,9 @@ public abstract class AbstraktAggregationsObjekt {
 				zielDatenSoll++;
 				first = true;
 			}
-			if (zielDatenSoll - zielDaten.size() > 0) {
-				for (int i = 0; i < zielDatenSoll - zielDaten.size(); i++) {
+			long dummy = zielDatenSoll - zielDaten.size();
+			if (dummy > 0) {
+				for (int i = 0; i < dummy; i++) {
 					if (wertAnzahl > 0) {
 						if (attribut.isGeschwindigkeitsAttribut()) {
 							zielDaten.add(new AggregationsAttributWert(
@@ -334,6 +338,8 @@ public abstract class AbstraktAggregationsObjekt {
 						} else {
 							/**
 							 * "halber" Q-Wert muss noch gewichtet werden
+							 * Das Passiert nur, wenn z.B. aus KZD, die im 2 Minuten-Takt kommen
+							 * z.B. das Intervall 5 Minuten ausgerechnet werden soll.
 							 */
 							if (first) {
 								long teilMittelWert = Math
@@ -428,18 +434,28 @@ public abstract class AbstraktAggregationsObjekt {
 	protected final void aggregiereMittel(AggregationsAttribut attribut,
 			Data nutzDatum, Collection<AggregationsDatum> basisDaten,
 			long zeitStempel, AggregationsIntervall intervall) {
+		/**
+		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
+		 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
+		 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit
+		 * einem Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
+		 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen
+		 * Werten ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit
+		 * einem parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer
+		 * Kennung zu versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung
+		 * generierte) Werte verwendet wurden. 
+		 */
+		Collection<AggregationsAttributWert> werte = this.ersetzteAusgefalleneWerte(attribut, basisDaten, intervall, zeitStempel);
 
 		boolean interpoliert = false;
 		boolean nichtErfasst = false;
 		long anzahl = 0;
 		long summe = 0;
 		Collection<GWert> gueteWerte = new ArrayList<GWert>();
-		for (AggregationsDatum basisDatum : basisDaten) {
-			AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
-			if (basisWert.getWert() >= 0
-					|| basisWert.getWert() == DUAKonstanten.NICHT_ERMITTELBAR) {
-				summe += (basisWert.getWert() == DUAKonstanten.FEHLERHAFT ? 0
-						: basisWert.getWert());
+		for(AggregationsAttributWert basisWert:werte){
+
+			if(basisWert.getWert() >= 0){
+				summe += basisWert.getWert();
 				anzahl++;
 				gueteWerte.add(basisWert.getGuete());
 				interpoliert |= basisWert.isInterpoliert();
@@ -487,22 +503,33 @@ public abstract class AbstraktAggregationsObjekt {
 	protected final void aggregiereSumme(AggregationsAttribut attribut,
 			Data nutzDatum, Collection<AggregationsDatum> basisDaten,
 			long zeitStempel, AggregationsIntervall intervall) {
-		double anzahlSoll = -1;
-		if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
-			anzahlSoll = DUAUtensilien.getStundenVonTag(zeitStempel + 2
-					* Constants.MILLIS_PER_HOUR);
-		}
+		/**
+		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen
+		 * Kurzzeitdatenzyklen. Ausgefallene Werte werden durch den Mittelwert
+		 * der vorhandenen Werte ersetzt. Um die Zuverlässigkeit der Daten
+		 * nachvollziehen zu können, ist jeder aggregierte Wert mit einem
+		 * Güteindex in % anzugeben. Der Güteindex wird durch arithmetische
+		 * Mittelung der Güteindizes der zu aggregierenden Daten bestimmt. Der
+		 * Güteindex von ausgefallenen Werten ergibt sich dabei aus dem
+		 * Mittelwert der vorhandenen Werte multipliziert mit einem
+		 * parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit
+		 * einer Kennung zu versehen, ob zur Aggregation interpolierte (durch
+		 * die Messwertersetzung generierte) Werte verwendet wurden.
+		 */
+		Collection<AggregationsAttributWert> werte = this
+				.ersetzteAusgefalleneWerte(attribut, basisDaten, intervall,
+						zeitStempel);
 
 		boolean interpoliert = false;
 		boolean nichtErfasst = false;
 		long summe = 0;
-		double anzahlIst = 0;
+
 		Collection<GWert> gueteWerte = new ArrayList<GWert>();
-		for (AggregationsDatum basisDatum : basisDaten) {
-			AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
+		for (AggregationsAttributWert basisWert : werte) {
+
 			if (basisWert.getWert() >= 0) {
 				summe += basisWert.getWert();
-				anzahlIst += 1.0;
+
 				gueteWerte.add(basisWert.getGuete());
 				interpoliert |= basisWert.isInterpoliert();
 				nichtErfasst |= basisWert.isNichtErfasst();
@@ -511,19 +538,16 @@ public abstract class AbstraktAggregationsObjekt {
 
 		AggregationsAttributWert exportWert = new AggregationsAttributWert(
 				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-		if (anzahlIst > 0) {
-			exportWert.setWert(Math.round((double) summe
-					* (AggregationLVE.APPROX_REST ? anzahlSoll / anzahlIst
-							: 1.0)));
+		if (gueteWerte.size() > 0) {
+			exportWert.setWert(summe);
 			exportWert.setInterpoliert(interpoliert);
-			if (AggregationLVE.NICHT_ERFASST) {
-				exportWert.setNichtErfasst(nichtErfasst);
-			}
+			exportWert.setNichtErfasst(nichtErfasst);
+
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 						.toArray(new GWert[0])));
 			} catch (GueteException e) {
-				Debug.getLogger().error("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+				Debug.getLogger().warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
 				e.printStackTrace();
 			}

@@ -231,15 +231,18 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
+	 * @param gueteFaktor der Guetefaktor als Zeichenkette.
 	 * @throws Exception
 	 *             wenn die Initialisierung fehlschlaegt
 	 */
-	public void testStart(final ClientDavInterface dav) throws Exception {
+	public void testStart(final ClientDavInterface dav, String gueteFaktor) throws Exception {
 		zeitRaffer = true;
 		Debug.getLogger().config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
 		this.komArgumente = new ArrayList<String>();
 		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
 				"kb.duaTestObjekte"); //$NON-NLS-1$
+		this.komArgumente.add("-gueteFaktor=" + gueteFaktor); //$NON-NLS-1$
+		 
 		this.initialize(dav);
 	}
 

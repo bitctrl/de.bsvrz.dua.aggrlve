@@ -90,7 +90,7 @@ public class AggregationLVE_15_60Test {
 		dav = DAVTest.newDav(Verbindung.getConData());
 
 		AggregationLVE aggregation = new AggregationLVE();
-		aggregation.testStart(dav);
+		aggregation.testStart(dav, "0.9");
 
 		AggregationUnvImporter inputImporter = new AggregationUnvImporter(dav,
 				Verbindung.WURZEL + "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$
@@ -251,7 +251,7 @@ public class AggregationLVE_15_60Test {
 		dav = DAVTest.newDav(Verbindung.getConData());
 
 		AggregationLVE aggregation = new AggregationLVE();
-		aggregation.testStart(dav);
+		aggregation.testStart(dav, "0.9");
 
 		AggregationUnvImporter inputImporter = new AggregationUnvImporter(dav,
 				Verbindung.WURZEL + "Messwert_Aggregation_unv.csv"); //$NON-NLS-1$

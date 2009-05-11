@@ -25,7 +25,6 @@
  */
 package de.bsvrz.dua.aggrlve;
 
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -36,7 +35,6 @@ import org.junit.Test;
 import com.bitctrl.Constants;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
 
 /**
