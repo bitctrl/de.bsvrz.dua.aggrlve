@@ -123,7 +123,8 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		kopie.tT = this.tT;
 		for (AggregationsAttribut attribut : AggregationsAttribut
 				.getInstanzen()) {
-			kopie.werte.put(attribut, this.getWert(attribut).clone());
+			AggregationsAttributWert orgWert = this.getWert(attribut);
+			kopie.werte.put(attribut, orgWert == null ? orgWert : orgWert.clone());
 		}
 
 		return kopie;

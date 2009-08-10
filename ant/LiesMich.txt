@@ -17,6 +17,9 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.0.6
+ - leere Einträge in einem Aggregationsdatensatz werden ignoriert
+
 1.0.5
   - Die Güte von (hier via Mittelwertbildung) interpolierten Fahrstreifendaten
     wird mit einem Faktor (Parameter "gueteFaktor") gewichtet.  

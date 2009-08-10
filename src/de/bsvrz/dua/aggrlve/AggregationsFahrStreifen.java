@@ -176,7 +176,7 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 		Collection<GWert> gueteWerte = new ArrayList<GWert>();
 		for (AggregationsDatum basisDatum : basisDaten) {
 			AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
-			if (basisWert.getWert() >= 0) {
+			if ((basisWert != null) && (basisWert.getWert() >= 0)) {
 				elementZaehler++;
 				summe += basisWert.getWert();
 				gueteWerte.add(basisWert.getGuete());

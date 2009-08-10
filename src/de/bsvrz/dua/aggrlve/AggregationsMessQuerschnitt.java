@@ -289,7 +289,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					for (AggregationsDatum basisDatum : fsQuellDatum) {
 						AggregationsAttributWert basisWert = basisDatum
 								.getWert(attribut);
-						if (basisWert.getWert() >= 0) {
+						if ((basisWert != null) && (basisWert.getWert() >= 0)) {
 							anzahlInFs++;
 							summeInFs += basisWert.getWert();
 							gueteWerteInFs.add(basisWert.getGuete());
@@ -331,7 +331,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					for (AggregationsDatum basisDatum : fsQuellDatum) {
 						AggregationsAttributWert basisWert = basisDatum
 								.getWert(attribut);
-						if (basisWert.getWert() >= 0) {
+						if ((basisWert != null) && (basisWert.getWert() >= 0)) {
 							erfassungsIntervall += basisDatum.getT();
 							zwischenSumme += (double) basisWert.getWert();
 							gueteWerte.add(basisWert.getGuete());
