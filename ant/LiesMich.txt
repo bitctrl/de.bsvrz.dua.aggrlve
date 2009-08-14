@@ -17,6 +17,9 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.0.7
+ - potentielle NPE beim Ersetzen von fehlenden Werten, wenn "leere" Datensätze verarbeitet werden sollen.
+ 
 1.0.6
  - leere Einträge in einem Aggregationsdatensatz werden ignoriert
 

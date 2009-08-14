@@ -303,7 +303,7 @@ public abstract class AbstraktAggregationsObjekt {
 			double gueteSumme = 0;
 			for (AggregationsDatum quellDatum : quellDaten) {
 				AggregationsAttributWert wert = quellDatum.getWert(attribut);
-				if (wert.getWert() >= 0) {
+				if ((wert != null) && (wert.getWert() >= 0)) {
 					gueteSumme += wert.getGuete().getIndexUnskaliert() >= 0 ? wert
 							.getGuete().getIndex()
 							: 0;
