@@ -72,7 +72,7 @@ public class AggregationLVEDTVMonat extends AbstraktDTVTest {
 
 		DataDescription dd = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
-				AggregationsIntervall.aGGDTVTAG.getAspekt(), (short) 0);
+				AggregationsIntervall.aGGDTVTAG.getAspekt());
 
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, 2000);

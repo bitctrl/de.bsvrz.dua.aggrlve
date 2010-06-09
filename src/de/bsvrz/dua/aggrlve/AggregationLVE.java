@@ -215,8 +215,8 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 							this.dav2.getDataModel().getAttributeGroup(
 									DUAKonstanten.ATG_KZD),
 							this.dav2.getDataModel().getAspect(
-									DUAKonstanten.ASP_MESSWERTERSETZUNG),
-							(short) 0), ReceiveOptions.normal(), ReceiverRole
+									DUAKonstanten.ASP_MESSWERTERSETZUNG)),
+							ReceiveOptions.normal(), ReceiverRole
 							.receiver());
 				}
 			} catch (Exception e) {

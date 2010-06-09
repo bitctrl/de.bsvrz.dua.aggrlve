@@ -116,7 +116,7 @@ public class AggregationLVE_15_60Test {
 
 		DataDescription dd5min = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KZD), dav.getDataModel()
-				.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG), (short) 0);
+				.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
 		CSVImporter outputImporter = new CSVImporter(Verbindung.WURZEL
 				+ "Tabelle56.csv"); //$NON-NLS-1$
@@ -277,7 +277,7 @@ public class AggregationLVE_15_60Test {
 
 		DataDescription dd5min = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KZD), dav.getDataModel()
-				.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG), (short) 0);
+				.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG));
 
 		CSVImporter outputImporter = new CSVImporter(Verbindung.WURZEL
 				+ "Tabelle57.csv"); //$NON-NLS-1$

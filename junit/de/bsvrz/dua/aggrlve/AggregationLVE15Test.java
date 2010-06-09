@@ -111,7 +111,7 @@ public class AggregationLVE15Test {
 
 		DataDescription dd1min = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
-				AggregationsIntervall.aGG1MINUTE.getAspekt(), (short) 0);
+				AggregationsIntervall.aGG1MINUTE.getAspekt());
 
 		TestErgebnisAnalyseImporter inputImporter = new TestErgebnisAnalyseImporter(
 				dav, Verbindung.WURZEL + "Analysewerte.csv"); //$NON-NLS-1$

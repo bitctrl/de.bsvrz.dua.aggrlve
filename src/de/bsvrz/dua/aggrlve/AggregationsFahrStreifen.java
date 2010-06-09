@@ -101,7 +101,7 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 		dav.subscribeReceiver(this, fs.getSystemObject(), new DataDescription(
 				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 				dav.getDataModel().getAspect(
-						DUAKonstanten.ASP_MESSWERTERSETZUNG), (short) 0),
+						DUAKonstanten.ASP_MESSWERTERSETZUNG)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 

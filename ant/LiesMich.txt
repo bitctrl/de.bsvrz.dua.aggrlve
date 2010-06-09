@@ -17,6 +17,10 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.0.8
+ - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
+        DataDescription(atg, asp)
+
 1.0.7
  - potentielle NPE beim Ersetzen von fehlenden Werten, wenn "leere" Datensätze verarbeitet werden sollen.
  
