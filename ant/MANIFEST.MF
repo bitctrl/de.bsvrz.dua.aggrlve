@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Aggregation LVE
 Bundle-SymbolicName: de.bsvrz.dua.aggrlve
-Bundle-Version: 1.0.8
+Bundle-Version: 1.0.9
 Bundle-Vendor: BitCtrl Systems GmbH
 Require-Bundle: de.bsvrz.dua.guete,
  de.bsvrz.sys.funclib.bitctrl

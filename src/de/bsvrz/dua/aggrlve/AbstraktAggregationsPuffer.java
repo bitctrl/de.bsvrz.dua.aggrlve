@@ -52,8 +52,8 @@ public abstract class AbstraktAggregationsPuffer {
 	protected static ClientDavInterface sDAV = null;
 
 	/**
-	 * das Aggregationsintervall, fuer das Daten in diesem Puffer stehen (<code>null</code>
-	 * deutet auf messwertersetzte Fahstreifenwerte hin).
+	 * das Aggregationsintervall, fuer das Daten in diesem Puffer stehen (
+	 * <code>null</code> deutet auf messwertersetzte Fahstreifenwerte hin).
 	 */
 	protected AggregationsIntervall aggregationsIntervall = null;
 
@@ -104,7 +104,9 @@ public abstract class AbstraktAggregationsPuffer {
 		synchronized (this) {
 			this.ringPuffer.addFirst(neuesDatum);
 			while (this.ringPuffer.size() > this.getMaxPufferInhalt()) {
-				this.ringPuffer.removeLast();
+				if (!this.ringPuffer.isEmpty()) {
+					this.ringPuffer.removeLast();
+				}
 			}
 		}
 	}
