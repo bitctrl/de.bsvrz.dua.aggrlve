@@ -24,9 +24,6 @@
  * mailto: info@bitctrl.de
  */
 
-/**
- * Basis-Klassen der SWE Aggregation LVE
- */
-
-package de.bsvrz.dua.aggrlve;
+/** Klassen der SWE Aggregation zur Aggregation von virtuellen MQ. */
+package de.bsvrz.dua.aggrlve.vmq;
 

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -44,6 +44,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dav.daf.main.config.SystemObjectType;
+import de.bsvrz.dua.aggrlve.vmq.VMqAggregator;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -66,9 +67,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Diese Applikation initialisiert nur alle in den uebergebenen
  * Konfigurationsbereichen konfigurierten Messquerschnitte. Von diesen Objekten
  * aus werden dann auch die assoziierten Fahrstreifen initialisiert
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
@@ -165,6 +166,9 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		 */
 		AggregationsIntervall.initialisiere(this.verbindung);
 
+		/** Aggregation für virtuelle MQ initialisieren. */
+		VMqAggregator.getInstance().init(this.verbindung);
+
 		guete = this.getGueteFaktor();
 		typFahrstreifen = this.verbindung.getDataModel().getType(
 				DUAKonstanten.TYP_FAHRSTREIFEN);
@@ -180,7 +184,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 			MessQuerschnitt mq = MessQuerschnitt.getInstanz(mqObjekt);
 			if (mq == null) {
 				throw new DUAInitialisierungsException(
-						"Konfiguration von Messquerschnitt " + //$NON-NLS-1$ 
+						"Konfiguration von Messquerschnitt " + //$NON-NLS-1$
 								mq
 								+ " konnte nicht vollstaendig ausgelesen werden"); //$NON-NLS-1$
 			} else {
@@ -228,7 +232,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Startet diese Applikation nur fuer Testzwecke.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param gueteFaktor der Guetefaktor als Zeichenkette.
@@ -242,7 +246,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
 				"kb.duaTestObjekte"); //$NON-NLS-1$
 		this.komArgumente.add("-gueteFaktor=" + gueteFaktor); //$NON-NLS-1$
-		 
+
 		this.initialize(dav);
 	}
 
@@ -267,7 +271,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Erfragt ein Aggregationsobjekt (nur fuer Testzwecke).
-	 * 
+	 *
 	 * @param obj
 	 *            das assoziierte Systemobjekt
 	 * @return ein Aggregationsobjekt (nur fuer Testzwecke).
@@ -280,7 +284,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * Erfragt den Zeitpunkt, der exakt 30s nach der Minute liegt, in der diese
 	 * Methode aufgerufen wird (Absolute Zeit ohne Sommer- und Winterzeit).
-	 * 
+	 *
 	 * @return der Zeitpunkt, der exakt 30s nach der Minute liegt, in der diese
 	 *         Methode aufgerufen wird
 	 */
@@ -299,7 +303,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Startet diese Applikation.
-	 * 
+	 *
 	 * @param argumente
 	 *            Argumente der Kommandozeile
 	 */
@@ -339,7 +343,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 								fsZaehler++;
 							}
 						}
-						
+
 						if (fsZaehler == this.mqFs.get(mq).size()) {
 							/**
 							 * fuer alle Fs des Mq sind Daten im Puffer
@@ -356,7 +360,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * Leitet eine Berechnung mit allen bis zum uebergebenen Zeitpunkt
 	 * eingetroffenen Daten fuer den uebergebenen Zeitpunkt aus.
-	 * 
+	 *
 	 * @param mqObj
 	 *            der Messquerschnitt, fuer den die Berechnung (Aggregation)
 	 *            stattfinden soll
@@ -392,7 +396,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * Löscht den aktuellen Fahrstreifen-Datenpuffer fuer einen bestimmten
 	 * Messquerschnitt.
-	 * 
+	 *
 	 * @param mq
 	 *            ein Messquerschnitt
 	 */
