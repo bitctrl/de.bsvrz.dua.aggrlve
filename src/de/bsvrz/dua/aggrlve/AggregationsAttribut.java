@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.HashSet;
@@ -54,53 +54,53 @@ public final class AggregationsAttribut {
 	 * Attribut <code>qKfz</code> bzw. <code>QKfz</code>
 	 */
 	public static final AggregationsAttribut Q_KFZ = new AggregationsAttribut(
-			"qKfz", "QKfz"); //$NON-NLS-1$ //$NON-NLS-2$
+			"qKfz", "QKfz");
 
 	/**
 	 * Attribut <code>qLkw</code> bzw. <code>QLkw</code>
 	 */
 	public static final AggregationsAttribut Q_LKW = new AggregationsAttribut(
-			"qLkw", "QLkw"); //$NON-NLS-1$ //$NON-NLS-2$
+			"qLkw", "QLkw");
 
 	/**
 	 * Attribut <code>qPkw</code> bzw. <code>QPkw</code>
 	 */
 	public static final AggregationsAttribut Q_PKW = new AggregationsAttribut(
-			"qPkw", "QPkw"); //$NON-NLS-1$ //$NON-NLS-2$
+			"qPkw", "QPkw");
 
 	/**
 	 * Attribut <code>vKfz</code> bzw. <code>VKfz</code>
 	 */
 	public static final AggregationsAttribut V_KFZ = new AggregationsAttribut(
-			"vKfz", "VKfz"); //$NON-NLS-1$ //$NON-NLS-2$
+			"vKfz", "VKfz");
 
 	/**
 	 * Attribut <code>vLkw</code> bzw. <code>VLkw</code>
 	 */
 	public static final AggregationsAttribut V_LKW = new AggregationsAttribut(
-			"vLkw", "VLkw"); //$NON-NLS-1$ //$NON-NLS-2$
+			"vLkw", "VLkw");
 
 	/**
 	 * Attribut <code>vPkw</code> bzw. <code>VPkw</code>
 	 */
 	public static final AggregationsAttribut V_PKW = new AggregationsAttribut(
-			"vPkw", "VPkw"); //$NON-NLS-1$ //$NON-NLS-2$
+			"vPkw", "VPkw");
 
 	/**
 	 * der Name des Attributs (FS).
 	 */
-	private String nameFS = null;
+	private final String nameFS;
 
 	/**
 	 * der Name des Attributs (MQ).
 	 */
-	private String nameMQ = null;
+	private final String nameMQ;
 
 	/**
 	 * indiziert, ob es sich bei diesem Attribut um ein Geschwindigkeitsattribut
 	 * handelt.
 	 */
-	private boolean geschwindigkeitsAttribut = false;
+	private final boolean geschwindigkeitsAttribut;
 
 	/**
 	 * Standardkonstruktor.
@@ -115,8 +115,8 @@ public final class AggregationsAttribut {
 	private AggregationsAttribut(final String nameFS, final String nameMQ) {
 		this.nameFS = nameFS;
 		this.nameMQ = nameMQ;
-		this.geschwindigkeitsAttribut = nameFS.startsWith("v"); //$NON-NLS-1$
-		WERTE_BEREICH.add(this);
+		this.geschwindigkeitsAttribut = nameFS.startsWith("v");
+		AggregationsAttribut.WERTE_BEREICH.add(this);
 	}
 
 	/**
@@ -147,7 +147,7 @@ public final class AggregationsAttribut {
 	 * @return alle statischen Instanzen dieser Klasse
 	 */
 	public static Set<AggregationsAttribut> getInstanzen() {
-		return WERTE_BEREICH;
+		return AggregationsAttribut.WERTE_BEREICH;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public final class AggregationsAttribut {
 	 */
 	@Override
 	public String toString() {
-		return this.nameFS + " (" + this.nameMQ + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		return this.nameFS + " (" + this.nameMQ + ")";
 	}
 
 }

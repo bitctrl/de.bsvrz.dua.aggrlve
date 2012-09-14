@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -63,18 +63,12 @@ public abstract class AbstraktAggregationsObjekt {
 	 * FG1-Aggregation nicht erfasst werden.
 	 */
 	private static final String[][] REST_ATTRIBUTE_AGGR = new String[][] {
-			new String[] { null, "BMax" }, //$NON-NLS-1$
-			new String[] { null, "VDelta" }, //$NON-NLS-1$
-			new String[] { "vgKfz", "VgKfz" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "sKfz", "SKfz" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "b", "B" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "aLkw", "ALkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kKfz", "KKfz" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kLkw", "KLkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kPkw", "KPkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "qB", "QB" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kB", "KB" } //$NON-NLS-1$//$NON-NLS-2$
-	};
+			new String[] { null, "BMax" }, new String[] { null, "VDelta" },
+			new String[] { "vgKfz", "VgKfz" }, new String[] { "sKfz", "SKfz" },
+			new String[] { "b", "B" }, new String[] { "aLkw", "ALkw" },
+			new String[] { "kKfz", "KKfz" }, new String[] { "kLkw", "KLkw" },
+			new String[] { "kPkw", "KPkw" }, new String[] { "qB", "QB" },
+			new String[] { "kB", "KB" } };
 
 	/**
 	 * die restlichen auszufuellenden Attribute der Attributgruppen
@@ -83,47 +77,31 @@ public abstract class AbstraktAggregationsObjekt {
 	 * DTV-Berechnung nicht erfasst werden.
 	 */
 	private static final String[][] REST_ATTRIBUTE_DTV = new String[][] {
-			new String[] { null, "BMax" }, //$NON-NLS-1$
-			new String[] { null, "VDelta" }, //$NON-NLS-1$
-			new String[] { "vKfz", "VKfz" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "vPkw", "VPkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "vLkw", "VLkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "vgKfz", "VgKfz" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "sKfz", "SKfz" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "b", "B" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "aLkw", "ALkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kKfz", "KKfz" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kLkw", "KLkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kPkw", "KPkw" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "qB", "QB" }, //$NON-NLS-1$//$NON-NLS-2$
-			new String[] { "kB", "KB" } //$NON-NLS-1$//$NON-NLS-2$
-	};
+			new String[] { null, "BMax" }, new String[] { null, "VDelta" },
+			new String[] { "vKfz", "VKfz" }, new String[] { "vPkw", "VPkw" },
+			new String[] { "vLkw", "VLkw" }, new String[] { "vgKfz", "VgKfz" },
+			new String[] { "sKfz", "SKfz" }, new String[] { "b", "B" },
+			new String[] { "aLkw", "ALkw" }, new String[] { "kKfz", "KKfz" },
+			new String[] { "kLkw", "KLkw" }, new String[] { "kPkw", "KPkw" },
+			new String[] { "qB", "QB" }, new String[] { "kB", "KB" } };
 
-	/**
-	 * statische Verbindung zum Datenverteiler.
-	 */
-	protected ClientDavInterface dav = null;
+	/** statische Verbindung zum Datenverteiler. */
+	protected ClientDavInterface dav;
 
-	/**
-	 * Datensender.
-	 */
-	protected DAVSendeAnmeldungsVerwaltung sender = null;
+	/*** Datensender. */
+	protected DAVSendeAnmeldungsVerwaltung sender;
 
-	/**
-	 * Das Systemobjekt, das hier verwaltet wird.
-	 */
-	protected SystemObject objekt = null;
+	/*** Das Systemobjekt, das hier verwaltet wird. */
+	protected SystemObject objekt;
 
-	/**
-	 * Mapt ein Systemobjekt auf sein letztes von hier aus publiziertes Datum.
-	 */
+	/** Mapt ein Systemobjekt auf sein letztes von hier aus publiziertes Datum. */
 	protected Map<SystemObject, ResultData> letzteDaten = new HashMap<SystemObject, ResultData>();
 
 	/**
 	 * speichert alle historischen Daten dieses Aggregationsobjektes aller
 	 * Aggregationsintervalle.
 	 */
-	protected AggregationsPufferMenge datenPuffer = null;
+	protected AggregationsPufferMenge datenPuffer;
 
 	/**
 	 * Standardkonstruktor.
@@ -149,9 +127,9 @@ public abstract class AbstraktAggregationsObjekt {
 	 */
 	protected final void sende(final ResultData resultat) {
 		if (resultat.getData() == null) {
-			ResultData letztesDatum = this.letzteDaten
-					.get(resultat.getObject());
-			if (letztesDatum != null && letztesDatum.getData() != null) {
+			final ResultData letztesDatum = this.letzteDaten.get(resultat
+					.getObject());
+			if ((letztesDatum != null) && (letztesDatum.getData() != null)) {
 				this.sender.sende(resultat);
 				this.letzteDaten.put(resultat.getObject(), resultat);
 			}
@@ -173,66 +151,62 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @param intervall
 	 *            der Aggregationsintervall
 	 */
-	protected final void fuelleRest(ResultData resultat,
-			AggregationsIntervall intervall) {
-		String[][] restAttribute = REST_ATTRIBUTE_AGGR;
+	protected final void fuelleRest(final ResultData resultat,
+			final AggregationsIntervall intervall) {
+		String[][] restAttribute = AbstraktAggregationsObjekt.REST_ATTRIBUTE_AGGR;
 
 		if (intervall.isDTVorTV()) {
-			restAttribute = REST_ATTRIBUTE_DTV;
+			restAttribute = AbstraktAggregationsObjekt.REST_ATTRIBUTE_DTV;
 		}
 
 		if (this.isFahrstreifen()) {
-			resultat.getData()
-					.getTimeValue("T").setMillis(intervall.getIntervall()); //$NON-NLS-1$
+			resultat.getData().getTimeValue("T")
+					.setMillis(intervall.getIntervall());
 		}
 
-		for (int i = 0; i < restAttribute.length; i++) {
-			String attributName = restAttribute[i][1];
+		for (final String[] element : restAttribute) {
+			String attributName = element[1];
 			if (this.isFahrstreifen()) {
-				attributName = restAttribute[i][0];
+				attributName = element[0];
 			}
 
 			if (attributName != null) {
-				resultat.getData().getItem(attributName).getUnscaledValue(
-						"Wert").set(DUAKonstanten.NICHT_ERMITTELBAR); //$NON-NLS-1$
-				resultat
-						.getData()
-						.getItem(attributName)
-						.getItem("Status")
-						.getItem("Erfassung")
-						.getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+				resultat.getData().getItem(attributName)
+						.getUnscaledValue("Wert")
+						.set(DUAKonstanten.NICHT_ERMITTELBAR);
 				resultat.getData().getItem(attributName).getItem("Status")
-						.getItem("MessWertErsetzung").getUnscaledValue(
-								"Implausibel").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+						.getItem("Erfassung").getUnscaledValue("NichtErfasst")
+						.set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status")
-						.getItem("MessWertErsetzung").getUnscaledValue(
-								"Interpoliert").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+						.getItem("MessWertErsetzung")
+						.getUnscaledValue("Implausibel")
+						.set(DUAKonstanten.NEIN);
+				resultat.getData().getItem(attributName).getItem("Status")
+						.getItem("MessWertErsetzung")
+						.getUnscaledValue("Interpoliert")
+						.set(DUAKonstanten.NEIN);
 
 				resultat.getData().getItem(attributName).getItem("Status")
-						.getItem("PlFormal")
-						.getUnscaledValue("WertMax").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+						.getItem("PlFormal").getUnscaledValue("WertMax")
+						.set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status")
-						.getItem("PlFormal")
-						.getUnscaledValue("WertMin").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+						.getItem("PlFormal").getUnscaledValue("WertMin")
+						.set(DUAKonstanten.NEIN);
 
-				resultat
-						.getData()
-						.getItem(attributName)
-						.getItem("Status")
+				resultat.getData().getItem(attributName).getItem("Status")
 						.getItem("PlLogisch")
-						.getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
-				resultat
-						.getData()
-						.getItem(attributName)
-						.getItem("Status")
+						.getUnscaledValue("WertMaxLogisch")
+						.set(DUAKonstanten.NEIN);
+				resultat.getData().getItem(attributName).getItem("Status")
 						.getItem("PlLogisch")
-						.getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN); //$NON-NLS-1$
+						.getUnscaledValue("WertMinLogisch")
+						.set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Güte")
-						.getUnscaledValue("Index").set(
-								DUAKonstanten.NICHT_ERMITTELBAR);
+						.getUnscaledValue("Index")
+						.set(DUAKonstanten.NICHT_ERMITTELBAR);
 				resultat.getData().getItem(attributName).getItem("Güte")
-						.getUnscaledValue("Verfahren").set(
-								GueteVerfahren.STANDARD.getCode());
+						.getUnscaledValue("Verfahren")
+						.set(GueteVerfahren.STANDARD.getCode());
 			}
 		}
 	}
@@ -277,7 +251,7 @@ public abstract class AbstraktAggregationsObjekt {
 			final AggregationsAttribut attribut,
 			final Collection<AggregationsDatum> quellDaten,
 			final AggregationsIntervall intervall, final long zeitStempel) {
-		Collection<AggregationsAttributWert> zielDaten = new ArrayList<AggregationsAttributWert>();
+		final Collection<AggregationsAttributWert> zielDaten = new ArrayList<AggregationsAttributWert>();
 
 		double anzahlSoll = -1;
 		if (intervall.equals(AggregationsIntervall.aGG1MINUTE)
@@ -290,9 +264,10 @@ public abstract class AbstraktAggregationsObjekt {
 		} else if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 			anzahlSoll = DUAUtensilien.getStundenVonTag(zeitStempel);
 		} else if (intervall.equals(AggregationsIntervall.aGGDTVMONAT)) {
-			Calendar c = new GregorianCalendar();
+			final Calendar c = new GregorianCalendar();
 			c.setTimeInMillis(zeitStempel);
-			anzahlSoll = c.getActualMaximum(Calendar.DAY_OF_MONTH);;
+			anzahlSoll = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+			;
 		} else if (intervall.equals(AggregationsIntervall.aGGDTVJAHR)) {
 			anzahlSoll = 12;
 		}
@@ -301,12 +276,12 @@ public abstract class AbstraktAggregationsObjekt {
 			long wertSumme = 0;
 			long wertAnzahl = 0;
 			double gueteSumme = 0;
-			for (AggregationsDatum quellDatum : quellDaten) {
-				AggregationsAttributWert wert = quellDatum.getWert(attribut);
+			for (final AggregationsDatum quellDatum : quellDaten) {
+				final AggregationsAttributWert wert = quellDatum
+						.getWert(attribut);
 				if ((wert != null) && (wert.getWert() >= 0)) {
 					gueteSumme += wert.getGuete().getIndexUnskaliert() >= 0 ? wert
-							.getGuete().getIndex()
-							: 0;
+							.getGuete().getIndex() : 0;
 					wertSumme += wert.getWert();
 					wertAnzahl++;
 					zielDaten.add(wert);
@@ -318,16 +293,16 @@ public abstract class AbstraktAggregationsObjekt {
 			if (wertAnzahl > 0) {
 				mittelWert = Math.round((double) wertSumme
 						/ (double) wertAnzahl);
-				mittelWertGuete = (double) gueteSumme / (double) wertAnzahl;
+				mittelWertGuete = gueteSumme / wertAnzahl;
 			}
 
 			boolean first = false;
 			long zielDatenSoll = (long) anzahlSoll;
-			if (anzahlSoll - (double) zielDatenSoll > 0.00005) {
+			if ((anzahlSoll - zielDatenSoll) > 0.00005) {
 				zielDatenSoll++;
 				first = true;
 			}
-			long dummy = zielDatenSoll - zielDaten.size();
+			final long dummy = zielDatenSoll - zielDaten.size();
 			if (dummy > 0) {
 				for (int i = 0; i < dummy; i++) {
 					if (wertAnzahl > 0) {
@@ -337,14 +312,15 @@ public abstract class AbstraktAggregationsObjekt {
 											* mittelWertGuete));
 						} else {
 							/**
-							 * "halber" Q-Wert muss noch gewichtet werden
-							 * Das Passiert nur, wenn z.B. aus KZD, die im 2 Minuten-Takt kommen
-							 * z.B. das Intervall 5 Minuten ausgerechnet werden soll.
+							 * "halber" Q-Wert muss noch gewichtet werden Das
+							 * Passiert nur, wenn z.B. aus KZD, die im 2
+							 * Minuten-Takt kommen z.B. das Intervall 5 Minuten
+							 * ausgerechnet werden soll.
 							 */
 							if (first) {
-								long teilMittelWert = Math
-										.round((double) mittelWert
-												* (double) (anzahlSoll - (long) anzahlSoll));
+								final long teilMittelWert = Math
+										.round(mittelWert
+												* (anzahlSoll - (long) anzahlSoll));
 								zielDaten
 										.add(new AggregationsAttributWert(
 												attribut, teilMittelWert,
@@ -366,10 +342,9 @@ public abstract class AbstraktAggregationsObjekt {
 				}
 			}
 		} else {
-			Debug
-					.getLogger()
+			Debug.getLogger()
 					.warning(
-							"Die Anzahl der benoetigten Intervalle sollte nicht kleiner 0 sein"); //$NON-NLS-1$
+							"Die Anzahl der benoetigten Intervalle sollte nicht kleiner 0 sein");
 		}
 
 		return zielDaten;
@@ -404,7 +379,7 @@ public abstract class AbstraktAggregationsObjekt {
 			berechnen = true;
 		} else {
 			if (!this.isFahrstreifen()) {
-				AbstraktAggregationsPuffer puffer = this.datenPuffer
+				final AbstraktAggregationsPuffer puffer = this.datenPuffer
 						.getPuffer(intervall);
 				if (puffer != null) {
 					berechnen = puffer.getDatenFuerZeitraum(zeitStempel,
@@ -431,30 +406,35 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @param intervall
 	 *            das gewuenschte Aggregationsintervall
 	 */
-	protected final void aggregiereMittel(AggregationsAttribut attribut,
-			Data nutzDatum, Collection<AggregationsDatum> basisDaten,
-			long zeitStempel, AggregationsIntervall intervall) {
+	protected final void aggregiereMittel(final AggregationsAttribut attribut,
+			final Data nutzDatum,
+			final Collection<AggregationsDatum> basisDaten,
+			final long zeitStempel, final AggregationsIntervall intervall) {
 		/**
-		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
-		 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
-		 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit
-		 * einem Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
-		 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen
-		 * Werten ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit
-		 * einem parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer
-		 * Kennung zu versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung
-		 * generierte) Werte verwendet wurden. 
+		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen
+		 * Kurzzeitdatenzyklen. Ausgefallene Werte werden durch den Mittelwert
+		 * der vorhandenen Werte ersetzt. Um die Zuverlässigkeit der Daten
+		 * nachvollziehen zu können, ist jeder aggregierte Wert mit einem
+		 * Güteindex in % anzugeben. Der Güteindex wird durch arithmetische
+		 * Mittelung der Güteindizes der zu aggregierenden Daten bestimmt. Der
+		 * Güteindex von ausgefallenen Werten ergibt sich dabei aus dem
+		 * Mittelwert der vorhandenen Werte multipliziert mit einem
+		 * parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit
+		 * einer Kennung zu versehen, ob zur Aggregation interpolierte (durch
+		 * die Messwertersetzung generierte) Werte verwendet wurden.
 		 */
-		Collection<AggregationsAttributWert> werte = this.ersetzteAusgefalleneWerte(attribut, basisDaten, intervall, zeitStempel);
+		final Collection<AggregationsAttributWert> werte = this
+				.ersetzteAusgefalleneWerte(attribut, basisDaten, intervall,
+						zeitStempel);
 
 		boolean interpoliert = false;
 		boolean nichtErfasst = false;
 		long anzahl = 0;
 		long summe = 0;
-		Collection<GWert> gueteWerte = new ArrayList<GWert>();
-		for(AggregationsAttributWert basisWert:werte){
+		final Collection<GWert> gueteWerte = new ArrayList<GWert>();
+		for (final AggregationsAttributWert basisWert : werte) {
 
-			if(basisWert.getWert() >= 0){
+			if (basisWert.getWert() >= 0) {
 				summe += basisWert.getWert();
 				anzahl++;
 				gueteWerte.add(basisWert.getGuete());
@@ -463,7 +443,7 @@ public abstract class AbstraktAggregationsObjekt {
 			}
 		}
 
-		AggregationsAttributWert exportWert = new AggregationsAttributWert(
+		final AggregationsAttributWert exportWert = new AggregationsAttributWert(
 				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
 		if (anzahl > 0) {
 			exportWert.setWert(Math.round((double) summe / (double) anzahl));
@@ -474,9 +454,10 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 						.toArray(new GWert[0])));
-			} catch (GueteException e) {
-				Debug.getLogger().error("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+			} catch (final GueteException e) {
+				Debug.getLogger().error(
+						"Guete von " + this.objekt + " fuer " + attribut
+								+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
 			}
 		}
@@ -500,9 +481,10 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @param intervall
 	 *            das gewuenschte Aggregationsintervall
 	 */
-	protected final void aggregiereSumme(AggregationsAttribut attribut,
-			Data nutzDatum, Collection<AggregationsDatum> basisDaten,
-			long zeitStempel, AggregationsIntervall intervall) {
+	protected final void aggregiereSumme(final AggregationsAttribut attribut,
+			final Data nutzDatum,
+			final Collection<AggregationsDatum> basisDaten,
+			final long zeitStempel, final AggregationsIntervall intervall) {
 		/**
 		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen
 		 * Kurzzeitdatenzyklen. Ausgefallene Werte werden durch den Mittelwert
@@ -516,7 +498,7 @@ public abstract class AbstraktAggregationsObjekt {
 		 * einer Kennung zu versehen, ob zur Aggregation interpolierte (durch
 		 * die Messwertersetzung generierte) Werte verwendet wurden.
 		 */
-		Collection<AggregationsAttributWert> werte = this
+		final Collection<AggregationsAttributWert> werte = this
 				.ersetzteAusgefalleneWerte(attribut, basisDaten, intervall,
 						zeitStempel);
 
@@ -524,8 +506,8 @@ public abstract class AbstraktAggregationsObjekt {
 		boolean nichtErfasst = false;
 		long summe = 0;
 
-		Collection<GWert> gueteWerte = new ArrayList<GWert>();
-		for (AggregationsAttributWert basisWert : werte) {
+		final Collection<GWert> gueteWerte = new ArrayList<GWert>();
+		for (final AggregationsAttributWert basisWert : werte) {
 
 			if (basisWert.getWert() >= 0) {
 				summe += basisWert.getWert();
@@ -536,7 +518,7 @@ public abstract class AbstraktAggregationsObjekt {
 			}
 		}
 
-		AggregationsAttributWert exportWert = new AggregationsAttributWert(
+		final AggregationsAttributWert exportWert = new AggregationsAttributWert(
 				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
 		if (gueteWerte.size() > 0) {
 			exportWert.setWert(summe);
@@ -546,9 +528,10 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 						.toArray(new GWert[0])));
-			} catch (GueteException e) {
-				Debug.getLogger().warning("Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-						attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+			} catch (final GueteException e) {
+				Debug.getLogger().warning(
+						"Guete von " + this.objekt + " fuer " + attribut
+								+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
 			}
 		}

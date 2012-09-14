@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -56,8 +56,8 @@ public class AggregationsPuffer extends AbstraktAggregationsPuffer {
 	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
 	 *             konnte
 	 */
-	public AggregationsPuffer(ClientDavInterface dav, SystemObject obj,
-			AggregationsIntervall intervall)
+	public AggregationsPuffer(final ClientDavInterface dav,
+			final SystemObject obj, final AggregationsIntervall intervall)
 			throws DUAInitialisierungsException {
 		super(dav, obj, intervall);
 	}

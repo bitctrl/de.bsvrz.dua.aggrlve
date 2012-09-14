@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -61,17 +61,16 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @version $Id$
  */
-public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
+public final class AggregationsMessQuerschnitt extends
+		AbstraktAggregationsObjekt {
 
-	/**
-	 * der hier betrachtete Messquerschnitt.
-	 */
-	private MessQuerschnitt mq = null;
+	/** der hier betrachtete Messquerschnitt. */
+	private final MessQuerschnitt mq;
 
 	/**
 	 * Menge der Fahrstreifen, die an diesem Messquerschnitt konfiguriert sind.
 	 */
-	private Map<SystemObject, AggregationsFahrStreifen> fsMenge = new HashMap<SystemObject, AggregationsFahrStreifen>();
+	private final Map<SystemObject, AggregationsFahrStreifen> fsMenge = new HashMap<SystemObject, AggregationsFahrStreifen>();
 
 	/**
 	 * Standardkonstruktor.
@@ -90,22 +89,22 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 		super(dav, mq.getSystemObject());
 		this.mq = mq;
 
-		this.datenPuffer = new AggregationsPufferMenge(dav, mq
-				.getSystemObject());
-		Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
-		for (AggregationsIntervall intervall : AggregationsIntervall
+		this.datenPuffer = new AggregationsPufferMenge(dav,
+				mq.getSystemObject());
+		final Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		for (final AggregationsIntervall intervall : AggregationsIntervall
 				.getInstanzen()) {
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(mq.getSystemObject(),
 						intervall.getDatenBeschreibung(false)));
-			} catch (Exception e) {
-				throw new DUAInitialisierungsException("Messquerschnitt " + mq //$NON-NLS-1$
-						+ " konnte nicht initialisiert werden", e); //$NON-NLS-1$
+			} catch (final Exception e) {
+				throw new DUAInitialisierungsException("Messquerschnitt " + mq
+						+ " konnte nicht initialisiert werden", e);
 			}
 		}
 		sender.modifiziereObjektAnmeldung(anmeldungen);
 
-		for (FahrStreifen fs : mq.getFahrStreifen()) {
+		for (final FahrStreifen fs : mq.getFahrStreifen()) {
 			this.fsMenge.put(fs.getSystemObject(),
 					new AggregationsFahrStreifen(dav, fs));
 		}
@@ -115,26 +114,26 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void aggregiere(long zeitStempel, AggregationsIntervall intervall) {
+	public void aggregiere(final long zeitStempel,
+			final AggregationsIntervall intervall) {
 		/**
 		 * Aggregiere alle Werte der untergeordneten Fahrstreifen
 		 */
-		for (AggregationsFahrStreifen fs : this.fsMenge.values()) {
+		for (final AggregationsFahrStreifen fs : this.fsMenge.values()) {
 			fs.aggregiere(zeitStempel, intervall);
 		}
 
 		if (this.isBerechnungNotwendig(zeitStempel, intervall)) {
-			long begin = zeitStempel;
+			final long begin = zeitStempel;
 			long ende = zeitStempel + intervall.getIntervall();
 			if (intervall.isDTVorTV()) {
-				GregorianCalendar cal = new GregorianCalendar();
+				final GregorianCalendar cal = new GregorianCalendar();
 				cal.setTimeInMillis(zeitStempel);
 
 				if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
 					cal.add(Calendar.DAY_OF_YEAR, 1);
 					ende = cal.getTimeInMillis();
-				} else if (intervall
-						.equals(AggregationsIntervall.aGGDTVMONAT)) {
+				} else if (intervall.equals(AggregationsIntervall.aGGDTVMONAT)) {
 					cal.add(Calendar.MONTH, 1);
 					ende = cal.getTimeInMillis();
 				} else if (intervall.equals(AggregationsIntervall.aGGDTVJAHR)) {
@@ -143,9 +142,9 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 				}
 			}
 
-			Collection<AggregationsDatum> mqDaten = this.datenPuffer
+			final Collection<AggregationsDatum> mqDaten = this.datenPuffer
 					.getDatenFuerZeitraum(begin, ende, intervall);
-			
+
 			Data nutzDatum = null;
 
 			if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
@@ -156,7 +155,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					 */
 					nutzDatum = dav.createData(intervall.getDatenBeschreibung(
 							false).getAttributeGroup());
-					for (AggregationsAttribut attribut : AggregationsAttribut
+					for (final AggregationsAttribut attribut : AggregationsAttribut
 							.getInstanzen()) {
 						if (!attribut.isGeschwindigkeitsAttribut()) {
 							this.aggregiereSumme(attribut, nutzDatum, mqDaten,
@@ -164,13 +163,14 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 						}
 					}
 				} else {
-					Debug.getLogger().warning(
-							intervall
-									+ " fuer " + this.objekt + //$NON-NLS-1$
-									" kann nicht berechnet werden, da keine Basisdaten (Intervall: "
-									+ //$NON-NLS-1$
-									intervall.getVorgaenger()
-									+ ") zur Verfuegung stehen"); //$NON-NLS-1$
+					Debug.getLogger()
+							.warning(
+									intervall
+											+ " fuer "
+											+ this.objekt
+											+ " kann nicht berechnet werden, da keine Basisdaten (Intervall: "
+											+ intervall.getVorgaenger()
+											+ ") zur Verfuegung stehen");
 				}
 			} else {
 				if (mqDaten.isEmpty()) {
@@ -179,18 +179,18 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 						 * Aggregiere Basisintervall aus messwertersetzten
 						 * Fahrstreifendaten
 						 */
-						Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten = new HashMap<AggregationsFahrStreifen, Collection<AggregationsDatum>>();
+						final Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten = new HashMap<AggregationsFahrStreifen, Collection<AggregationsDatum>>();
 
-						for (AggregationsFahrStreifen fs : this.fsMenge
+						for (final AggregationsFahrStreifen fs : this.fsMenge
 								.values()) {
-							Collection<AggregationsDatum> daten = fs
+							final Collection<AggregationsDatum> daten = fs
 									.getPuffer().getPuffer(null)
 									.getDatenFuerZeitraum(begin, ende);
 							fsDaten.put(fs, daten);
 						}
 
 						boolean kannBasisIntervallBerechnen = false;
-						for (Collection<AggregationsDatum> daten : fsDaten
+						for (final Collection<AggregationsDatum> daten : fsDaten
 								.values()) {
 							if (!daten.isEmpty()) {
 								kannBasisIntervallBerechnen = true;
@@ -214,7 +214,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					 */
 					nutzDatum = dav.createData(intervall.getDatenBeschreibung(
 							false).getAttributeGroup());
-					for (AggregationsAttribut attribut : AggregationsAttribut
+					for (final AggregationsAttribut attribut : AggregationsAttribut
 							.getInstanzen()) {
 						this.aggregiereMittel(attribut, nutzDatum, mqDaten,
 								zeitStempel, intervall);
@@ -222,7 +222,8 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 				}
 			}
 
-			ResultData resultat = new ResultData(this.mq.getSystemObject(),
+			final ResultData resultat = new ResultData(
+					this.mq.getSystemObject(),
 					intervall.getDatenBeschreibung(false), zeitStempel,
 					nutzDatum);
 
@@ -242,7 +243,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 	 * @param obj
 	 *            das assoziierte Systemobjekt
 	 * @return ein Aggregationsobjekt unterhalb dieses Objektes (nur fuer
-	 * Testzwecke).
+	 *         Testzwecke).
 	 */
 	public AggregationsFahrStreifen getAggregationsObjekt(final SystemObject obj) {
 		return this.fsMenge.get(obj);
@@ -263,31 +264,32 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 	 *            das Aggregationsintervall
 	 */
 	private void aggregiereBasisDatum(
-			Data nutzDatum,
-			Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten,
-			long zeitStempel, AggregationsIntervall intervall) {
+			final Data nutzDatum,
+			final Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten,
+			final long zeitStempel, final AggregationsIntervall intervall) {
 
-		for (AggregationsAttribut attribut : AggregationsAttribut
+		for (final AggregationsAttribut attribut : AggregationsAttribut
 				.getInstanzen()) {
 			boolean interpoliert = false;
 			boolean nichtErfasst = false;
-			AggregationsAttributWert exportWert = new AggregationsAttributWert(
+			final AggregationsAttributWert exportWert = new AggregationsAttributWert(
 					attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-			Collection<GWert> gueteWerte = new ArrayList<GWert>();
+			final Collection<GWert> gueteWerte = new ArrayList<GWert>();
 
 			if (attribut.isGeschwindigkeitsAttribut()) {
 				long summe = 0;
 				long anzahl = 0;
 
-				for (AggregationsFahrStreifen fahrStreifen : fsDaten.keySet()) {
-					Collection<AggregationsDatum> fsQuellDatum = fsDaten
+				for (final AggregationsFahrStreifen fahrStreifen : fsDaten
+						.keySet()) {
+					final Collection<AggregationsDatum> fsQuellDatum = fsDaten
 							.get(fahrStreifen);
 
 					long summeInFs = 0;
 					long anzahlInFs = 0;
-					Collection<GWert> gueteWerteInFs = new ArrayList<GWert>();
-					for (AggregationsDatum basisDatum : fsQuellDatum) {
-						AggregationsAttributWert basisWert = basisDatum
+					final Collection<GWert> gueteWerteInFs = new ArrayList<GWert>();
+					for (final AggregationsDatum basisDatum : fsQuellDatum) {
+						final AggregationsAttributWert basisWert = basisDatum
 								.getWert(attribut);
 						if ((basisWert != null) && (basisWert.getWert() >= 0)) {
 							anzahlInFs++;
@@ -306,13 +308,11 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					try {
 						gueteWerte.add(GueteVerfahren.summe(gueteWerteInFs
 								.toArray(new GWert[0])));
-					} catch (GueteException e) {
-						Debug
-								.getLogger()
-								.error(
-										"Guete von " + fahrStreifen.getObjekt() + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-												attribut
-												+ " konnte nicht berechnet werden", e); //$NON-NLS-1$
+					} catch (final GueteException e) {
+						Debug.getLogger().error(
+								"Guete von " + fahrStreifen.getObjekt()
+										+ " fuer " + attribut
+										+ " konnte nicht berechnet werden", e);
 						e.printStackTrace();
 					}
 				}
@@ -324,24 +324,23 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 			} else {
 				double summe = 0;
 
-				for (Collection<AggregationsDatum> fsQuellDatum : fsDaten
+				for (final Collection<AggregationsDatum> fsQuellDatum : fsDaten
 						.values()) {
 					double erfassungsIntervall = 0;
 					double zwischenSumme = 0;
-					for (AggregationsDatum basisDatum : fsQuellDatum) {
-						AggregationsAttributWert basisWert = basisDatum
+					for (final AggregationsDatum basisDatum : fsQuellDatum) {
+						final AggregationsAttributWert basisWert = basisDatum
 								.getWert(attribut);
 						if ((basisWert != null) && (basisWert.getWert() >= 0)) {
 							erfassungsIntervall += basisDatum.getT();
-							zwischenSumme += (double) basisWert.getWert();
+							zwischenSumme += basisWert.getWert();
 							gueteWerte.add(basisWert.getGuete());
 							interpoliert |= basisWert.isInterpoliert();
 							nichtErfasst |= basisWert.isNichtErfasst();
 						}
 					}
 					if (erfassungsIntervall > 0) {
-						summe += zwischenSumme
-								* (double) Constants.MILLIS_PER_HOUR
+						summe += (zwischenSumme * Constants.MILLIS_PER_HOUR)
 								/ erfassungsIntervall;
 					}
 				}
@@ -359,13 +358,10 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 				try {
 					exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 							.toArray(new GWert[0])));
-				} catch (GueteException e) {
-					Debug
-							.getLogger()
-							.error(
-									"Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-											attribut
-											+ " konnte nicht berechnet werden", e); //$NON-NLS-1$
+				} catch (final GueteException e) {
+					Debug.getLogger().error(
+							"Guete von " + this.objekt + " fuer " + attribut
+									+ " konnte nicht berechnet werden", e);
 					e.printStackTrace();
 				}
 			}
@@ -379,8 +375,9 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 	 */
 	@Override
 	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der MQ " + this.mq + //$NON-NLS-1$
-				" wird nicht mehr aggregiert"); //$NON-NLS-1$
+		Debug.getLogger().warning(
+				"Der MQ " + this.mq + " wird nicht mehr aggregiert");
+		super.finalize();
 	}
 
 	/**

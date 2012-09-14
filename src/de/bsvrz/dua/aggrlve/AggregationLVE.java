@@ -85,7 +85,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	 * Systemzeit orientieren. Dadurch wird der Zeitrafferbetrieb dieser SWE
 	 * ermoeglicht.
 	 */
-	private static boolean zeitRaffer = false;
+	private static boolean zeitRaffer;
 
 	/**
 	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehören.
@@ -104,7 +104,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * Zweite Datenverteiler-Verbindung fuer Testzwecke.
 	 */
-	private ClientDavInterface dav2 = null;
+	private ClientDavInterface dav2;
 
 	/***************************************************************************
 	 * Normale Variablen *
@@ -130,12 +130,12 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * der Systemobjekttyp Fahrstreifen.
 	 */
-	public static SystemObjectType typFahrstreifen = null;
+	public static SystemObjectType typFahrstreifen;
 
 	/**
 	 * Aspekt der messwertersetzten Fahrstreifendaten.
 	 */
-	public static Aspect mwe = null;
+	public static Aspect mwe;
 
 	/**
 	 * der interne Kontrollprozess dient der zeitlichen Steuerung der
@@ -193,9 +193,9 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 			final MessQuerschnitt mq = MessQuerschnitt.getInstanz(mqObjekt);
 			if (mq == null) {
 				throw new DUAInitialisierungsException(
-						"Konfiguration von Messquerschnitt " + //$NON-NLS-1$
-								mq
-								+ " konnte nicht vollstaendig ausgelesen werden"); //$NON-NLS-1$
+						"Konfiguration von Messquerschnitt "
+								+ mq
+								+ " konnte nicht vollstaendig ausgelesen werden");
 			} else {
 				messQuerschnitte.put(mqObjekt, new AggregationsMessQuerschnitt(
 						this.verbindung, mq));
@@ -242,7 +242,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 				}
 			} catch (final Exception e) {
 				throw new DUAInitialisierungsException(
-						"Testapplikation konnte nicht gestartet werden", e); //$NON-NLS-1$
+						"Testapplikation konnte nicht gestartet werden", e);
 			}
 		}
 	}
@@ -260,11 +260,11 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	public void testStart(final ClientDavInterface dav, final String gueteFaktor)
 			throws Exception {
 		AggregationLVE.zeitRaffer = true;
-		Debug.getLogger().config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
+		Debug.getLogger().config("Applikation fuer Testzwecke gestartet");
 		this.komArgumente = new ArrayList<String>();
-		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
-				"kb.duaTestObjekte"); //$NON-NLS-1$
-		this.komArgumente.add("-gueteFaktor=" + gueteFaktor); //$NON-NLS-1$
+		this.komArgumente.add("-KonfigurationsBereichsPid="
+				+ "kb.duaTestObjekte");
+		this.komArgumente.add("-gueteFaktor=" + gueteFaktor);
 
 		this.initialize(dav);
 	}
@@ -412,7 +412,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 					}
 				}
 			} else {
-				throw new RuntimeException("TEST: Kein MQ gefunden"); //$NON-NLS-1$
+				throw new RuntimeException("TEST: Kein MQ gefunden");
 			}
 		}
 	}

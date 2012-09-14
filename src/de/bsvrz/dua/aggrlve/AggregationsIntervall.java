@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.Calendar;
@@ -40,14 +40,14 @@ import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Korrespondiert mit den Aspekten der Aggregationsintervalle:<br> -
- * <code>asp.agregation1Minute</code>,<br> -
- * <code>asp.agregation5Minuten</code>,<br> -
- * <code>asp.agregation15Minuten</code>,<br> -
- * <code>asp.agregation30Minuten</code>,<br> -
- * <code>asp.agregation60Minuten</code>,<br> -
- * <code>asp.agregationDtvMonat</code> und<br> -
- * <code>asp.agregationDtvJahr</code><br>
+ * Korrespondiert mit den Aspekten der Aggregationsintervalle:<br>
+ * - <code>asp.agregation1Minute</code>,<br>
+ * - <code>asp.agregation5Minuten</code>,<br>
+ * - <code>asp.agregation15Minuten</code>,<br>
+ * - <code>asp.agregation30Minuten</code>,<br>
+ * - <code>asp.agregation60Minuten</code>,<br>
+ * - <code>asp.agregationDtvMonat</code> und<br>
+ * - <code>asp.agregationDtvJahr</code><br>
  * .<br>
  * <b>Achtung:</b> Bevor auf die statischen Member dieser Klasse zugegriffen
  * werden kann, muss diese Klasse initialisiert werden
@@ -56,47 +56,48 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * 
  * @version $Id$
  */
-public final class AggregationsIntervall implements Comparable<AggregationsIntervall> {
+public final class AggregationsIntervall implements
+		Comparable<AggregationsIntervall> {
 
 	/**
 	 * <code>asp.agregation1Minute</code>.
 	 */
-	public static AggregationsIntervall aGG1MINUTE = null;
+	public static AggregationsIntervall aGG1MINUTE;
 
 	/**
 	 * <code>asp.agregation5Minuten</code>.
 	 */
-	public static AggregationsIntervall aGG5MINUTE = null;
+	public static AggregationsIntervall aGG5MINUTE;
 
 	/**
 	 * <code>asp.agregation15Minuten</code>.
 	 */
-	public static AggregationsIntervall aGG15MINUTE = null;
+	public static AggregationsIntervall aGG15MINUTE;
 
 	/**
 	 * <code>asp.agregation30Minuten</code>.
 	 */
-	public static AggregationsIntervall aGG30MINUTE = null;
+	public static AggregationsIntervall aGG30MINUTE;
 
 	/**
 	 * <code>asp.agregation60Minuten</code>.
 	 */
-	public static AggregationsIntervall aGG60MINUTE = null;
+	public static AggregationsIntervall aGG60MINUTE;
 
 	/**
 	 * <code>asp.agregationDtvTag</code>.
 	 */
-	public static AggregationsIntervall aGGDTVTAG = null;
+	public static AggregationsIntervall aGGDTVTAG;
 
 	/**
 	 * <code>asp.agregationDtvMonat</code>.
 	 */
-	public static AggregationsIntervall aGGDTVMONAT = null;
+	public static AggregationsIntervall aGGDTVMONAT;
 
 	/**
 	 * <code>asp.agregationDtvJahr</code>.
 	 */
-	public static AggregationsIntervall aGGDTVJAHR = null;
+	public static AggregationsIntervall aGGDTVJAHR;
 
 	/**
 	 * der Wertebereich dieses Typs.
@@ -107,13 +108,13 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 * die Datenbeschreibung der Publikationsdaten dieses Aggregations-
 	 * Intervalls (fuer FS).
 	 */
-	private DataDescription datenBeschreibungFs = null;
+	private final DataDescription datenBeschreibungFs;
 
 	/**
 	 * die Datenbeschreibung der Publikationsdaten dieses Aggregations-
 	 * Intervalls (fuer MQ).
 	 */
-	private DataDescription datenBeschreibungMq = null;
+	private final DataDescription datenBeschreibungMq;
 
 	/**
 	 * die Laenge des Aggregationsintervalls in ms.
@@ -124,7 +125,7 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 * die maximale Anzahl der Elemente, die in einem Puffer mit Daten dieser
 	 * Aggregationsstufe vorgehalten werden muessen.
 	 */
-	private long maxPufferGroesse = 0;
+	private final long maxPufferGroesse;
 
 	/**
 	 * Standardkonstruktor.
@@ -151,7 +152,7 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 		this.datenBeschreibungMq = new DataDescription(atgMq, asp);
 		this.intervallLaengeInMillis = intervall;
 		this.maxPufferGroesse = maxPufferGroesse;
-		werteBereich.add(this);
+		AggregationsIntervall.werteBereich.add(this);
 	}
 
 	/**
@@ -161,70 +162,76 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 *            Verbindung zum Datenverteiler
 	 */
 	public static void initialisiere(final ClientDavInterface dav) {
-		aGG1MINUTE = new AggregationsIntervall(dav.getDataModel()
+		AggregationsIntervall.aGG1MINUTE = new AggregationsIntervall(dav
+				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect("asp.agregation1Minute"), //$NON-NLS-1$
+				.getDataModel().getAspect("asp.agregation1Minute"),
 				Constants.MILLIS_PER_MINUTE, 5);
 
-		aGG5MINUTE = new AggregationsIntervall(dav.getDataModel()
+		AggregationsIntervall.aGG5MINUTE = new AggregationsIntervall(dav
+				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect("asp.agregation5Minuten"), //$NON-NLS-1$
+				.getDataModel().getAspect("asp.agregation5Minuten"),
 				5 * Constants.MILLIS_PER_MINUTE, 3);
-		aGG15MINUTE = new AggregationsIntervall(dav.getDataModel()
+		AggregationsIntervall.aGG15MINUTE = new AggregationsIntervall(dav
+				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect("asp.agregation15Minuten"), //$NON-NLS-1$
+				.getDataModel().getAspect("asp.agregation15Minuten"),
 				15 * Constants.MILLIS_PER_MINUTE, 2);
-		aGG30MINUTE = new AggregationsIntervall(dav.getDataModel()
+		AggregationsIntervall.aGG30MINUTE = new AggregationsIntervall(dav
+				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect("asp.agregation30Minuten"), //$NON-NLS-1$
+				.getDataModel().getAspect("asp.agregation30Minuten"),
 				30 * Constants.MILLIS_PER_MINUTE, 2);
-		aGG60MINUTE = new AggregationsIntervall(dav.getDataModel()
+		AggregationsIntervall.aGG60MINUTE = new AggregationsIntervall(dav
+				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav
 				.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect("asp.agregation60Minuten"), //$NON-NLS-1$
+				.getDataModel().getAspect("asp.agregation60Minuten"),
 				60 * Constants.MILLIS_PER_MINUTE, 40);
 
-		aGGDTVTAG = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav
-				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
-				dav.getDataModel().getAspect("asp.agregationDtvTag"), //$NON-NLS-1$
+		AggregationsIntervall.aGGDTVTAG = new AggregationsIntervall(dav
+				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
+				dav.getDataModel().getAspect("asp.agregationDtvTag"),
 				60 * 24 * Constants.MILLIS_PER_MINUTE, 50);
-		aGGDTVMONAT = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav
-				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
-				dav.getDataModel().getAspect("asp.agregationDtvMonat"), //$NON-NLS-1$
+		AggregationsIntervall.aGGDTVMONAT = new AggregationsIntervall(dav
+				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
+				dav.getDataModel().getAspect("asp.agregationDtvMonat"),
 				61 * 24 * Constants.MILLIS_PER_MINUTE, 15);
-		aGGDTVJAHR = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav
-				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
-				dav.getDataModel().getAspect("asp.agregationDtvJahr"), //$NON-NLS-1$
+		AggregationsIntervall.aGGDTVJAHR = new AggregationsIntervall(dav
+				.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
+				dav.getDataModel().getAspect("asp.agregationDtvJahr"),
 				62 * 24 * Constants.MILLIS_PER_MINUTE, 0);
 	}
 
 	/**
 	 * Erfragt die Menge aller statischen Instanzen dieser Klasse in sortierter
-	 * Form:<br> - <code>asp.agregation1Minute</code>,<br> -
-	 * <code>asp.agregation5Minuten</code>,<br> -
-	 * <code>asp.agregation15Minuten</code>,<br> -
-	 * <code>asp.agregation30Minuten</code>,<br> -
-	 * <code>asp.agregation60Minuten</code>,<br> -
-	 * <code>asp.agregationDtvMonat</code> und<br> -
-	 * <code>asp.agregationDtvJahr</code>.<br>
+	 * Form:<br>
+	 * - <code>asp.agregation1Minute</code>,<br>
+	 * - <code>asp.agregation5Minuten</code>,<br>
+	 * - <code>asp.agregation15Minuten</code>,<br>
+	 * - <code>asp.agregation30Minuten</code>,<br>
+	 * - <code>asp.agregation60Minuten</code>,<br>
+	 * - <code>asp.agregationDtvMonat</code> und<br>
+	 * - <code>asp.agregationDtvJahr</code>.<br>
 	 * <br>
 	 * 
 	 * @return die Menge aller statischen Instanzen dieser Klasse
 	 */
 	public static SortedSet<AggregationsIntervall> getInstanzen() {
-		return werteBereich;
+		return AggregationsIntervall.werteBereich;
 	}
 
 	/**
@@ -256,7 +263,7 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 * @return die Datenbeschreibung der Publikationsdaten dieses Aggregations-
 	 *         Intervalls
 	 */
-	public DataDescription getDatenBeschreibung(boolean fuerFahrstreifen) {
+	public DataDescription getDatenBeschreibung(final boolean fuerFahrstreifen) {
 		if (fuerFahrstreifen) {
 			return this.datenBeschreibungFs;
 		}
@@ -272,8 +279,9 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	public AggregationsIntervall getVorgaenger() {
 		AggregationsIntervall vorgaenger = null;
 
-		for (AggregationsIntervall intervall : getInstanzen()) {
-			if (intervall.equals(this)) {
+		for (final AggregationsIntervall intervall : AggregationsIntervall
+				.getInstanzen()) {
+			if (this.equals(intervall)) {
 				break;
 			}
 			vorgaenger = intervall;
@@ -295,30 +303,32 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 *         sollte oder <code>-1</code>, wenn zum uebergebenen Zeitpunkt
 	 *         keine Aggregation notwendig ist
 	 */
-	public long getAggregationZeitStempel(long zeitpunkt) {
+	public long getAggregationZeitStempel(final long zeitpunkt) {
 		long zeitStempel = -1;
-		GregorianCalendar cal = new GregorianCalendar();
+		final GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(zeitpunkt);
 		final long minuteJetzt = cal.get(Calendar.MINUTE);
 
-		if (this.equals(aGG1MINUTE) || this.equals(aGG5MINUTE)
-				|| this.equals(aGG15MINUTE) || this.equals(aGG30MINUTE)
-				|| this.equals(aGG60MINUTE)) {
-			long intervallLaengeInMinuten = this.getIntervall()
+		if (this.equals(AggregationsIntervall.aGG1MINUTE)
+				|| this.equals(AggregationsIntervall.aGG5MINUTE)
+				|| this.equals(AggregationsIntervall.aGG15MINUTE)
+				|| this.equals(AggregationsIntervall.aGG30MINUTE)
+				|| this.equals(AggregationsIntervall.aGG60MINUTE)) {
+			final long intervallLaengeInMinuten = this.getIntervall()
 					/ Constants.MILLIS_PER_MINUTE;
-			if (minuteJetzt % intervallLaengeInMinuten == 0) {
+			if ((minuteJetzt % intervallLaengeInMinuten) == 0) {
 				cal.add(Calendar.MINUTE, (int) (-1 * intervallLaengeInMinuten));
 				cal.set(Calendar.SECOND, 0);
 				cal.set(Calendar.MILLISECOND, 0);
 				zeitStempel = cal.getTimeInMillis();
 			}
-		} else if (this.equals(aGGDTVTAG)) {
+		} else if (this.equals(AggregationsIntervall.aGGDTVTAG)) {
 			/**
 			 * Versuche noch 12 Stunden im neuen Tag DTV-Tag des Vorgaengertages
 			 * zu berechnen
 			 */
 			final long stundeJetzt = cal.get(Calendar.HOUR_OF_DAY);
-			if (stundeJetzt < 12 && minuteJetzt == 1) {
+			if ((stundeJetzt < 12) && (minuteJetzt == 1)) {
 				cal.add(Calendar.DAY_OF_YEAR, -1);
 				cal.set(Calendar.HOUR_OF_DAY, 0);
 				cal.set(Calendar.MINUTE, 0);
@@ -326,14 +336,14 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 				cal.set(Calendar.MILLISECOND, 0);
 				zeitStempel = cal.getTimeInMillis();
 			}
-		} else if (this.equals(aGGDTVJAHR)) {
+		} else if (this.equals(AggregationsIntervall.aGGDTVJAHR)) {
 			final long stundeJetzt = cal.get(Calendar.HOUR_OF_DAY);
 			final long tagJetzt = cal.get(Calendar.DAY_OF_YEAR);
 			/**
 			 * Versuche noch 30 Tage im neuen Jahr DTV-Jahr des Vorgaengerjahres
 			 * zu berechnen
 			 */
-			if (tagJetzt < 30 && stundeJetzt == 0 && minuteJetzt == 1) {
+			if ((tagJetzt < 30) && (stundeJetzt == 0) && (minuteJetzt == 1)) {
 				cal.add(Calendar.YEAR, -1);
 				cal.set(Calendar.DAY_OF_YEAR, 1);
 				cal.set(Calendar.MINUTE, 0);
@@ -341,14 +351,14 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 				cal.set(Calendar.MILLISECOND, 0);
 				zeitStempel = cal.getTimeInMillis();
 			}
-		} else if (this.equals(aGGDTVMONAT)) {
+		} else if (this.equals(AggregationsIntervall.aGGDTVMONAT)) {
 			/**
 			 * Versuche noch 20 Tage im neuen Monat DTV-Monat des
 			 * Vorgaengermonats zu berechnen
 			 */
 			final long stundeJetzt = cal.get(Calendar.HOUR_OF_DAY);
 			final long tagJetzt = cal.get(Calendar.DAY_OF_MONTH);
-			if (tagJetzt < 20 && stundeJetzt == 0 && minuteJetzt == 1) {
+			if ((tagJetzt < 20) && (stundeJetzt == 0) && (minuteJetzt == 1)) {
 				cal.set(Calendar.DAY_OF_MONTH, 1);
 				cal.add(Calendar.MONTH, -1);
 				cal.set(Calendar.MINUTE, 0);
@@ -377,10 +387,11 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	/**
 	 * Erfragt, ob zum uebergebenen Zeitpunkt eine Aggregation notwendig ist.
 	 * 
-	 * @param zeitpunkt der Zeitpunkt
+	 * @param zeitpunkt
+	 *            der Zeitpunkt
 	 * @return ob zum uebergebenen Zeitpunkt eine Aggregation notwendig ist
 	 */
-	public boolean isAggregationErforderlich(long zeitpunkt) {
+	public boolean isAggregationErforderlich(final long zeitpunkt) {
 		return getAggregationZeitStempel(zeitpunkt) != -1;
 	}
 
@@ -396,7 +407,8 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compareTo(AggregationsIntervall that) {
+	@Override
+	public int compareTo(final AggregationsIntervall that) {
 		return new Long(this.getIntervall()).compareTo(that.getIntervall());
 	}
 
@@ -404,18 +416,18 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		boolean ergebnis = false;
 
-		if (obj != null && obj instanceof AggregationsIntervall) {
-			AggregationsIntervall that = (AggregationsIntervall) obj;
+		if ((obj != null) && (obj instanceof AggregationsIntervall)) {
+			final AggregationsIntervall that = (AggregationsIntervall) obj;
 
-			ergebnis = this.getDatenBeschreibung(true).getAspect().equals(
-					that.getDatenBeschreibung(true).getAspect())
-					&& this.getDatenBeschreibung(true).getAttributeGroup()
-							.equals(
-									that.getDatenBeschreibung(true)
-											.getAttributeGroup());
+			ergebnis = this.getDatenBeschreibung(true).getAspect()
+					.equals(that.getDatenBeschreibung(true).getAspect())
+					&& this.getDatenBeschreibung(true)
+							.getAttributeGroup()
+							.equals(that.getDatenBeschreibung(true)
+									.getAttributeGroup());
 		}
 
 		return ergebnis;
@@ -426,7 +438,7 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 */
 	@Override
 	public String toString() {
-		return this.datenBeschreibungFs + "\n" + this.datenBeschreibungMq; //$NON-NLS-1$
+		return this.datenBeschreibungFs + "\n" + this.datenBeschreibungMq;
 	}
 
 }

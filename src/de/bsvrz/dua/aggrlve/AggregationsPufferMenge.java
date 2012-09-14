@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -52,12 +52,12 @@ public class AggregationsPufferMenge {
 	 * Alle Aspekte, deren Daten in diesem Objekt gespeichert werden in
 	 * aufsteigender Reihenfolge.
 	 */
-	private static Aspect[] aspekteSortiert = null;
+	private static Aspect[] aspekteSortiert;
 
 	/**
 	 * Menge aller Puffer mit Aggregationsdaten (vom Aspekt aus betrachtet).
 	 */
-	private Map<Aspect, AbstraktAggregationsPuffer> pufferMenge = new HashMap<Aspect, AbstraktAggregationsPuffer>();
+	private final Map<Aspect, AbstraktAggregationsPuffer> pufferMenge = new HashMap<Aspect, AbstraktAggregationsPuffer>();
 
 	/**
 	 * Standardkonstruktor.
@@ -72,20 +72,21 @@ public class AggregationsPufferMenge {
 	 */
 	public AggregationsPufferMenge(final ClientDavInterface dav,
 			final SystemObject obj) throws DUAInitialisierungsException {
-		if (aspekteSortiert == null) {
-			aspekteSortiert = new Aspect[AggregationsIntervall.getInstanzen()
-					.size() + 1];
-			aspekteSortiert[0] = AggregationLVE.mwe;
+		if (AggregationsPufferMenge.aspekteSortiert == null) {
+			AggregationsPufferMenge.aspekteSortiert = new Aspect[AggregationsIntervall
+					.getInstanzen().size() + 1];
+			AggregationsPufferMenge.aspekteSortiert[0] = AggregationLVE.mwe;
 			int i = 1;
-			for (AggregationsIntervall intervall : AggregationsIntervall
+			for (final AggregationsIntervall intervall : AggregationsIntervall
 					.getInstanzen()) {
-				aspekteSortiert[i++] = intervall.getAspekt();
+				AggregationsPufferMenge.aspekteSortiert[i++] = intervall
+						.getAspekt();
 			}
 		}
 
 		this.pufferMenge.put(AggregationLVE.mwe, new MweAggregationsPuffer(dav,
 				obj));
-		for (AggregationsIntervall intervall : AggregationsIntervall
+		for (final AggregationsIntervall intervall : AggregationsIntervall
 				.getInstanzen()) {
 			if (intervall.equals(AggregationsIntervall.aGG60MINUTE)
 					|| intervall.equals(AggregationsIntervall.aGGDTVTAG)
@@ -110,16 +111,17 @@ public class AggregationsPufferMenge {
 	 *            ein aktuelles Datum mit Aggregations- oder messwertersetzten
 	 *            Fahrstreifendaten
 	 */
-	public void aktualisiere(ResultData resultat) {
-		AbstraktAggregationsPuffer puffer = this.pufferMenge.get(resultat
+	public void aktualisiere(final ResultData resultat) {
+		final AbstraktAggregationsPuffer puffer = this.pufferMenge.get(resultat
 				.getDataDescription().getAspect());
 		if (puffer != null) {
 			puffer.aktualisiere(resultat);
 		} else {
 			Debug.getLogger().fine(
-					"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt " + //$NON-NLS-1$ //$NON-NLS-2$
-							resultat.getDataDescription().getAspect()
-							+ " existiert nicht"); //$NON-NLS-1$
+					"Puffer fuer Objekt " + resultat.getObject()
+							+ " und Aspekt "
+							+ resultat.getDataDescription().getAspect()
+							+ " existiert nicht");
 		}
 	}
 
@@ -143,23 +145,24 @@ public class AggregationsPufferMenge {
 			final AggregationsIntervall aggregationsIntervall) {
 		Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
 
-		AggregationsIntervall ausgangsIntervall = aggregationsIntervall
+		final AggregationsIntervall ausgangsIntervall = aggregationsIntervall
 				.getVorgaenger();
 		if (ausgangsIntervall == null) {
 			daten = this.pufferMenge.get(AggregationLVE.mwe)
 					.getDatenFuerZeitraum(begin, ende);
 		} else {
 			int start = 0;
-			for (int i = 0; i < aspekteSortiert.length; i++) {
-				if (aspekteSortiert[i].equals(ausgangsIntervall
-						.getDatenBeschreibung(true).getAspect())) {
+			for (int i = 0; i < AggregationsPufferMenge.aspekteSortiert.length; i++) {
+				if (AggregationsPufferMenge.aspekteSortiert[i]
+						.equals(ausgangsIntervall.getDatenBeschreibung(true)
+								.getAspect())) {
 					start = i;
 				}
 			}
 
 			for (int i = start; i >= 0; i--) {
-				AbstraktAggregationsPuffer puffer = this.pufferMenge
-						.get(aspekteSortiert[i]);
+				final AbstraktAggregationsPuffer puffer = this.pufferMenge
+						.get(AggregationsPufferMenge.aspekteSortiert[i]);
 				if (puffer != null) {
 					daten = puffer.getDatenFuerZeitraum(begin, ende);
 					if (aggregationsIntervall.isDTVorTV() || !daten.isEmpty()) {

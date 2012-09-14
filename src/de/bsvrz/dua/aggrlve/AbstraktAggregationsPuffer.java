@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -49,13 +49,13 @@ public abstract class AbstraktAggregationsPuffer {
 	/**
 	 * Verbindung zum Datenverteiler.
 	 */
-	protected static ClientDavInterface sDAV = null;
+	protected static ClientDavInterface sDAV;
 
 	/**
 	 * das Aggregationsintervall, fuer das Daten in diesem Puffer stehen (
 	 * <code>null</code> deutet auf messwertersetzte Fahstreifenwerte hin).
 	 */
-	protected AggregationsIntervall aggregationsIntervall = null;
+	protected AggregationsIntervall aggregationsIntervall;
 
 	/**
 	 * Ringpuffer mit den zeitlich aktuellsten Daten.
@@ -65,7 +65,7 @@ public abstract class AbstraktAggregationsPuffer {
 	/**
 	 * das Systemobjekt, dessen Daten hier gespeichert werden.
 	 */
-	protected SystemObject objekt = null;
+	protected SystemObject objekt;
 
 	/**
 	 * Standardkonstruktor.
@@ -85,8 +85,8 @@ public abstract class AbstraktAggregationsPuffer {
 	public AbstraktAggregationsPuffer(final ClientDavInterface dav,
 			final SystemObject obj, final AggregationsIntervall intervall)
 			throws DUAInitialisierungsException {
-		if (sDAV == null) {
-			sDAV = dav;
+		if (AbstraktAggregationsPuffer.sDAV == null) {
+			AbstraktAggregationsPuffer.sDAV = dav;
 		}
 		this.objekt = obj;
 		this.aggregationsIntervall = intervall;
@@ -99,8 +99,8 @@ public abstract class AbstraktAggregationsPuffer {
 	 * @param resultat
 	 *            ein aktuelles Datum dieses Aggregationsintervalls
 	 */
-	public void aktualisiere(Dataset resultat) {
-		AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
+	public void aktualisiere(final Dataset resultat) {
+		final AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
 		synchronized (this) {
 			this.ringPuffer.addFirst(neuesDatum);
 			while (this.ringPuffer.size() > this.getMaxPufferInhalt()) {
@@ -124,13 +124,13 @@ public abstract class AbstraktAggregationsPuffer {
 	 */
 	public final Collection<AggregationsDatum> getDatenFuerZeitraum(
 			final long begin, final long ende) {
-		Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
+		final Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
 
 		synchronized (this) {
-			for (AggregationsDatum einzelDatum : this.ringPuffer) {
-				if (einzelDatum.getDatenZeit() >= begin
-						&& einzelDatum.getDatenZeit() < ende) {
-					daten.add((AggregationsDatum) einzelDatum.clone());
+			for (final AggregationsDatum einzelDatum : this.ringPuffer) {
+				if ((einzelDatum.getDatenZeit() >= begin)
+						&& (einzelDatum.getDatenZeit() < ende)) {
+					daten.add(einzelDatum.clone());
 				}
 			}
 		}
@@ -152,15 +152,15 @@ public abstract class AbstraktAggregationsPuffer {
 	 */
 	@Override
 	public String toString() {
-		String s = "Datenart: " + (this.aggregationsIntervall == null ? //$NON-NLS-1$
-		"FS-MWE"
-				: this.aggregationsIntervall);
+		String s = "Datenart: "
+				+ (this.aggregationsIntervall == null ? "FS-MWE"
+						: this.aggregationsIntervall);
 
 		synchronized (this) {
-			s += "\nMAX: " + this.getMaxPufferInhalt() + "\nInhalt: " + //$NON-NLS-1$//$NON-NLS-2$
-					(this.ringPuffer.isEmpty() ? "leer\n" : "\n");
-			for (AggregationsDatum datum : this.ringPuffer) {
-				s += datum + "\n"; //$NON-NLS-1$
+			s += "\nMAX: " + this.getMaxPufferInhalt() + "\nInhalt: "
+					+ (this.ringPuffer.isEmpty() ? "leer\n" : "\n");
+			for (final AggregationsDatum datum : this.ringPuffer) {
+				s += datum + "\n";
 			}
 		}
 

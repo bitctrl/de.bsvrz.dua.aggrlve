@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.Data;
@@ -49,7 +49,7 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	/**
 	 * das Attribut.
 	 */
-	private AggregationsAttribut attr = null;
+	private final AggregationsAttribut attr;
 
 	/**
 	 * der Wert dieses Attributs.
@@ -59,7 +59,7 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	/**
 	 * die Guete.
 	 */
-	private GWert guete = null;
+	private GWert guete;
 
 	/**
 	 * Standardkonstruktor.
@@ -72,42 +72,40 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	public AggregationsAttributWert(final AggregationsAttribut attr,
 			final Dataset resultat) {
 		if (attr == null) {
-			throw new NullPointerException("Attribut ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException("Attribut ist <<null>>");
 		}
-		Data datenSatz = resultat.getData();
+		final Data datenSatz = resultat.getData();
 		if (datenSatz == null) {
-			throw new NullPointerException("Datensatz ist <<null>>"); //$NON-NLS-1$
+			throw new NullPointerException("Datensatz ist <<null>>");
 		}
 
-		String attributName = attr.getAttributName(resultat.getObject()
+		final String attributName = attr.getAttributName(resultat.getObject()
 				.isOfType(AggregationLVE.typFahrstreifen));
 
 		this.attr = attr;
-		this.wert = datenSatz.getItem(attributName)
-				.getUnscaledValue("Wert").longValue(); //$NON-NLS-1$
-		this.nichtErfasst = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("Erfassung").
-				getUnscaledValue("NichtErfasst").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
-		this.implausibel = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung").
-				getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
-		this.interpoliert = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung").
-				getUnscaledValue("Interpoliert").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
+		this.wert = datenSatz.getItem(attributName).getUnscaledValue("Wert")
+				.longValue();
+		this.nichtErfasst = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("Erfassung").getUnscaledValue("NichtErfasst")
+				.intValue() == DUAKonstanten.JA;
+		this.implausibel = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("MessWertErsetzung").getUnscaledValue("Implausibel")
+				.intValue() == DUAKonstanten.JA;
+		this.interpoliert = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
+				.intValue() == DUAKonstanten.JA;
 
-		this.formalMax = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlFormal").
-				getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
-		this.formalMin = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlFormal").
-				getUnscaledValue("WertMin").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
+		this.formalMax = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlFormal").getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA;
+		this.formalMin = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlFormal").getUnscaledValue("WertMin").intValue() == DUAKonstanten.JA;
 
-		this.logischMax = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch").
-				getUnscaledValue("WertMaxLogisch").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
-		this.logischMin = datenSatz.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch").
-				getUnscaledValue("WertMinLogisch").intValue() == DUAKonstanten.JA; //$NON-NLS-1$
+		this.logischMax = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlLogisch").getUnscaledValue("WertMaxLogisch")
+				.intValue() == DUAKonstanten.JA;
+		this.logischMin = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlLogisch").getUnscaledValue("WertMinLogisch")
+				.intValue() == DUAKonstanten.JA;
 
 		this.guete = new GWert(datenSatz, attributName);
 	}
@@ -122,11 +120,11 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	 * @param guete
 	 *            die Guete
 	 */
-	public AggregationsAttributWert(AggregationsAttribut attribut, long wert,
-			double guete) {
+	public AggregationsAttributWert(final AggregationsAttribut attribut,
+			final long wert, final double guete) {
 		this.attr = attribut;
 		this.wert = wert;
-		GanzZahl gueteGanzZahl = GanzZahl.getGueteIndex();
+		final GanzZahl gueteGanzZahl = GanzZahl.getGueteIndex();
 		gueteGanzZahl.setSkaliertenWert(guete);
 		this.guete = new GWert(gueteGanzZahl, GueteVerfahren.STANDARD, false);
 	}
@@ -134,13 +132,14 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public AggregationsAttributWert clone() {
 		AggregationsAttributWert kopie = null;
 
 		try {
 			kopie = (AggregationsAttributWert) super.clone();
 			kopie.guete = new GWert(this.guete);
-		} catch (CloneNotSupportedException e) {
+		} catch (final CloneNotSupportedException e) {
 			// wird nicht geworfen
 		}
 
@@ -159,43 +158,69 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	 * @param isFahrstreifen
 	 *            ob es sich um ein Fahrstreifendatum handelt
 	 */
-	public final void exportiere(Data nutzDatum, boolean isFahrstreifen) {
+	public final void exportiere(final Data nutzDatum,
+			final boolean isFahrstreifen) {
 
-		String attributName = attr.getAttributName(isFahrstreifen);
+		final String attributName = attr.getAttributName(isFahrstreifen);
 
 		if (DUAUtensilien.isWertInWerteBereich(nutzDatum.getItem(attributName)
-				.getItem("Wert"), this.wert)) { //$NON-NLS-1$
-			nutzDatum.getItem(attributName)
-					.getUnscaledValue("Wert").set(this.wert); //$NON-NLS-1$			
+				.getItem("Wert"), this.wert)) {
+			nutzDatum.getItem(attributName).getUnscaledValue("Wert")
+					.set(this.wert);
 		} else {
-			nutzDatum
-					.getItem(attributName)
-					.getUnscaledValue("Wert").set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT); //$NON-NLS-1$
+			nutzDatum.getItem(attributName).getUnscaledValue("Wert")
+					.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}
 
-		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("Erfassung").
-				getUnscaledValue("NichtErfasst").set(this.isNichtErfasst() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
-		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung").
-				getUnscaledValue("Implausibel").set(this.isImplausibel() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
-		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("MessWertErsetzung").
-				getUnscaledValue("Interpoliert").set(this.isInterpoliert() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("Erfassung")
+				.getUnscaledValue("NichtErfasst")
+				.set(this.isNichtErfasst() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("MessWertErsetzung")
+				.getUnscaledValue("Implausibel")
+				.set(this.isImplausibel() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("MessWertErsetzung")
+				.getUnscaledValue("Interpoliert")
+				.set(this.isInterpoliert() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
 
-		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlFormal").
-				getUnscaledValue("WertMax").set(this.isFormalMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
-		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlFormal").
-				getUnscaledValue("WertMin").set(this.isFormalMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlFormal")
+				.getUnscaledValue("WertMax")
+				.set(this.isFormalMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlFormal")
+				.getUnscaledValue("WertMin")
+				.set(this.isFormalMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 
-		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch").
-				getUnscaledValue("WertMaxLogisch").set(this.isLogischMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
-		nutzDatum.getItem(attributName)
-				.getItem("Status").getItem("PlLogisch").
-				getUnscaledValue("WertMinLogisch").set(this.isLogischMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN); //$NON-NLS-1$
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlLogisch")
+				.getUnscaledValue("WertMaxLogisch")
+				.set(this.isLogischMax() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlLogisch")
+				.getUnscaledValue("WertMinLogisch")
+				.set(this.isLogischMin() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
 
 		this.guete.exportiere(nutzDatum, attributName);
 	}
@@ -252,7 +277,8 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compareTo(AggregationsAttributWert that) {
+	@Override
+	public int compareTo(final AggregationsAttributWert that) {
 		return new Long(this.getWert()).compareTo(that.getWert());
 	}
 
@@ -260,17 +286,18 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		boolean ergebnis = false;
 
-		if (obj != null && obj instanceof AggregationsAttributWert) {
-			AggregationsAttributWert that = (AggregationsAttributWert) obj;
+		if ((obj != null) && (obj instanceof AggregationsAttributWert)) {
+			final AggregationsAttributWert that = (AggregationsAttributWert) obj;
 			ergebnis = this.getAttribut().equals(that.getAttribut())
-					&& this.getWert() == that.getWert()
-					&& this.isNichtErfasst() == that.isNichtErfasst()
-					&& this.isImplausibel() == that.isImplausibel()
-					&& this.isInterpoliert() == that.isInterpoliert()
-					&& this.getGuete().getIndex() - that.getGuete().getIndex() < 0.001;
+					&& (this.getWert() == that.getWert())
+					&& (this.isNichtErfasst() == that.isNichtErfasst())
+					&& (this.isImplausibel() == that.isImplausibel())
+					&& (this.isInterpoliert() == that.isInterpoliert())
+					&& ((this.getGuete().getIndex() - that.getGuete()
+							.getIndex()) < 0.001);
 		}
 
 		return ergebnis;
@@ -281,10 +308,9 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	 */
 	@Override
 	public String toString() {
-		return "Attribut: " + this.attr + "\nWert: " + this.wert + //$NON-NLS-1$ //$NON-NLS-2$
-				"\nGuete: " + this.guete + //$NON-NLS-1$
-				"\nVeraendert: " + (this.veraendert ? "Ja" : "Nein") + //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-				"\n" + super.toString(); //$NON-NLS-1$
+		return "Attribut: " + this.attr + "\nWert: " + this.wert + "\nGuete: "
+				+ this.guete + "\nVeraendert: "
+				+ (this.veraendert ? "Ja" : "Nein") + "\n" + super.toString();
 	}
 
 }

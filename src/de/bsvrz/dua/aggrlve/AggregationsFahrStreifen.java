@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 	/**
 	 * der hier betrachtete Fahrstreifen.
 	 */
-	private FahrStreifen fs = null;
+	private final FahrStreifen fs;
 
 	/**
 	 * Standardkonstruktor.
@@ -83,24 +83,26 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 		super(dav, fs.getSystemObject());
 		this.fs = fs;
 
-		this.datenPuffer = new AggregationsPufferMenge(dav, fs
-				.getSystemObject());
-		Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
-		for (AggregationsIntervall intervall : AggregationsIntervall
+		this.datenPuffer = new AggregationsPufferMenge(dav,
+				fs.getSystemObject());
+		final Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		for (final AggregationsIntervall intervall : AggregationsIntervall
 				.getInstanzen()) {
 			try {
 				anmeldungen.add(new DAVObjektAnmeldung(fs.getSystemObject(),
 						intervall.getDatenBeschreibung(true)));
-			} catch (Exception e) {
-				throw new DUAInitialisierungsException("Fahrstreifen " + fs //$NON-NLS-1$
-						+ " konnte nicht initialisiert werden", e); //$NON-NLS-1$
+			} catch (final Exception e) {
+				throw new DUAInitialisierungsException("Fahrstreifen " + fs
+						+ " konnte nicht initialisiert werden", e);
 			}
 		}
 		sender.modifiziereObjektAnmeldung(anmeldungen);
 
-		dav.subscribeReceiver(this, fs.getSystemObject(), new DataDescription(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
-				dav.getDataModel().getAspect(
+		dav.subscribeReceiver(
+				this,
+				fs.getSystemObject(),
+				new DataDescription(dav.getDataModel().getAttributeGroup(
+						DUAKonstanten.ATG_KZD), dav.getDataModel().getAspect(
 						DUAKonstanten.ASP_MESSWERTERSETZUNG)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
@@ -109,18 +111,19 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void aggregiere(long zeitStempel, AggregationsIntervall intervall) {
+	public void aggregiere(final long zeitStempel,
+			final AggregationsIntervall intervall) {
 		if (!intervall.isDTVorTV()) {
-			Collection<AggregationsDatum> basisDaten = this.datenPuffer
-					.getDatenFuerZeitraum(zeitStempel, zeitStempel
-							+ intervall.getIntervall(), intervall);
+			final Collection<AggregationsDatum> basisDaten = this.datenPuffer
+					.getDatenFuerZeitraum(zeitStempel,
+							zeitStempel + intervall.getIntervall(), intervall);
 			Data nutzDatum = null;
 
 			if (!basisDaten.isEmpty()) {
 				nutzDatum = dav.createData(intervall.getDatenBeschreibung(true)
 						.getAttributeGroup());
 
-				for (AggregationsAttribut attribut : AggregationsAttribut
+				for (final AggregationsAttribut attribut : AggregationsAttribut
 						.getInstanzen()) {
 					if (attribut.isGeschwindigkeitsAttribut()
 							|| basisDaten.iterator().next().isNormiert()) {
@@ -133,7 +136,8 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 				}
 			}
 
-			ResultData resultat = new ResultData(this.fs.getSystemObject(),
+			final ResultData resultat = new ResultData(
+					this.fs.getSystemObject(),
 					intervall.getDatenBeschreibung(true), zeitStempel,
 					nutzDatum);
 
@@ -163,9 +167,10 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 	 * @param intervall
 	 *            das gewuenschte Aggregationsintervall
 	 */
-	protected final void aggregiereAlsBasisDatum(AggregationsAttribut attribut,
-			Data nutzDatum, Collection<AggregationsDatum> basisDaten,
-			long zeitStempel, AggregationsIntervall intervall) {
+	protected final void aggregiereAlsBasisDatum(
+			final AggregationsAttribut attribut, final Data nutzDatum,
+			final Collection<AggregationsDatum> basisDaten,
+			final long zeitStempel, final AggregationsIntervall intervall) {
 
 		final double erfassungsIntervallLaenge = basisDaten.iterator().next()
 				.getT();
@@ -173,9 +178,10 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 		boolean nichtErfasst = false;
 		double elementZaehler = 0;
 		long summe = 0;
-		Collection<GWert> gueteWerte = new ArrayList<GWert>();
-		for (AggregationsDatum basisDatum : basisDaten) {
-			AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
+		final Collection<GWert> gueteWerte = new ArrayList<GWert>();
+		for (final AggregationsDatum basisDatum : basisDaten) {
+			final AggregationsAttributWert basisWert = basisDatum
+					.getWert(attribut);
 			if ((basisWert != null) && (basisWert.getWert() >= 0)) {
 				elementZaehler++;
 				summe += basisWert.getWert();
@@ -188,12 +194,12 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 			// }
 		}
 
-		AggregationsAttributWert exportWert = new AggregationsAttributWert(
+		final AggregationsAttributWert exportWert = new AggregationsAttributWert(
 				attribut, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
 		if (elementZaehler > 0) {
-			exportWert.setWert(Math.round((double) summe
-					* Constants.MILLIS_PER_HOUR
-					/ (erfassungsIntervallLaenge * elementZaehler)));
+			exportWert.setWert(Math
+					.round(((double) summe * Constants.MILLIS_PER_HOUR)
+							/ (erfassungsIntervallLaenge * elementZaehler)));
 			exportWert.setInterpoliert(interpoliert);
 			if (AggregationLVE.NICHT_ERFASST) {
 				exportWert.setNichtErfasst(nichtErfasst);
@@ -201,10 +207,10 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte
 						.toArray(new GWert[0])));
-			} catch (GueteException e) {
+			} catch (final GueteException e) {
 				Debug.getLogger().error(
-						"Guete von " + this.objekt + " fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-								attribut + " konnte nicht berechnet werden", e); //$NON-NLS-1$
+						"Guete von " + this.objekt + " fuer " + attribut
+								+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
 			}
 		}
@@ -215,16 +221,19 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if (resultat != null) {
 					this.datenPuffer.aktualisiere(resultat);
-					if(resultat.getData() == null) {
-						for(AggregationsIntervall intervall:AggregationsIntervall.getInstanzen()){
-							this.sende(new ResultData(this.fs.getSystemObject(),
-									intervall.getDatenBeschreibung(true), resultat.getDataTime(),
-									null));							
+					if (resultat.getData() == null) {
+						for (final AggregationsIntervall intervall : AggregationsIntervall
+								.getInstanzen()) {
+							this.sende(new ResultData(
+									this.fs.getSystemObject(), intervall
+											.getDatenBeschreibung(true),
+									resultat.getDataTime(), null));
 						}
 					}
 				}
@@ -237,8 +246,9 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
 	 */
 	@Override
 	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der FS " + this.fs + //$NON-NLS-1$
-				" wird nicht mehr aggregiert"); //$NON-NLS-1$
+		Debug.getLogger().warning(
+				"Der FS " + this.fs + " wird nicht mehr aggregiert");
+		super.finalize();
 	}
 
 	/**

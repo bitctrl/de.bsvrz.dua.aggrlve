@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.util.Date;
@@ -37,10 +37,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Enthaelt alle Informationen, die mit einem <code>ResultData</code> der
  * Attributgruppe <code>atg.verkehrsDatenKurzZeitIntervall</code> bzw.
  * <code>atg.verkehrsDatenKurzZeitFs</code> oder
- * <code>atg.verkehrsDatenKurzZeitMq</code> in den Attrbiuten
- * <code>qPkw</code>, <code>qLkw</code>, <code>qKfz</code> und
- * <code>vLkw</code>, <code>vKfz</code>, <code>vPkw</code> enthalten
- * sind (inkl. Zeitstempel)
+ * <code>atg.verkehrsDatenKurzZeitMq</code> in den Attrbiuten <code>qPkw</code>,
+ * <code>qLkw</code>, <code>qKfz</code> und <code>vLkw</code>, <code>vKfz</code>
+ * , <code>vPkw</code> enthalten sind (inkl. Zeitstempel)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -48,7 +47,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  */
 public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		Cloneable {
-	
+
 	/**
 	 * Erfragt, ob dieses Datum auf Stunden normiert ist.
 	 */
@@ -67,7 +66,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	/**
 	 * die Werte aller innerhalb der Messwertaggregation betrachteten Attribute.
 	 */
-	private Map<AggregationsAttribut, AggregationsAttributWert> werte = new HashMap<AggregationsAttribut, AggregationsAttributWert>();
+	private final Map<AggregationsAttribut, AggregationsAttributWert> werte = new HashMap<AggregationsAttribut, AggregationsAttributWert>();
 
 	/**
 	 * Standardkonstruktor.
@@ -89,15 +88,15 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	public AggregationsDatum(final Dataset resultat) {
 		this.datenZeit = resultat.getDataTime();
 		if (resultat.getObject().isOfType(AggregationLVE.typFahrstreifen)) {
-			if (resultat.getDataDescription().getAspect().equals(
-					AggregationLVE.mwe)) {
+			if (resultat.getDataDescription().getAspect()
+					.equals(AggregationLVE.mwe)) {
 				this.normiert = false;
 			}
-			if(resultat.getData() != null) {
+			if (resultat.getData() != null) {
 				this.tT = resultat.getData().getTimeValue("T").getMillis();
 			}
 		} else {
-			for (AggregationsIntervall intervall : AggregationsIntervall
+			for (final AggregationsIntervall intervall : AggregationsIntervall
 					.getInstanzen()) {
 				if (intervall.getAspekt().equals(
 						resultat.getDataDescription().getAspect())) {
@@ -105,26 +104,31 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 				}
 			}
 		}
-		for (AggregationsAttribut attribut : AggregationsAttribut
+		for (final AggregationsAttribut attribut : AggregationsAttribut
 				.getInstanzen()) {
-			this.werte.put(attribut, resultat.getData() != null?new AggregationsAttributWert(attribut,
-					resultat):null);
+			this.werte.put(attribut,
+					resultat.getData() != null ? new AggregationsAttributWert(
+							attribut, resultat) : null);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws CloneNotSupportedException
 	 */
+	@Override
 	public AggregationsDatum clone() {
-		AggregationsDatum kopie = new AggregationsDatum();
+		final AggregationsDatum kopie = new AggregationsDatum();
 
 		kopie.normiert = this.normiert;
 		kopie.datenZeit = this.datenZeit;
 		kopie.tT = this.tT;
-		for (AggregationsAttribut attribut : AggregationsAttribut
+		for (final AggregationsAttribut attribut : AggregationsAttribut
 				.getInstanzen()) {
-			AggregationsAttributWert orgWert = this.getWert(attribut);
-			kopie.werte.put(attribut, orgWert == null ? orgWert : orgWert.clone());
+			final AggregationsAttributWert orgWert = this.getWert(attribut);
+			kopie.werte.put(attribut,
+					orgWert == null ? orgWert : orgWert.clone());
 		}
 
 		return kopie;
@@ -142,27 +146,29 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	/**
 	 * Erfragt den Wert eines Attributs.
 	 * 
-	 * @param attribut1 das Attribut
+	 * @param attribut1
+	 *            das Attribut
 	 * @return der Wert eines Attributs
 	 */
 	public final AggregationsAttributWert getWert(
 			final AggregationsAttribut attribut1) {
 		return this.werte.get(attribut1);
 	}
-	
+
 	/**
 	 * Erfragt, ob in diesem Datensatz keine Nutzdaten enthalten sind.
 	 * 
 	 * @return ob in diesem Datensatz keine Nutzdaten enthalten sind.
 	 */
-	public final boolean isKeineDaten(){
+	public final boolean isKeineDaten() {
 		return this.werte.values().iterator().next() == null;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compareTo(AggregationsDatum that) {
+	@Override
+	public int compareTo(final AggregationsDatum that) {
 		return new Long(this.datenZeit).compareTo(that.datenZeit);
 	}
 
@@ -188,23 +194,22 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		return super.equals(obj);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		String s = "Datenzeit: " + //$NON-NLS-1$
-				DUAKonstanten.ZEIT_FORMAT_GENAU
-						.format(new Date(this.datenZeit))
-				+ " (" + this.datenZeit + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		String s = "Datenzeit: "
+				+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+						this.datenZeit)) + " (" + this.datenZeit + ")";
 
-		s += "\nT: " + tT; //$NON-NLS-1$
-		for (AggregationsAttribut attribut : this.werte.keySet()) {
-			s += "\n" + attribut + ":\n" + this.werte.get(attribut); //$NON-NLS-1$//$NON-NLS-2$
+		s += "\nT: " + tT;
+		for (final AggregationsAttribut attribut : this.werte.keySet()) {
+			s += "\n" + attribut + ":\n" + this.werte.get(attribut);
 		}
 
 		return s;

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import com.bitctrl.Constants;
@@ -60,8 +60,8 @@ public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
 	 *             konnte
 	 */
-	public MweAggregationsPuffer(ClientDavInterface dav, SystemObject obj)
-			throws DUAInitialisierungsException {
+	public MweAggregationsPuffer(final ClientDavInterface dav,
+			final SystemObject obj) throws DUAInitialisierungsException {
 		super(dav, obj, null);
 	}
 
@@ -69,7 +69,7 @@ public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void aktualisiere(Dataset resultat) {
+	public void aktualisiere(final Dataset resultat) {
 		super.aktualisiere(resultat);
 		if (resultat.getData() != null) {
 			/**
@@ -78,15 +78,16 @@ public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 			synchronized (this) {
 				if (this.ringPuffer.getLast().getT() != this.ringPuffer
 						.getFirst().getT()) {
-					AggregationsDatum erstesDatum = this.ringPuffer.getFirst();
+					final AggregationsDatum erstesDatum = this.ringPuffer
+							.getFirst();
 					this.ringPuffer.clear();
 					this.ringPuffer.add(erstesDatum);
 				}
 			}
 
-			double t = this.ringPuffer.getFirst().getT();
+			final double t = this.ringPuffer.getFirst().getT();
 			this.maxPufferAktuell = Math.round(Math.max(1.0,
-					(double) Constants.MILLIS_PER_HOUR / t)) + 5;
+					Constants.MILLIS_PER_HOUR / t)) + 5;
 		}
 	}
 

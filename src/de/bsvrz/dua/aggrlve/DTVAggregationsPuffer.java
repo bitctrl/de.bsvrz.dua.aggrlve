@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -23,7 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
- 
+
 package de.bsvrz.dua.aggrlve;
 
 import java.io.IOException;
@@ -73,25 +73,28 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 	 *             wenn dieses Objekt nicht vollstaendig initialisiert werden
 	 *             konnte
 	 */
-	public DTVAggregationsPuffer(ClientDavInterface dav, SystemObject obj,
-			AggregationsIntervall intervall)
+	public DTVAggregationsPuffer(final ClientDavInterface dav,
+			final SystemObject obj, final AggregationsIntervall intervall)
 			throws DUAInitialisierungsException {
 		super(dav, obj, intervall);
-		if (sDAV.getArchive().isArchiveAvailable()) {
-			this.archiveAvailabilityChanged(sDAV.getArchive());
+		if (AbstraktAggregationsPuffer.sDAV.getArchive().isArchiveAvailable()) {
+			this.archiveAvailabilityChanged(AbstraktAggregationsPuffer.sDAV
+					.getArchive());
 		} else {
-			sDAV.getArchive().addArchiveAvailabilityListener(this);
+			AbstraktAggregationsPuffer.sDAV.getArchive()
+					.addArchiveAvailabilityListener(this);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void archiveAvailabilityChanged(ArchiveRequestManager archiv) {
+	@Override
+	public void archiveAvailabilityChanged(final ArchiveRequestManager archiv) {
 		if (archiv.isArchiveAvailable() && this.ringPuffer.isEmpty()) {
 			final long jetzt = System.currentTimeMillis();
 			long beginArchivAnfrage = -1;
-			long endeArchivAnfrage = jetzt;
+			final long endeArchivAnfrage = jetzt;
 
 			if (this.aggregationsIntervall
 					.equals(AggregationsIntervall.aGG60MINUTE)) {
@@ -99,36 +102,38 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 24 Stunden bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR
-						* this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt
+						- (Constants.MILLIS_PER_HOUR * this.aggregationsIntervall
+								.getMaxPufferGroesse());
 			} else if (this.aggregationsIntervall
 					.equals(AggregationsIntervall.aGGDTVTAG)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 50 Tage bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L
-						* this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt
+						- (Constants.MILLIS_PER_HOUR * 24L * this.aggregationsIntervall
+								.getMaxPufferGroesse());
 			} else if (this.aggregationsIntervall
 					.equals(AggregationsIntervall.aGGDTVMONAT)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze
 				 * der letzten 15 Monate bereitstehen
 				 */
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L
-						* 31L
-						* this.aggregationsIntervall.getMaxPufferGroesse();
+				beginArchivAnfrage = jetzt
+						- (Constants.MILLIS_PER_HOUR * 24L * 31L * this.aggregationsIntervall
+								.getMaxPufferGroesse());
 			} else {
-				beginArchivAnfrage = jetzt - Constants.MILLIS_PER_HOUR * 24L
-						* 370L;
+				beginArchivAnfrage = jetzt
+						- (Constants.MILLIS_PER_HOUR * 24L * 370L);
 			}
 
 			if (beginArchivAnfrage > 0) {
-				ArchiveTimeSpecification zeit = new ArchiveTimeSpecification(
+				final ArchiveTimeSpecification zeit = new ArchiveTimeSpecification(
 						TimingType.DATA_TIME, false, beginArchivAnfrage,
 						endeArchivAnfrage);
 
-				ArchiveDataSpecification archivDatenBeschreibung = new ArchiveDataSpecification(
+				final ArchiveDataSpecification archivDatenBeschreibung = new ArchiveDataSpecification(
 						zeit, new ArchiveDataKindCombination(
 								ArchiveDataKind.ONLINE),
 						ArchiveOrder.BY_DATA_TIME, ArchiveRequestOption.NORMAL,
@@ -136,26 +141,26 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 						this.objekt);
 
 				try {
-					ArchiveDataQueryResult result = archiv.request(
+					final ArchiveDataQueryResult result = archiv.request(
 							ArchiveQueryPriority.MEDIUM,
 							archivDatenBeschreibung);
-					ArchiveDataStream[] streams = result.getStreams();
+					final ArchiveDataStream[] streams = result.getStreams();
 					synchronized (this) {
-						for (ArchiveDataStream stream : streams) {
+						for (final ArchiveDataStream stream : streams) {
 							ArchiveData archiveDatum = null;
 							do {
 								archiveDatum = stream.take();
-								if (archiveDatum != null
-										&& archiveDatum.getData() != null) {
+								if ((archiveDatum != null)
+										&& (archiveDatum.getData() != null)) {
 									this.aktualisiere(archiveDatum);
 								}
 							} while (archiveDatum != null);
 						}
 					}
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					Debug.getLogger().error(Constants.EMPTY_STRING, e);
 					e.printStackTrace();
 				}
