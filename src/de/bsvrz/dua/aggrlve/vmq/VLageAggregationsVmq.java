@@ -177,13 +177,16 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 		final List<QWert> qWerte = new ArrayList<QWert>();
 
 		for (final SystemObject mq : getMqParts().keySet()) {
-			qWerte.add(new QWert(dataList.get(mq), attName, getMqParts()
-					.get(mq).getAnteil()));
+			final ResultData data = dataList.get(mq);
+			if (data != null) {
+				qWerte.add(new QWert(data, attName, getMqParts().get(mq)
+						.getAnteil()));
+			}
 		}
 
 		QWert qQ = null;
 		if (!qWerte.isEmpty()) {
-			qQ = QWert.summe(qWerte.toArray(new QWert[0]));
+			qQ = QWert.summe(qWerte.toArray(new QWert[qWerte.size()]));
 		}
 
 		MesswertUnskaliert mw = new MesswertUnskaliert(attName);

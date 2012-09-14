@@ -16,7 +16,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Aggregationswerte.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
+ * @version $Id: StandardAggregationsVmq.java 36992 2012-09-13 13:38:37Z peuker
+ *          $
  */
 public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
@@ -276,6 +277,28 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
+	 * liefert einen QWert für das übergebene Attribut und den defnierten MQ aus
+	 * den aktuellen Daten. Wenn kein Wert ermittelt werden kann, wird
+	 * <code>null</code> geliefert.
+	 * 
+	 * @param dataList
+	 *            die Liste mit den aktuellen Daten
+	 * @param mq
+	 *            der MQ
+	 * @param attname
+	 *            der Name des gesuchten Attributs
+	 * @return das Ergebnis oder <code>null</code>
+	 */
+	private QWert getQWert(final Map<SystemObject, ResultData> dataList,
+			final SystemObject mq, final String attname) {
+		final ResultData resultData = getMQData(dataList, mq);
+		if (resultData == null) {
+			return null;
+		}
+		return new QWert(resultData, attname);
+	}
+
+	/**
 	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den
 	 * Attributen <code>QKfz, QLkw</code> und <code>QPkw</code>.
 	 * 
@@ -297,21 +320,19 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 			 * an MQMitte der jeweilige Wert nicht vorhanden ist, gilt:
 			 * Q(MQVor)=Q(MQNach)+Q(MQAus)-Q(MQEin).
 			 */
-			final QWert qMitte = new QWert(getMQData(dataList, mqMitte),
-					attName);
-			final QWert qAus = new QWert(getMQData(dataList, mqAusfahrt),
-					attName);
-
-			qWert = QWert.summe(qMitte, qAus);
+			final QWert qMitte = getQWert(dataList, mqMitte, attName);
+			final QWert qAus = getQWert(dataList, mqAusfahrt, attName);
+			if ((qMitte != null) && (qAus != null)) {
+				qWert = QWert.summe(qMitte, qAus);
+			}
 
 			if ((qWert == null) || !qWert.isExportierbarNach(analyseDatum)
 					|| !qWert.isVerrechenbar()) {
-				final QWert qNach = new QWert(getMQData(dataList, mqNach),
-						attName);
-				final QWert qEin = new QWert(getMQData(dataList, mqEinfahrt),
-						attName);
+				final QWert qNach = getQWert(dataList, mqNach, attName);
+				final QWert qEin = getQWert(dataList, mqEinfahrt, attName);
 
-				if (qNach.isVerrechenbar() && qEin.isVerrechenbar()) {
+				if ((qNach != null) && (qEin != null) && qNach.isVerrechenbar()
+						&& qEin.isVerrechenbar()) {
 					if ((qWert == null)
 							|| !qWert.isExportierbarNach(analyseDatum)) {
 						qWert = QWert.differenz(QWert.summe(qNach, qAus), qEin);
@@ -337,20 +358,18 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 			 * Wenn an MQVor der jeweilige Wert nicht vorhanden ist, gilt
 			 * Q(MQMitte)=Q(MQNach)-Q(MQEin).
 			 */
-			final QWert qVor = new QWert(getMQData(dataList, mqVor), attName);
-			final QWert qAus = new QWert(getMQData(dataList, mqAusfahrt),
-					attName);
+			final QWert qVor = getQWert(dataList, mqVor, attName);
+			final QWert qAus = getQWert(dataList, mqAusfahrt, attName);
 
 			qWert = QWert.differenz(qVor, qAus);
 
 			if ((qWert == null) || !qWert.isExportierbarNach(analyseDatum)
 					|| !qWert.isVerrechenbar()) {
-				final QWert qNach = new QWert(getMQData(dataList, mqNach),
-						attName);
-				final QWert qEin = new QWert(getMQData(dataList, mqEinfahrt),
-						attName);
+				final QWert qNach = getQWert(dataList, mqNach, attName);
+				final QWert qEin = getQWert(dataList, mqEinfahrt, attName);
 
-				if (qNach.isVerrechenbar() && qEin.isVerrechenbar()) {
+				if ((qNach != null) && (qEin != null) && qNach.isVerrechenbar()
+						&& qEin.isVerrechenbar()) {
 					if ((qWert == null)
 							|| !qWert.isExportierbarNach(analyseDatum)) {
 						qWert = QWert.differenz(qNach, qEin);
@@ -375,21 +394,18 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 			 * Wenn an MQMitte der jeweilige Wert nicht vorhanden ist, gilt
 			 * Q(MQNach)=Q(MQVor)+Q(MQEin)-Q(MQAus).
 			 */
-			final QWert qMitte = new QWert(getMQData(dataList, mqMitte),
-					attName);
-			final QWert qEin = new QWert(getMQData(dataList, mqEinfahrt),
-					attName);
+			final QWert qMitte = getQWert(dataList, mqMitte, attName);
+			final QWert qEin = getQWert(dataList, mqEinfahrt, attName);
 
 			qWert = QWert.summe(qMitte, qEin);
 
 			if ((qWert == null) || !qWert.isExportierbarNach(analyseDatum)
 					|| !qWert.isVerrechenbar()) {
-				final QWert qVor = new QWert(getMQData(dataList, mqVor),
-						attName);
-				final QWert qAus = new QWert(getMQData(dataList, mqAusfahrt),
-						attName);
+				final QWert qVor = getQWert(dataList, mqVor, attName);
+				final QWert qAus = getQWert(dataList, mqAusfahrt, attName);
 
-				if (qVor.isVerrechenbar() && qAus.isVerrechenbar()) {
+				if ((qVor != null) && (qAus != null) && qVor.isVerrechenbar()
+						&& qAus.isVerrechenbar()) {
 					if ((qWert == null)
 							|| !qWert.isExportierbarNach(analyseDatum)) {
 						qWert = QWert.differenz(QWert.summe(qVor, qEin), qAus);

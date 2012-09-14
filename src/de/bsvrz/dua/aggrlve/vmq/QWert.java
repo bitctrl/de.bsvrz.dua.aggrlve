@@ -161,6 +161,11 @@ public class QWert {
 	 *         nicht ermittelt werden konnte
 	 */
 	public static final QWert summe(final QWert... summanden) {
+
+		if ((summanden.length <= 0) || (summanden[0] == null)) {
+			return null;
+		}
+
 		final QWert ergebnis = new QWert(summanden[0].getWert().getName());
 		ergebnis.getWert().setWertUnskaliert(
 				DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
