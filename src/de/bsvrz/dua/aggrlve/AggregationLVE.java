@@ -56,6 +56,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
+import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -67,9 +68,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Diese Applikation initialisiert nur alle in den uebergebenen
  * Konfigurationsbereichen konfigurierten Messquerschnitte. Von diesen Objekten
  * aus werden dann auch die assoziierten Fahrstreifen initialisiert
- *
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
  * @version $Id$
  */
 public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
@@ -89,16 +90,16 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehören.
 	 */
-	private Map<SystemObject, SystemObject> fsMq = new HashMap<SystemObject, SystemObject>();
+	private final Map<SystemObject, SystemObject> fsMq = new HashMap<SystemObject, SystemObject>();
 	/**
 	 * alle Messquerschnitte, mit den Fahrstreifen, zu denen sie gehören.
 	 */
-	private Map<SystemObject, Set<SystemObject>> mqFs = new HashMap<SystemObject, Set<SystemObject>>();
+	private final Map<SystemObject, Set<SystemObject>> mqFs = new HashMap<SystemObject, Set<SystemObject>>();
 
 	/**
 	 * Letztes Fahrstreifendatum pro Fahrstreifen.
 	 */
-	private Map<SystemObject, ResultData> fsDataHist = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> fsDataHist = new HashMap<SystemObject, ResultData>();
 
 	/**
 	 * Zweite Datenverteiler-Verbindung fuer Testzwecke.
@@ -142,12 +143,12 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	 * Prozess immer 30s nach jeder vollen Minute eine Ueberprüfung für alle
 	 * Fahrstreifen bzw. Messquerschnitte.
 	 */
-	private ObjektWecker wecker = new ObjektWecker();
+	private final ObjektWecker wecker = new ObjektWecker();
 
 	/**
 	 * alle Messquerschnitte, fuer die Daten aggregiert werden sollen.
 	 */
-	private Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = new HashMap<SystemObject, AggregationsMessQuerschnitt>();
+	private final Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = new HashMap<SystemObject, AggregationsMessQuerschnitt>();
 
 	/**
 	 * {@inheritDoc}
@@ -155,6 +156,11 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
+
+		final ArgumentList argumentList = new ArgumentList(
+				komArgumente.toArray(new String[komArgumente.size()]));
+		final boolean ignoreVmq = argumentList
+				.fetchArgument("-ignoreVMQ=false").booleanValue();
 
 		/**
 		 * DUA-Verkehrs-Netz initialisieren
@@ -167,21 +173,24 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		AggregationsIntervall.initialisiere(this.verbindung);
 
 		/** Aggregation für virtuelle MQ initialisieren. */
-		VMqAggregator.getInstance().init(this.verbindung);
+		if (!ignoreVmq) {
+			VMqAggregator.getInstance().init(this.verbindung);
+		}
 
-		guete = this.getGueteFaktor();
-		typFahrstreifen = this.verbindung.getDataModel().getType(
-				DUAKonstanten.TYP_FAHRSTREIFEN);
-		mwe = this.verbindung.getDataModel().getAspect(
+		AggregationLVE.guete = this.getGueteFaktor();
+		AggregationLVE.typFahrstreifen = this.verbindung.getDataModel()
+				.getType(DUAKonstanten.TYP_FAHRSTREIFEN);
+		AggregationLVE.mwe = this.verbindung.getDataModel().getAspect(
 				DUAKonstanten.ASP_MESSWERTERSETZUNG);
 
-		Collection<SystemObject> alleMqObjImKB = DUAUtensilien
-				.getBasisInstanzen(this.verbindung.getDataModel().getType(
-						DUAKonstanten.TYP_MQ), this.verbindung, this
-						.getKonfigurationsBereiche());
+		final Collection<SystemObject> alleMqObjImKB = DUAUtensilien
+				.getBasisInstanzen(
+						this.verbindung.getDataModel().getType(
+								DUAKonstanten.TYP_MQ), this.verbindung,
+						this.getKonfigurationsBereiche());
 
-		for (SystemObject mqObjekt : alleMqObjImKB) {
-			MessQuerschnitt mq = MessQuerschnitt.getInstanz(mqObjekt);
+		for (final SystemObject mqObjekt : alleMqObjImKB) {
+			final MessQuerschnitt mq = MessQuerschnitt.getInstanz(mqObjekt);
 			if (mq == null) {
 				throw new DUAInitialisierungsException(
 						"Konfiguration von Messquerschnitt " + //$NON-NLS-1$
@@ -191,8 +200,8 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 				messQuerschnitte.put(mqObjekt, new AggregationsMessQuerschnitt(
 						this.verbindung, mq));
 
-				Set<SystemObject> fsList = new HashSet<SystemObject>();
-				for (FahrStreifen fs : mq.getFahrStreifen()) {
+				final Set<SystemObject> fsList = new HashSet<SystemObject>();
+				for (final FahrStreifen fs : mq.getFahrStreifen()) {
 					this.fsMq.put(fs.getSystemObject(), mq.getSystemObject());
 					fsList.add(fs.getSystemObject());
 				}
@@ -200,7 +209,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 			}
 		}
 
-		if (!zeitRaffer) {
+		if (!AggregationLVE.zeitRaffer) {
 			wecker.setWecker(this, getNaechstenWeckZeitPunkt());
 		} else {
 			/**
@@ -214,16 +223,24 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 				this.dav2.connect();
 				this.dav2.login();
 
-				for (SystemObject fs : fsMq.keySet()) {
-					this.dav2.subscribeReceiver(this, fs, new DataDescription(
-							this.dav2.getDataModel().getAttributeGroup(
-									DUAKonstanten.ATG_KZD),
-							this.dav2.getDataModel().getAspect(
-									DUAKonstanten.ASP_MESSWERTERSETZUNG)),
-							ReceiveOptions.normal(), ReceiverRole
-							.receiver());
+				for (final SystemObject fs : fsMq.keySet()) {
+					this.dav2
+							.subscribeReceiver(
+									this,
+									fs,
+									new DataDescription(
+											this.dav2
+													.getDataModel()
+													.getAttributeGroup(
+															DUAKonstanten.ATG_KZD),
+											this.dav2
+													.getDataModel()
+													.getAspect(
+															DUAKonstanten.ASP_MESSWERTERSETZUNG)),
+									ReceiveOptions.normal(), ReceiverRole
+											.receiver());
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new DUAInitialisierungsException(
 						"Testapplikation konnte nicht gestartet werden", e); //$NON-NLS-1$
 			}
@@ -232,15 +249,17 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Startet diese Applikation nur fuer Testzwecke.
-	 *
+	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
-	 * @param gueteFaktor der Guetefaktor als Zeichenkette.
+	 * @param gueteFaktor
+	 *            der Guetefaktor als Zeichenkette.
 	 * @throws Exception
 	 *             wenn die Initialisierung fehlschlaegt
 	 */
-	public void testStart(final ClientDavInterface dav, String gueteFaktor) throws Exception {
-		zeitRaffer = true;
+	public void testStart(final ClientDavInterface dav, final String gueteFaktor)
+			throws Exception {
+		AggregationLVE.zeitRaffer = true;
 		Debug.getLogger().config("Applikation fuer Testzwecke gestartet"); //$NON-NLS-1$
 		this.komArgumente = new ArrayList<String>();
 		this.komArgumente.add("-KonfigurationsBereichsPid=" + //$NON-NLS-1$
@@ -253,11 +272,13 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void alarm() {
 		final long jetzt = System.currentTimeMillis();
 
-		for (AggregationsMessQuerschnitt mq : this.messQuerschnitte.values()) {
-			for (AggregationsIntervall intervall : AggregationsIntervall
+		for (final AggregationsMessQuerschnitt mq : this.messQuerschnitte
+				.values()) {
+			for (final AggregationsIntervall intervall : AggregationsIntervall
 					.getInstanzen()) {
 				if (intervall.isAggregationErforderlich(jetzt)) {
 					mq.aggregiere(intervall.getAggregationZeitStempel(jetzt),
@@ -271,7 +292,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Erfragt ein Aggregationsobjekt (nur fuer Testzwecke).
-	 *
+	 * 
 	 * @param obj
 	 *            das assoziierte Systemobjekt
 	 * @return ein Aggregationsobjekt (nur fuer Testzwecke).
@@ -284,12 +305,12 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * Erfragt den Zeitpunkt, der exakt 30s nach der Minute liegt, in der diese
 	 * Methode aufgerufen wird (Absolute Zeit ohne Sommer- und Winterzeit).
-	 *
+	 * 
 	 * @return der Zeitpunkt, der exakt 30s nach der Minute liegt, in der diese
 	 *         Methode aufgerufen wird
 	 */
 	private long getNaechstenWeckZeitPunkt() {
-		GregorianCalendar cal = new GregorianCalendar();
+		final GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());
 
 		if (cal.get(Calendar.SECOND) >= 25) {
@@ -303,11 +324,11 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * Startet diese Applikation.
-	 *
+	 * 
 	 * @param argumente
 	 *            Argumente der Kommandozeile
 	 */
-	public static void main(String[] argumente) {
+	public static void main(final String[] argumente) {
 		StandardApplicationRunner.run(new AggregationLVE(), argumente);
 	}
 
@@ -322,6 +343,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SWETyp getSWETyp() {
 		return SWETyp.SWE_AGGREGATION_LVE;
 	}
@@ -329,16 +351,18 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if (resultat != null) {
 					synchronized (dav2) {
 						this.fsDataHist.put(resultat.getObject(), resultat);
 
-						SystemObject mq = this.fsMq.get(resultat.getObject());
+						final SystemObject mq = this.fsMq.get(resultat
+								.getObject());
 						int fsZaehler = 0;
-						for (SystemObject fs : this.mqFs.get(mq)) {
+						for (final SystemObject fs : this.mqFs.get(mq)) {
 							if (this.fsDataHist.get(fs) != null) {
 								fsZaehler++;
 							}
@@ -360,18 +384,17 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * Leitet eine Berechnung mit allen bis zum uebergebenen Zeitpunkt
 	 * eingetroffenen Daten fuer den uebergebenen Zeitpunkt aus.
-	 *
+	 * 
 	 * @param mqObj
 	 *            der Messquerschnitt, fuer den die Berechnung (Aggregation)
 	 *            stattfinden soll
 	 * @param jetzt
 	 *            der Zeitpunkt der Berechnung
 	 */
-	private void loeseBerechnungAus(final SystemObject mqObj,
-			final long jetzt) {
+	private void loeseBerechnungAus(final SystemObject mqObj, final long jetzt) {
 		synchronized (dav2) {
 			AggregationsMessQuerschnitt mqZiel = null;
-			for (AggregationsMessQuerschnitt mq : this.messQuerschnitte
+			for (final AggregationsMessQuerschnitt mq : this.messQuerschnitte
 					.values()) {
 				if (mq.getObjekt().equals(mqObj)) {
 					mqZiel = mq;
@@ -380,11 +403,12 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 			}
 
 			if (mqZiel != null) {
-				for (AggregationsIntervall intervall : AggregationsIntervall
+				for (final AggregationsIntervall intervall : AggregationsIntervall
 						.getInstanzen()) {
 					if (intervall.isAggregationErforderlich(jetzt)) {
-						mqZiel.aggregiere(intervall
-								.getAggregationZeitStempel(jetzt), intervall);
+						mqZiel.aggregiere(
+								intervall.getAggregationZeitStempel(jetzt),
+								intervall);
 					}
 				}
 			} else {
@@ -396,13 +420,13 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	/**
 	 * Löscht den aktuellen Fahrstreifen-Datenpuffer fuer einen bestimmten
 	 * Messquerschnitt.
-	 *
+	 * 
 	 * @param mq
 	 *            ein Messquerschnitt
 	 */
 	private void loescheMqPuffer(final SystemObject mq) {
-		if (mq != null && this.mqFs.get(mq) != null) {
-			for (SystemObject fs : this.mqFs.get(mq)) {
+		if ((mq != null) && (this.mqFs.get(mq) != null)) {
+			for (final SystemObject fs : this.mqFs.get(mq)) {
 				this.fsDataHist.put(fs, null);
 			}
 		}
