@@ -64,9 +64,11 @@ public class VmqDataPart {
 	 */
 	public ResultData getNextValue(final Aspect aspect) {
 
-		final SortedMap<Long, ResultData> map = dataList.get(aspect);
-		if ((map != null) && (!map.isEmpty())) {
-			return map.get(map.firstKey());
+		synchronized (dataList) {
+			final SortedMap<Long, ResultData> map = dataList.get(aspect);
+			if ((map != null) && (!map.isEmpty())) {
+				return map.get(map.firstKey());
+			}
 		}
 		return null;
 	}
@@ -82,10 +84,17 @@ public class VmqDataPart {
 	 */
 	public void clear(final long dataTime, final Aspect aspect) {
 
-		final SortedMap<Long, ResultData> map = dataList.get(aspect);
-		if (map != null) {
-			while (!map.isEmpty() && (map.firstKey() <= dataTime)) {
-				map.remove(map.firstKey());
+		synchronized (dataList) {
+			final SortedMap<Long, ResultData> map = dataList.get(aspect);
+			if (map != null) {
+				while (!map.isEmpty()) {
+					final Long time = map.firstKey();
+					if ((time != null) && (time <= dataTime)) {
+						map.remove(time);
+					} else {
+						break;
+					}
+				}
 			}
 		}
 	}

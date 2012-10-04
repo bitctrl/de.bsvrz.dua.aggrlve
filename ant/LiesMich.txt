@@ -17,6 +17,10 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.1.1
+  - Mögliches Memory-Leak, wenn keine Aggregation für virtuelle MQ gebildet werden konnte
+  - Synchronisationsproblem bei der Datenerfassung für MQ behoben
+
 1.1.0
   - Support für virtuelle MQ
 

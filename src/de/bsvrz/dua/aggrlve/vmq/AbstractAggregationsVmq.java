@@ -32,7 +32,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Messquerschnitts, dessen Aggregationsdaten gebildet werden sollen.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
+ * @version $Id: AbstractAggregationsVmq.java 36992 2012-09-13 13:38:37Z peuker
+ *          $
  */
 public abstract class AbstractAggregationsVmq implements
 		ClientReceiverInterface, ClientSenderInterface {
@@ -597,8 +598,8 @@ public abstract class AbstractAggregationsVmq implements
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					clearData(resultData.getDataTime(), aspect);
 				}
+				clearData(currentTime, aspect);
 			}
 		}
 

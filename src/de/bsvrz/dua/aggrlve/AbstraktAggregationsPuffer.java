@@ -60,7 +60,7 @@ public abstract class AbstraktAggregationsPuffer {
 	/**
 	 * Ringpuffer mit den zeitlich aktuellsten Daten.
 	 */
-	protected LinkedList<AggregationsDatum> ringPuffer = new LinkedList<AggregationsDatum>();
+	protected final LinkedList<AggregationsDatum> ringPuffer = new LinkedList<AggregationsDatum>();
 
 	/**
 	 * das Systemobjekt, dessen Daten hier gespeichert werden.
@@ -101,7 +101,7 @@ public abstract class AbstraktAggregationsPuffer {
 	 */
 	public void aktualisiere(final Dataset resultat) {
 		final AggregationsDatum neuesDatum = new AggregationsDatum(resultat);
-		synchronized (this) {
+		synchronized (ringPuffer) {
 			this.ringPuffer.addFirst(neuesDatum);
 			while (this.ringPuffer.size() > this.getMaxPufferInhalt()) {
 				if (!this.ringPuffer.isEmpty()) {
@@ -126,7 +126,7 @@ public abstract class AbstraktAggregationsPuffer {
 			final long begin, final long ende) {
 		final Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
 
-		synchronized (this) {
+		synchronized (ringPuffer) {
 			for (final AggregationsDatum einzelDatum : this.ringPuffer) {
 				if ((einzelDatum.getDatenZeit() >= begin)
 						&& (einzelDatum.getDatenZeit() < ende)) {
@@ -156,15 +156,28 @@ public abstract class AbstraktAggregationsPuffer {
 				+ (this.aggregationsIntervall == null ? "FS-MWE"
 						: this.aggregationsIntervall);
 
-		synchronized (this) {
+		synchronized (ringPuffer) {
 			s += "\nMAX: " + this.getMaxPufferInhalt() + "\nInhalt: "
-					+ (this.ringPuffer.isEmpty() ? "leer\n" : "\n");
+					+ (ringPufferisEmpty() ? "leer\n" : "\n");
 			for (final AggregationsDatum datum : this.ringPuffer) {
 				s += datum + "\n";
 			}
 		}
 
 		return s;
+	}
+
+	/**
+	 * ermittelt, ob der Ringpuffer der Aggregationsdaten leer ist.
+	 * 
+	 * @return den Zustand
+	 */
+	protected boolean ringPufferisEmpty() {
+		boolean result = false;
+		synchronized (ringPuffer) {
+			result = ringPuffer.isEmpty();
+		}
+		return result;
 	}
 
 }

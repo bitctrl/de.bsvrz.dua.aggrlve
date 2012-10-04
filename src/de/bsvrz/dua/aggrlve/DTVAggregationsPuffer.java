@@ -91,7 +91,7 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 	 */
 	@Override
 	public void archiveAvailabilityChanged(final ArchiveRequestManager archiv) {
-		if (archiv.isArchiveAvailable() && this.ringPuffer.isEmpty()) {
+		if (archiv.isArchiveAvailable() && ringPufferisEmpty()) {
 			final long jetzt = System.currentTimeMillis();
 			long beginArchivAnfrage = -1;
 			final long endeArchivAnfrage = jetzt;

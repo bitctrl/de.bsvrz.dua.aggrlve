@@ -75,7 +75,7 @@ public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 			/**
 			 * hat sich das Erfassungsintervall geaendert?
 			 */
-			synchronized (this) {
+			synchronized (ringPuffer) {
 				if (this.ringPuffer.getLast().getT() != this.ringPuffer
 						.getFirst().getT()) {
 					final AggregationsDatum erstesDatum = this.ringPuffer
@@ -83,11 +83,11 @@ public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 					this.ringPuffer.clear();
 					this.ringPuffer.add(erstesDatum);
 				}
-			}
 
-			final double t = this.ringPuffer.getFirst().getT();
-			this.maxPufferAktuell = Math.round(Math.max(1.0,
-					Constants.MILLIS_PER_HOUR / t)) + 5;
+				final double t = this.ringPuffer.getFirst().getT();
+				this.maxPufferAktuell = Math.round(Math.max(1.0,
+						Constants.MILLIS_PER_HOUR / t)) + 5;
+			}
 		}
 	}
 
