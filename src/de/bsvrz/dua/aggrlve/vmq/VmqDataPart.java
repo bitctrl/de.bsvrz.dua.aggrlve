@@ -44,13 +44,15 @@ public class VmqDataPart {
 	 */
 	public void push(final ResultData result) {
 		if (result.hasData()) {
-			final Aspect aspect = result.getDataDescription().getAspect();
-			SortedMap<Long, ResultData> map = dataList.get(aspect);
-			if (map == null) {
-				map = new TreeMap<Long, ResultData>();
-				dataList.put(aspect, map);
+			synchronized (dataList) {
+				final Aspect aspect = result.getDataDescription().getAspect();
+				SortedMap<Long, ResultData> map = dataList.get(aspect);
+				if (map == null) {
+					map = new TreeMap<Long, ResultData>();
+					dataList.put(aspect, map);
+				}
+				map.put(result.getDataTime(), result);
 			}
-			map.put(result.getDataTime(), result);
 		}
 	}
 
