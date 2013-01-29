@@ -17,6 +17,9 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.1.3
+  - Memory-Leak fuer virtuelle MQs mit mindestens einem Unter-MQ, der keine Daten liefert, entfernt. 
+  
 1.1.2
   - Potentielles Synchronisationsproblem bei der Datenerfassung für VMQ behoben
 

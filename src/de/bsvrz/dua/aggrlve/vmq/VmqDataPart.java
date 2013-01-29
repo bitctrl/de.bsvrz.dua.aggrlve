@@ -51,6 +51,9 @@ public class VmqDataPart {
 					map = new TreeMap<Long, ResultData>();
 					dataList.put(aspect, map);
 				}
+				if(map.size() > 3) {
+					map.clear();
+				}
 				map.put(result.getDataTime(), result);
 			}
 		}
