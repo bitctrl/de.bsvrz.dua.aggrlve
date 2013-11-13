@@ -17,6 +17,11 @@ und je Jahr (Details siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.1.4
+  - Normalerweise findet die Berechnung von Aggregationsgroessen immer 30 Sekunden nach der vollen
+    Minute statt. Dieser Wert wurde in einen optionalen Parameter (-offset) umgewandelt. Standardwert ist 30s.
+    Durch die Angabe dieses Parameters können auch (maximal 55s) verspaetete Datensaetze behandelt werden. 
+
 1.1.3
   - Fix (Bug2924): Memory-Leak fuer virtuelle MQs mit mindestens einem Unter-MQ, der keine 
     Daten liefert, entfernt. 

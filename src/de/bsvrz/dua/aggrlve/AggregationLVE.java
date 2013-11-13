@@ -76,6 +76,10 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		implements IObjektWeckerListener {
 
+	private static final int OFFSET_MIN = 5;
+
+	private static final int OFFSET_MAX = 55;
+
 	/***************************************************************************
 	 * Nur fuer Testzwecke *
 	 **************************************************************************/
@@ -150,12 +154,37 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	 */
 	private final Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = new HashMap<SystemObject, AggregationsMessQuerschnitt>();
 
+	private int berechnungsOffset = 30;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
+
+		final String timeoutString = DUAUtensilien.getArgument("offset",
+				komArgumente);
+		if (timeoutString != null) {
+			try {
+				this.berechnungsOffset = Integer.parseInt(timeoutString);
+			} catch (Exception ex) {
+				;
+			}
+		}
+		if (berechnungsOffset < OFFSET_MIN) {
+			berechnungsOffset = OFFSET_MIN;
+			Debug.getLogger().warning(
+					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", "
+							+ OFFSET_MAX + "] liegen! Korrigiere auf "
+							+ OFFSET_MIN + "s.");
+		} else if (berechnungsOffset > OFFSET_MAX) {
+			berechnungsOffset = OFFSET_MAX;
+			Debug.getLogger().warning(
+					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", "
+							+ OFFSET_MAX + "] liegen! Korrigiere auf "
+							+ OFFSET_MAX + "s.");
+		}
 
 		final ArgumentList argumentList = new ArgumentList(
 				komArgumente.toArray(new String[komArgumente.size()]));
@@ -313,11 +342,11 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		final GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());
 
-		if (cal.get(Calendar.SECOND) >= 25) {
+		if (cal.get(Calendar.SECOND) >= berechnungsOffset - 2) {
 			cal.add(Calendar.MINUTE, 1);
 		}
 		cal.set(Calendar.MILLISECOND, 0);
-		cal.set(Calendar.SECOND, 30);
+		cal.set(Calendar.SECOND, berechnungsOffset);
 
 		return cal.getTimeInMillis();
 	}
