@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.Data.ReferenceValue;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -12,12 +13,10 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Repräsentation eines virtuellen MQ im Standardverfahren zur Berechnung der
- * Aggregationswerte.
+ * Repräsentation eines virtuellen MQ im Standardverfahren zur Berechnung der Aggregationswerte.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id: StandardAggregationsVmq.java 36992 2012-09-13 13:38:37Z peuker
- *          $
+ * @version $Id: StandardAggregationsVmq.java 36992 2012-09-13 13:38:37Z peuker$
  */
 public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
@@ -44,8 +43,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	private SystemObject mqEinfahrt;
 
 	/**
-	 * Konstruktor, erzeugt eine Instanz der Klasse für das übergebene
-	 * Systemobjekt mit den angegebenen Konfigurationsdaten.
+	 * Konstruktor, erzeugt eine Instanz der Klasse für das übergebene Systemobjekt mit den
+	 * angegebenen Konfigurationsdaten.
 	 * 
 	 * @param obj
 	 *            das MQ-Objekt
@@ -58,47 +57,41 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 			lage = data.getUnscaledValue("Lage").intValue();
 
-			mqVor = data.getReferenceValue("MessQuerschnittVor")
-					.getSystemObject();
+			final ReferenceValue referenceValue = data.getReferenceValue("MessQuerschnittVor");
+			mqVor = referenceValue.getSystemObject();
 			if (mqVor != null) {
 				getMqParts().put(mqVor, new VmqDataPart());
 			}
 
-			mqMitte = data.getReferenceValue("MessQuerschnittMitte")
-					.getSystemObject();
-			if (mqVor != null) {
+			mqMitte = data.getReferenceValue("MessQuerschnittMitte").getSystemObject();
+			if (mqMitte != null) {
 				getMqParts().put(mqMitte, new VmqDataPart());
 			}
 
-			mqNach = data.getReferenceValue("MessQuerschnittNach")
-					.getSystemObject();
-			if (mqVor != null) {
+			mqNach = data.getReferenceValue("MessQuerschnittNach").getSystemObject();
+			if (mqNach != null) {
 				getMqParts().put(mqNach, new VmqDataPart());
 			}
 
-			mqAusfahrt = data.getReferenceValue("MessQuerschnittAusfahrt")
-					.getSystemObject();
-			if (mqVor != null) {
+			mqAusfahrt = data.getReferenceValue("MessQuerschnittAusfahrt").getSystemObject();
+			if (mqAusfahrt != null) {
 				getMqParts().put(mqAusfahrt, new VmqDataPart());
 			}
 
-			mqEinfahrt = data.getReferenceValue("MessQuerschnittEinfahrt")
-					.getSystemObject();
-			if (mqVor != null) {
+			mqEinfahrt = data.getReferenceValue("MessQuerschnittEinfahrt").getSystemObject();
+			if (mqEinfahrt != null) {
 				getMqParts().put(mqEinfahrt, new VmqDataPart());
 			}
 		}
 	}
 
 	@Override
-	protected ResultData calculateResultData(
-			final Map<SystemObject, ResultData> dataList) {
+	protected ResultData calculateResultData(final Map<SystemObject, ResultData> dataList) {
 		ResultData result = null;
 		if (!dataList.isEmpty()) {
 			DataDescription desc = null;
 			long time = 0;
-			for (final Entry<SystemObject, ResultData> entry : dataList
-					.entrySet()) {
+			for (final Entry<SystemObject, ResultData> entry : dataList.entrySet()) {
 				if (desc == null) {
 					desc = entry.getValue().getDataDescription();
 					time = entry.getValue().getDataTime();
@@ -115,9 +108,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Diese Methode geht davon aus, dass keine weiteren Werte zur Berechnung
-	 * des Analysedatums eintreffen werden und berechnet mit allen im Moment
-	 * gepufferten Daten das Analysedatum.
+	 * Diese Methode geht davon aus, dass keine weiteren Werte zur Berechnung des Analysedatums
+	 * eintreffen werden und berechnet mit allen im Moment gepufferten Daten das Analysedatum.
 	 * 
 	 * @param dataList
 	 *            die Liste mi den aktuellen Daten
@@ -128,31 +120,28 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	 * 
 	 * @return ein Analysedatum
 	 */
-	private synchronized ResultData getErgebnisAufBasisAktuellerDaten(
-			final DataDescription desc, final long time,
-			final Map<SystemObject, ResultData> dataList) {
+	private synchronized ResultData getErgebnisAufBasisAktuellerDaten(final DataDescription desc,
+			final long time, final Map<SystemObject, ResultData> dataList) {
 		ResultData ergebnis = null;
 
 		final Data analyseDatum = getDav().createData(desc.getAttributeGroup());
 
 		/**
-		 * Ermittle Werte für
-		 * <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
+		 * Ermittle Werte für <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
 		 * <code>VDelta</code> via Ersetzung
 		 */
-		final String[] attErsetzung = new String[] { "VKfz", "VLkw", "VPkw",
-				"VgKfz", "B", "BMax", "SKfz", "VDelta" };
+		final String[] attErsetzung = new String[] { "VKfz", "VLkw", "VPkw", "VgKfz", "B", "BMax",
+				"SKfz", "VDelta" };
 		for (final String attName : attErsetzung) {
-			final ResultData ersetzung = this.getErsatzDatum(attName, dataList);
+			final ResultData ersetzung = getErsatzDatum(attName, dataList);
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
 						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				Debug.getLogger().error(
-						"Es konnte kein Ersetzungsdatum fuer " + getVmq()
-								+ " im Attribut " + attName
-								+ " ermittelt werden");
+						"Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
+								+ attName + " ermittelt werden");
 				final MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
@@ -164,19 +153,18 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 		 */
 		final String[] attBilanz = new String[] { "QKfz", "QLkw", "QPkw" };
 		for (final String attName : attBilanz) {
-			this.setBilanzDatum(analyseDatum, attName, dataList);
+			setBilanzDatum(analyseDatum, attName, dataList);
 		}
 
 		/**
-		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und
-		 * <code>KB</code>
+		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
 		 */
-		this.berechneLkwAnteil(analyseDatum);
-		this.berechneDichte(analyseDatum, "Kfz");
-		this.berechneDichte(analyseDatum, "Lkw");
-		this.berechneDichte(analyseDatum, "Pkw");
-		this.berechneBemessungsVerkehrsstaerke(analyseDatum);
-		this.berechneBemessungsdichte(analyseDatum);
+		berechneLkwAnteil(analyseDatum);
+		berechneDichte(analyseDatum, "Kfz");
+		berechneDichte(analyseDatum, "Lkw");
+		berechneDichte(analyseDatum, "Pkw");
+		berechneBemessungsVerkehrsstaerke(analyseDatum);
+		berechneBemessungsdichte(analyseDatum);
 
 		ergebnis = new ResultData(getVmq(), desc, time, analyseDatum);
 
@@ -184,20 +172,17 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Erfragt das Ersatzdatum für diesen virtuellen Messquerschnitt in den
-	 * Attributen <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
-	 * <code>VDelta</code>.
+	 * Erfragt das Ersatzdatum für diesen virtuellen Messquerschnitt in den Attributen
+	 * <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und <code>VDelta</code>.
 	 * 
 	 * @param attName
-	 *            der Name des Attributs, für das ein Ersatzdatum gefunden
-	 *            werden soll
+	 *            der Name des Attributs, für das ein Ersatzdatum gefunden werden soll
 	 * @param dataList
 	 *            die Liste mit den aktuellen Daten
-	 * @return das Ersatzdatum für diesen virtuellen Messquerschnitt in den
-	 *         Attributen <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code>
-	 *         und <code>VDelta</code> oder <code>null</code>, wenn dieses nicht
-	 *         ermittelt werden konnte, weil z.B. alle MQs erfasst sind (wäre
-	 *         ein Konfigurationsfehler)
+	 * @return das Ersatzdatum für diesen virtuellen Messquerschnitt in den Attributen
+	 *         <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und <code>VDelta</code> oder
+	 *         <code>null</code>, wenn dieses nicht ermittelt werden konnte, weil z.B. alle MQs
+	 *         erfasst sind (wäre ein Konfigurationsfehler)
 	 */
 	private ResultData getErsatzDatum(final String attName,
 			final Map<SystemObject, ResultData> dataList) {
@@ -257,9 +242,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * liefert für den übergebenen MQ den Datensatz aus der aktuellen
-	 * Datenliste. Wenn keine entsprechenden Daten verfügbar sind wird
-	 * <code>null</code> geliefert.
+	 * liefert für den übergebenen MQ den Datensatz aus der aktuellen Datenliste. Wenn keine
+	 * entsprechenden Daten verfügbar sind wird <code>null</code> geliefert.
 	 * 
 	 * @param dataList
 	 *            die Liste mit den aktuellen Daten
@@ -267,7 +251,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	 *            der MQ
 	 * @return das Ergebnis oder <code>null</code>
 	 */
-	private ResultData getMQData(final Map<SystemObject, ResultData> dataList,
+	private static ResultData getMQData(final Map<SystemObject, ResultData> dataList,
 			final SystemObject mq) {
 		ResultData result = null;
 		if ((mq != null) && (dataList != null)) {
@@ -277,9 +261,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * liefert einen QWert für das übergebene Attribut und den defnierten MQ aus
-	 * den aktuellen Daten. Wenn kein Wert ermittelt werden kann, wird
-	 * <code>null</code> geliefert.
+	 * liefert einen QWert für das übergebene Attribut und den defnierten MQ aus den aktuellen
+	 * Daten. Wenn kein Wert ermittelt werden kann, wird <code>null</code> geliefert.
 	 * 
 	 * @param dataList
 	 *            die Liste mit den aktuellen Daten
@@ -289,7 +272,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	 *            der Name des gesuchten Attributs
 	 * @return das Ergebnis oder <code>null</code>
 	 */
-	private QWert getQWert(final Map<SystemObject, ResultData> dataList,
+	private static QWert getQWert(final Map<SystemObject, ResultData> dataList,
 			final SystemObject mq, final String attname) {
 		final ResultData resultData = getMQData(dataList, mq);
 		if (resultData == null) {
@@ -299,14 +282,13 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den
-	 * Attributen <code>QKfz, QLkw</code> und <code>QPkw</code>.
+	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den Attributen
+	 * <code>QKfz, QLkw</code> und <code>QPkw</code>.
 	 * 
 	 * @param analyseDatum
 	 *            das Zeil für den Ergebniswert
 	 * @param attName
-	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt
-	 *            werden soll
+	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
 	 * @param dataList
 	 *            die aktuellen Daten
 	 */
@@ -316,9 +298,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 		if (lage == StandardAggregationsVmq.VOR) {
 			/**
-			 * 1. MQVor nicht direkt erfasst: Q(MQVor)=Q(MQMitte)+Q(MQAus). Wenn
-			 * an MQMitte der jeweilige Wert nicht vorhanden ist, gilt:
-			 * Q(MQVor)=Q(MQNach)+Q(MQAus)-Q(MQEin).
+			 * 1. MQVor nicht direkt erfasst: Q(MQVor)=Q(MQMitte)+Q(MQAus). Wenn an MQMitte der
+			 * jeweilige Wert nicht vorhanden ist, gilt: Q(MQVor)=Q(MQNach)+Q(MQAus)-Q(MQEin).
 			 */
 			final QWert qMitte = getQWert(dataList, mqMitte, attName);
 			final QWert qAus = getQWert(dataList, mqAusfahrt, attName);
@@ -333,18 +314,15 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 				if ((qNach != null) && (qEin != null) && qNach.isVerrechenbar()
 						&& qEin.isVerrechenbar()) {
-					if ((qWert == null)
-							|| !qWert.isExportierbarNach(analyseDatum)) {
+					if ((qWert == null) || !qWert.isExportierbarNach(analyseDatum)) {
 						qWert = QWert.differenz(QWert.summe(qNach, qAus), qEin);
 					} else {
 						/**
 						 * Also Q != null und Q ist exportierbar
 						 */
 						if (!qWert.isVerrechenbar()) {
-							final QWert dummy = QWert.differenz(
-									QWert.summe(qNach, qAus), qEin);
-							if ((dummy != null)
-									&& dummy.isExportierbarNach(analyseDatum)
+							final QWert dummy = QWert.differenz(QWert.summe(qNach, qAus), qEin);
+							if ((dummy != null) && dummy.isExportierbarNach(analyseDatum)
 									&& dummy.isVerrechenbar()) {
 								qWert = dummy;
 							}
@@ -354,9 +332,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 			}
 		} else if (lage == StandardAggregationsVmq.MITTE) {
 			/**
-			 * 2. MQMitte nicht direkt erfasst: Q(MQMitte)=Q(MQVor)-Q(MQAus).
-			 * Wenn an MQVor der jeweilige Wert nicht vorhanden ist, gilt
-			 * Q(MQMitte)=Q(MQNach)-Q(MQEin).
+			 * 2. MQMitte nicht direkt erfasst: Q(MQMitte)=Q(MQVor)-Q(MQAus). Wenn an MQVor der
+			 * jeweilige Wert nicht vorhanden ist, gilt Q(MQMitte)=Q(MQNach)-Q(MQEin).
 			 */
 			final QWert qVor = getQWert(dataList, mqVor, attName);
 			final QWert qAus = getQWert(dataList, mqAusfahrt, attName);
@@ -370,8 +347,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 				if ((qNach != null) && (qEin != null) && qNach.isVerrechenbar()
 						&& qEin.isVerrechenbar()) {
-					if ((qWert == null)
-							|| !qWert.isExportierbarNach(analyseDatum)) {
+					if ((qWert == null) || !qWert.isExportierbarNach(analyseDatum)) {
 						qWert = QWert.differenz(qNach, qEin);
 					} else {
 						/**
@@ -379,8 +355,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 						 */
 						if (!qWert.isVerrechenbar()) {
 							final QWert dummy = QWert.differenz(qNach, qEin);
-							if ((dummy != null)
-									&& dummy.isExportierbarNach(analyseDatum)
+							if ((dummy != null) && dummy.isExportierbarNach(analyseDatum)
 									&& dummy.isVerrechenbar()) {
 								qWert = dummy;
 							}
@@ -390,9 +365,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 			}
 		} else if (lage == StandardAggregationsVmq.NACH) {
 			/**
-			 * 3. MQNach nicht direkt erfasst Q(MQNach)=Q(MQMitte)+Q(MQEin).
-			 * Wenn an MQMitte der jeweilige Wert nicht vorhanden ist, gilt
-			 * Q(MQNach)=Q(MQVor)+Q(MQEin)-Q(MQAus).
+			 * 3. MQNach nicht direkt erfasst Q(MQNach)=Q(MQMitte)+Q(MQEin). Wenn an MQMitte der
+			 * jeweilige Wert nicht vorhanden ist, gilt Q(MQNach)=Q(MQVor)+Q(MQEin)-Q(MQAus).
 			 */
 			final QWert qMitte = getQWert(dataList, mqMitte, attName);
 			final QWert qEin = getQWert(dataList, mqEinfahrt, attName);
@@ -406,18 +380,15 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 				if ((qVor != null) && (qAus != null) && qVor.isVerrechenbar()
 						&& qAus.isVerrechenbar()) {
-					if ((qWert == null)
-							|| !qWert.isExportierbarNach(analyseDatum)) {
+					if ((qWert == null) || !qWert.isExportierbarNach(analyseDatum)) {
 						qWert = QWert.differenz(QWert.summe(qVor, qEin), qAus);
 					} else {
 						/**
 						 * Also Q != null und Q ist exportierbar
 						 */
 						if (!qWert.isVerrechenbar()) {
-							final QWert dummy = QWert.differenz(
-									QWert.summe(qVor, qEin), qAus);
-							if ((dummy != null)
-									&& dummy.isExportierbarNach(analyseDatum)
+							final QWert dummy = QWert.differenz(QWert.summe(qVor, qEin), qAus);
+							if ((dummy != null) && dummy.isExportierbarNach(analyseDatum)
 									&& dummy.isVerrechenbar()) {
 								qWert = dummy;
 							}
@@ -437,9 +408,9 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im Sinne der Wertersetzung brauchbar
-	 * ist. Dies ist dann der Fall, wenn das Datum Nutzdaten enthält und dessen
-	 * Datenzeit echt älter als die des letzten publizierten Analysedatums ist.
+	 * Erfragt, ob das übergebene Datum im Sinne der Wertersetzung brauchbar ist. Dies ist dann der
+	 * Fall, wenn das Datum Nutzdaten enthält und dessen Datenzeit echt älter als die des letzten
+	 * publizierten Analysedatums ist.
 	 * 
 	 * @param datum
 	 *            ein Analysedatum eines MQ
@@ -458,8 +429,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle
-	 * Nutzdaten (Werte >= 0 hat).
+	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte >= 0
+	 * hat).
 	 * 
 	 * @param datum
 	 *            ein Analysedatum
@@ -467,12 +438,11 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	 *            der Name des Attributs
 	 * @return ob das übergebene Datum im übergebenen Attribut sinnvolle Daten
 	 */
-	private boolean isDatumNutzbar(final ResultData datum, final String attName) {
+	private static boolean isDatumNutzbar(final ResultData datum, final String attName) {
 		boolean ergebnis = false;
 
 		if ((datum != null) && (datum.getData() != null)) {
-			ergebnis = new MesswertUnskaliert(attName, datum.getData())
-					.getWertUnskaliert() >= 0;
+			ergebnis = new MesswertUnskaliert(attName, datum.getData()).getWertUnskaliert() >= 0;
 		}
 
 		return ergebnis;
