@@ -28,15 +28,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Abstrakte Implementierung zur Verwaltung der Daten eines virtuellen
- * Messquerschnitts, dessen Aggregationsdaten gebildet werden sollen.
+ * Abstrakte Implementierung zur Verwaltung der Daten eines virtuellen Messquerschnitts, dessen
+ * Aggregationsdaten gebildet werden sollen.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id: AbstractAggregationsVmq.java 36992 2012-09-13 13:38:37Z peuker
- *          $
+ * @version $Id$
  */
-public abstract class AbstractAggregationsVmq implements
-		ClientReceiverInterface, ClientSenderInterface {
+public abstract class AbstractAggregationsVmq implements ClientReceiverInterface,
+		ClientSenderInterface {
+
+	private static Debug logger = Debug.getLogger();
 
 	/** das VMQ-Objekt. */
 	private final SystemObject vmq;
@@ -52,8 +53,7 @@ public abstract class AbstractAggregationsVmq implements
 	private Data paramData;
 
 	/**
-	 * das letzte veröffentlichte Datum (wird zur Ersatzwertbildung
-	 * herangezogen).
+	 * das letzte veröffentlichte Datum (wird zur Ersatzwertbildung herangezogen).
 	 */
 	private ResultData letztesErgebnis;
 
@@ -64,91 +64,76 @@ public abstract class AbstractAggregationsVmq implements
 	 *            das Objekt
 	 */
 	public AbstractAggregationsVmq(final SystemObject obj) {
-		this.vmq = obj;
+		vmq = obj;
 	}
 
 	/**
-	 * Berechnet die Bemessungsdichte (<code>KB</code>) analog
-	 * SE-02.00.00.00.00-AFo-4.0 S.120f.
+	 * Berechnet die Bemessungsdichte (<code>KB</code>) analog SE-02.00.00.00.00-AFo-4.0 S.120f.
 	 * 
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
 	protected final void berechneBemessungsdichte(final Data analyseDatum) {
 		final MesswertUnskaliert kbAnalyse = new MesswertUnskaliert("KB");
-		final MesswertUnskaliert qbWert = new MesswertUnskaliert("QB",
-				analyseDatum);
-		final MesswertUnskaliert vKfz = new MesswertUnskaliert("VKfz",
-				analyseDatum);
+		final MesswertUnskaliert qbWert = new MesswertUnskaliert("QB", analyseDatum);
+		final MesswertUnskaliert vKfz = new MesswertUnskaliert("VKfz", analyseDatum);
 
-		if (qbWert.isFehlerhaftBzwImplausibel()
-				|| vKfz.isFehlerhaftBzwImplausibel()) {
-			kbAnalyse
-					.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		if (qbWert.isFehlerhaftBzwImplausibel() || vKfz.isFehlerhaftBzwImplausibel()) {
+			kbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		} else {
 			if ((vKfz.getWertUnskaliert() == 0)
 					|| (vKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 
-				if ((paramData != null) && (this.letztesErgebnis != null)
-						&& (this.letztesErgebnis.getData() != null)) {
+				if ((paramData != null) && (letztesErgebnis != null)
+						&& (letztesErgebnis.getData() != null)) {
 
-					final MesswertUnskaliert kbTMinus1 = new MesswertUnskaliert(
-							"KB", this.letztesErgebnis.getData());
+					final MesswertUnskaliert kbTMinus1 = new MesswertUnskaliert("KB",
+							letztesErgebnis.getData());
 					if (kbTMinus1.getWertUnskaliert() >= 0) {
-						if (kbTMinus1.getWertUnskaliert() >= paramData
-								.getItem("KB").getUnscaledValue("Grenz")
-								.longValue()) {
+						if (kbTMinus1.getWertUnskaliert() >= paramData.getItem("KB")
+								.getUnscaledValue("Grenz").longValue()) {
 							kbAnalyse.setWertUnskaliert(paramData.getItem("KB")
 									.getUnscaledValue("Max").longValue());
 						} else {
 							kbAnalyse.setWertUnskaliert(0);
 						}
 					} else {
-						kbAnalyse
-								.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						kbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					}
 				} else {
-					kbAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					kbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 
 			} else {
 				// normal berechnen
 				if (qbWert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
-					kbAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
+					kbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					final long kbWert = Math.round((double) qbWert
-							.getWertUnskaliert()
+					final long kbWert = Math.round((double) qbWert.getWertUnskaliert()
 							/ (double) vKfz.getWertUnskaliert());
 
-					if (DUAUtensilien.isWertInWerteBereich(analyseDatum
-							.getItem("KB").getItem("Wert"), kbWert)) {
+					if (DUAUtensilien.isWertInWerteBereich(
+							analyseDatum.getItem("KB").getItem("Wert"), kbWert)) {
 						final boolean interpoliert = qbWert.isInterpoliert()
 								|| vKfz.isInterpoliert();
 						GWert kbGuete = null;
 						try {
-							kbGuete = GueteVerfahren.quotient(new GWert(
-									analyseDatum, "QB"), new GWert(
-									analyseDatum, "VKfz"));
+							kbGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QB"),
+									new GWert(analyseDatum, "VKfz"));
 						} catch (final GueteException e) {
 							Debug.getLogger().error(
-									"Guete-Index fuer KB nicht berechenbar in "
-											+ analyseDatum, e);
+									"Guete-Index fuer KB nicht berechenbar in " + analyseDatum, e);
 							e.printStackTrace();
 						}
 
 						kbAnalyse.setWertUnskaliert(kbWert);
 						kbAnalyse.setInterpoliert(interpoliert);
 						if (kbGuete != null) {
-							kbAnalyse.getGueteIndex().setWert(
-									kbGuete.getIndexUnskaliert());
-							kbAnalyse.setVerfahren(kbGuete.getVerfahren()
-									.getCode());
+							kbAnalyse.getGueteIndex().setWert(kbGuete.getIndexUnskaliert());
+							kbAnalyse.setVerfahren(kbGuete.getVerfahren().getCode());
 						}
 					} else {
-						kbAnalyse
-								.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						kbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					}
 				}
 			}
@@ -158,26 +143,20 @@ public abstract class AbstractAggregationsVmq implements
 	}
 
 	/**
-	 * Berechnet die Bemessungsverkehrsstaerke (<code>QB</code>) analog
-	 * SE-02.00.00.00.00-AFo-4.0 S.120f.
+	 * Berechnet die Bemessungsverkehrsstaerke (<code>QB</code>) analog SE-02.00.00.00.00-AFo-4.0
+	 * S.120f.
 	 * 
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
-	protected final void berechneBemessungsVerkehrsstaerke(
-			final Data analyseDatum) {
+	protected final void berechneBemessungsVerkehrsstaerke(final Data analyseDatum) {
 		final MesswertUnskaliert qbAnalyse = new MesswertUnskaliert("QB");
-		final MesswertUnskaliert vPkw = new MesswertUnskaliert("VPkw",
-				analyseDatum);
-		final MesswertUnskaliert vLkw = new MesswertUnskaliert("VLkw",
-				analyseDatum);
-		final MesswertUnskaliert qPkw = new MesswertUnskaliert("QPkw",
-				analyseDatum);
-		final MesswertUnskaliert qLkw = new MesswertUnskaliert("QLkw",
-				analyseDatum);
+		final MesswertUnskaliert vPkw = new MesswertUnskaliert("VPkw", analyseDatum);
+		final MesswertUnskaliert vLkw = new MesswertUnskaliert("VLkw", analyseDatum);
+		final MesswertUnskaliert qPkw = new MesswertUnskaliert("QPkw", analyseDatum);
+		final MesswertUnskaliert qLkw = new MesswertUnskaliert("QLkw", analyseDatum);
 
-		if (vLkw.isFehlerhaftBzwImplausibel()
-				|| qLkw.isFehlerhaftBzwImplausibel()
+		if (vLkw.isFehlerhaftBzwImplausibel() || qLkw.isFehlerhaftBzwImplausibel()
 				|| (vLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 				|| (qLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 			if ((vPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
@@ -188,51 +167,42 @@ public abstract class AbstractAggregationsVmq implements
 				GWert qbGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
 
 				qbWert = qPkw.getWertUnskaliert();
-				if (DUAUtensilien.isWertInWerteBereich(
-						analyseDatum.getItem("QB").getItem("Wert"), qbWert)) {
+				if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("QB").getItem("Wert"),
+						qbWert)) {
 					qbGuete = new GWert(analyseDatum, "QPkw");
 
 					qbAnalyse.setWertUnskaliert(qbWert);
 					qbAnalyse.setInterpoliert(qPkw.isInterpoliert());
-					qbAnalyse.getGueteIndex().setWert(
-							qbGuete.getIndexUnskaliert());
+					qbAnalyse.getGueteIndex().setWert(qbGuete.getIndexUnskaliert());
 					qbAnalyse.setVerfahren(qbGuete.getVerfahren().getCode());
 				} else {
-					qbAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			}
 		} else {
-			if (vPkw.isFehlerhaftBzwImplausibel()
-					|| qPkw.isFehlerhaftBzwImplausibel()) {
-				qbAnalyse
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			if (vPkw.isFehlerhaftBzwImplausibel() || qPkw.isFehlerhaftBzwImplausibel()) {
+				qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((vPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (qPkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 				qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 			} else {
 				if (paramData != null) {
-					final double k1 = paramData.getItem("fl")
-							.getScaledValue("k1").doubleValue();
-					final double k2 = paramData.getItem("fl")
-							.getScaledValue("k2").doubleValue();
+					final double k1 = paramData.getItem("fl").getScaledValue("k1").doubleValue();
+					final double k2 = paramData.getItem("fl").getScaledValue("k2").doubleValue();
 
 					double fL;
 					if (vPkw.getWertUnskaliert() <= vLkw.getWertUnskaliert()) {
 						fL = k1;
 					} else {
-						fL = k1
-								+ (k2 * (vPkw.getWertUnskaliert() - vLkw
-										.getWertUnskaliert()));
+						fL = k1 + (k2 * (vPkw.getWertUnskaliert() - vLkw.getWertUnskaliert()));
 					}
 
 					long qbWert = DUAKonstanten.NICHT_ERMITTELBAR;
 					GWert qbGuete = GueteVerfahren.STD_FEHLERHAFT_BZW_NICHT_ERMITTELBAR;
 
-					qbWert = qPkw.getWertUnskaliert()
-							+ Math.round(fL * qLkw.getWertUnskaliert());
-					if (DUAUtensilien.isWertInWerteBereich(analyseDatum
-							.getItem("QB").getItem("Wert"), qbWert)) {
+					qbWert = qPkw.getWertUnskaliert() + Math.round(fL * qLkw.getWertUnskaliert());
+					if (DUAUtensilien.isWertInWerteBereich(
+							analyseDatum.getItem("QB").getItem("Wert"), qbWert)) {
 						final GWert qPkwGuete = new GWert(analyseDatum, "QPkw");
 						final GWert qLkwGuete = new GWert(analyseDatum, "QLkw");
 
@@ -241,28 +211,22 @@ public abstract class AbstractAggregationsVmq implements
 									GueteVerfahren.gewichte(qLkwGuete, fL));
 						} catch (final GueteException e) {
 							Debug.getLogger().error(
-									"Guete-Index fuer QB nicht berechenbar in "
-											+ analyseDatum, e);
+									"Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e);
 							e.printStackTrace();
 						}
 
 						qbAnalyse.setWertUnskaliert(qbWert);
-						qbAnalyse.setInterpoliert(qPkw.isInterpoliert()
-								|| qLkw.isInterpoliert());
+						qbAnalyse.setInterpoliert(qPkw.isInterpoliert() || qLkw.isInterpoliert());
 						if (qbGuete != null) {
-							qbAnalyse.getGueteIndex().setWert(
-									qbGuete.getIndexUnskaliert());
-							qbAnalyse.setVerfahren(qbGuete.getVerfahren()
-									.getCode());
+							qbAnalyse.getGueteIndex().setWert(qbGuete.getIndexUnskaliert());
+							qbAnalyse.setVerfahren(qbGuete.getVerfahren().getCode());
 						}
 					} else {
-						qbAnalyse
-								.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					}
 
 				} else {
-					qbAnalyse
-							.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					qbAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 			}
 
@@ -272,56 +236,44 @@ public abstract class AbstractAggregationsVmq implements
 	}
 
 	/**
-	 * Berechnet die Verkehrsstärken (<code>Kxxx</code>) analog
-	 * SE-02.00.00.00.00-AFo-4.0 S.119f.
+	 * Berechnet die Verkehrsstärken (<code>Kxxx</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f.
 	 * 
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 * @param attName
 	 *            der Attributname des Verkehrswertes, der berechnet werden soll
 	 */
-	protected final void berechneDichte(final Data analyseDatum,
-			final String attName) {
-		final MesswertUnskaliert kAnalyse = new MesswertUnskaliert("K"
-				+ attName);
-		final MesswertUnskaliert qWert = new MesswertUnskaliert("Q" + attName,
-				analyseDatum);
-		final MesswertUnskaliert vWert = new MesswertUnskaliert("V" + attName,
-				analyseDatum);
+	protected final void berechneDichte(final Data analyseDatum, final String attName) {
+		final MesswertUnskaliert kAnalyse = new MesswertUnskaliert("K" + attName);
+		final MesswertUnskaliert qWert = new MesswertUnskaliert("Q" + attName, analyseDatum);
+		final MesswertUnskaliert vWert = new MesswertUnskaliert("V" + attName, analyseDatum);
 
-		if (qWert.isFehlerhaftBzwImplausibel()
-				|| vWert.isFehlerhaftBzwImplausibel()) {
+		if (qWert.isFehlerhaftBzwImplausibel() || vWert.isFehlerhaftBzwImplausibel()) {
 			kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		} else {
 			if ((vWert.getWertUnskaliert() == 0)
 					|| (vWert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
-				if ((paramData != null) && (this.letztesErgebnis != null)
-						&& (this.letztesErgebnis.getData() != null)) {
+				if ((paramData != null) && (letztesErgebnis != null)
+						&& (letztesErgebnis.getData() != null)) {
 					long grenz = -1;
 					long max = -1;
 
 					if (attName.startsWith("K")) {
 						/* Kfz */
-						grenz = paramData.getItem("KKfz")
-								.getUnscaledValue("Grenz").longValue();
-						max = paramData.getItem("KKfz").getUnscaledValue("Max")
-								.longValue();
+						grenz = paramData.getItem("KKfz").getUnscaledValue("Grenz").longValue();
+						max = paramData.getItem("KKfz").getUnscaledValue("Max").longValue();
 					} else if (attName.startsWith("L")) {
 						/* Lkw */
-						grenz = paramData.getItem("KLkw")
-								.getUnscaledValue("Grenz").longValue();
-						max = paramData.getItem("KLkw").getUnscaledValue("Max")
-								.longValue();
+						grenz = paramData.getItem("KLkw").getUnscaledValue("Grenz").longValue();
+						max = paramData.getItem("KLkw").getUnscaledValue("Max").longValue();
 					} else {
 						/* Pkw */
-						grenz = paramData.getItem("KPkw")
-								.getUnscaledValue("Grenz").longValue();
-						max = paramData.getItem("KPkw").getUnscaledValue("Max")
-								.longValue();
+						grenz = paramData.getItem("KPkw").getUnscaledValue("Grenz").longValue();
+						max = paramData.getItem("KPkw").getUnscaledValue("Max").longValue();
 					}
 
-					final MesswertUnskaliert kTMinus1 = new MesswertUnskaliert(
-							"K" + attName, this.letztesErgebnis.getData());
+					final MesswertUnskaliert kTMinus1 = new MesswertUnskaliert("K" + attName,
+							letztesErgebnis.getData());
 					if (kTMinus1.isFehlerhaftBzwImplausibel()) {
 						kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					} else if (kTMinus1.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
@@ -341,33 +293,29 @@ public abstract class AbstractAggregationsVmq implements
 				if (qWert.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR) {
 					kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 				} else {
-					final long kWert = Math.round((double) qWert
-							.getWertUnskaliert()
+					final long kWert = Math.round((double) qWert.getWertUnskaliert()
 							/ (double) vWert.getWertUnskaliert());
-					if (DUAUtensilien.isWertInWerteBereich(analyseDatum
-							.getItem("K" + attName).getItem("Wert"), kWert)) {
+					if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("K" + attName)
+							.getItem("Wert"), kWert)) {
 						final boolean interpoliert = qWert.isInterpoliert()
 								|| vWert.isInterpoliert();
 						GWert kGuete = null;
 
 						try {
-							kGuete = GueteVerfahren.quotient(new GWert(
-									analyseDatum, "Q" + attName), new GWert(
-									analyseDatum, "V" + attName));
+							kGuete = GueteVerfahren.quotient(
+									new GWert(analyseDatum, "Q" + attName), new GWert(analyseDatum,
+											"V" + attName));
 						} catch (final GueteException e) {
 							Debug.getLogger().error(
-									"Guete-Index fuer K" + attName
-											+ " nicht berechenbar", e);
+									"Guete-Index fuer K" + attName + " nicht berechenbar", e);
 							e.printStackTrace();
 						}
 
 						kAnalyse.setWertUnskaliert(kWert);
 						kAnalyse.setInterpoliert(interpoliert);
 						if (kGuete != null) {
-							kAnalyse.getGueteIndex().setWert(
-									kGuete.getIndexUnskaliert());
-							kAnalyse.setVerfahren(kGuete.getVerfahren()
-									.getCode());
+							kAnalyse.getGueteIndex().setWert(kGuete.getIndexUnskaliert());
+							kAnalyse.setVerfahren(kGuete.getVerfahren().getCode());
 						}
 					} else {
 						kAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
@@ -387,48 +335,38 @@ public abstract class AbstractAggregationsVmq implements
 	 */
 	protected final void berechneLkwAnteil(final Data analyseDatum) {
 		final MesswertUnskaliert aLkwAnalyse = new MesswertUnskaliert("ALkw");
-		final MesswertUnskaliert qLkw = new MesswertUnskaliert("QLkw",
-				analyseDatum);
-		final MesswertUnskaliert qKfz = new MesswertUnskaliert("QKfz",
-				analyseDatum);
+		final MesswertUnskaliert qLkw = new MesswertUnskaliert("QLkw", analyseDatum);
+		final MesswertUnskaliert qKfz = new MesswertUnskaliert("QKfz", analyseDatum);
 
-		if (qLkw.isFehlerhaftBzwImplausibel()
-				|| qKfz.isFehlerhaftBzwImplausibel()) {
-			aLkwAnalyse
-					.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+		if (qLkw.isFehlerhaftBzwImplausibel() || qKfz.isFehlerhaftBzwImplausibel()) {
+			aLkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		} else if ((qLkw.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 				|| (qKfz.getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 			aLkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR);
 		} else {
 			GWert aLkwGuete = null;
-			final long aLkwWert = Math
-					.round(((double) qLkw.getWertUnskaliert() / (double) qKfz
-							.getWertUnskaliert()) * 100.0);
+			final long aLkwWert = Math.round(((double) qLkw.getWertUnskaliert() / (double) qKfz
+					.getWertUnskaliert()) * 100.0);
 
-			if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("ALkw")
-					.getItem("Wert"), aLkwWert)) {
+			if (DUAUtensilien.isWertInWerteBereich(analyseDatum.getItem("ALkw").getItem("Wert"),
+					aLkwWert)) {
 				try {
-					aLkwGuete = GueteVerfahren.quotient(new GWert(analyseDatum,
-							"QLkw"), new GWert(analyseDatum, "QKfz"));
+					aLkwGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QLkw"), new GWert(
+							analyseDatum, "QKfz"));
 				} catch (final GueteException e) {
 					Debug.getLogger().error(
-							"Guete-Index fuer ALkw nicht berechenbar in "
-									+ analyseDatum, e);
+							"Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e);
 					e.printStackTrace();
 				}
 
 				aLkwAnalyse.setWertUnskaliert(aLkwWert);
-				aLkwAnalyse.setInterpoliert(qLkw.isInterpoliert()
-						|| qKfz.isInterpoliert());
+				aLkwAnalyse.setInterpoliert(qLkw.isInterpoliert() || qKfz.isInterpoliert());
 				if (aLkwGuete != null) {
-					aLkwAnalyse.getGueteIndex().setWert(
-							aLkwGuete.getIndexUnskaliert());
-					aLkwAnalyse
-							.setVerfahren(aLkwGuete.getVerfahren().getCode());
+					aLkwAnalyse.getGueteIndex().setWert(aLkwGuete.getIndexUnskaliert());
+					aLkwAnalyse.setVerfahren(aLkwGuete.getVerfahren().getCode());
 				}
 			} else {
-				aLkwAnalyse
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				aLkwAnalyse.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 		}
 
@@ -436,19 +374,17 @@ public abstract class AbstractAggregationsVmq implements
 	}
 
 	/**
-	 * berechnet den zusammengefassten Datensatz für einen virtuellen MQ aus den
-	 * übergebenen aktuellen Daten.
+	 * berechnet den zusammengefassten Datensatz für einen virtuellen MQ aus den übergebenen
+	 * aktuellen Daten.
 	 * 
 	 * @param dataList
 	 *            die aktuellen Daten
 	 * @return der Datensatz oder null, wenn keiner gebildet werden konnte
 	 */
-	protected abstract ResultData calculateResultData(
-			Map<SystemObject, ResultData> dataList);
+	protected abstract ResultData calculateResultData(Map<SystemObject, ResultData> dataList);
 
 	/**
-	 * löscht alle zwischengespeicherten Daten die nicht jünger als der
-	 * übergebene Zeitpunkt sind.
+	 * löscht alle zwischengespeicherten Daten die nicht jünger als der übergebene Zeitpunkt sind.
 	 * 
 	 * @param dataTime
 	 *            der Zeitpunkt
@@ -462,8 +398,8 @@ public abstract class AbstractAggregationsVmq implements
 	}
 
 	@Override
-	public void dataRequest(final SystemObject object,
-			final DataDescription dataDescription, final byte state) {
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
+			final byte state) {
 		Debug.getLogger().finest("Sendesteuerung wird nicht unterstützt");
 	}
 
@@ -479,8 +415,7 @@ public abstract class AbstractAggregationsVmq implements
 	/**
 	 * liefert das letzte publizierte Ergebnis.
 	 * 
-	 * @return das Ergebnis oder <code>null</code>, wenn noch keines publiziert
-	 *         wurde
+	 * @return das Ergebnis oder <code>null</code>, wenn noch keines publiziert wurde
 	 */
 	protected ResultData getLetztesErgebnis() {
 		return letztesErgebnis;
@@ -512,25 +447,21 @@ public abstract class AbstractAggregationsVmq implements
 	 *            die Datenverteilerverbindung
 	 */
 	public final void init(final ClientDavInterface connection) {
-		this.dav = connection;
+		dav = connection;
 
-		paramAtg = connection.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitAnalyseMq");
-		connection.subscribeReceiver(this, vmq,
-				new DataDescription(paramAtg, connection.getDataModel()
-						.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		paramAtg = connection.getDataModel()
+				.getAttributeGroup("atg.verkehrsDatenKurzZeitAnalyseMq");
+		connection.subscribeReceiver(this, vmq, new DataDescription(paramAtg, connection
+				.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)), ReceiveOptions
+				.normal(), ReceiverRole.receiver());
 
-		for (final Aspect asp : VMqAggregator.getInstance()
-				.getSupportedAspects()) {
-			final DataDescription dataDescription = new DataDescription(
-					VMqAggregator.getInstance().getSrcAtg(), asp);
-			connection.subscribeReceiver(this, getMqParts().keySet(),
-					dataDescription, ReceiveOptions.normal(),
-					ReceiverRole.receiver());
+		for (final Aspect asp : VMqAggregator.getInstance().getSupportedAspects()) {
+			final DataDescription dataDescription = new DataDescription(VMqAggregator.getInstance()
+					.getSrcAtg(), asp);
+			connection.subscribeReceiver(this, getMqParts().keySet(), dataDescription,
+					ReceiveOptions.normal(), ReceiverRole.receiver());
 			try {
-				connection.subscribeSender(this, vmq, dataDescription,
-						SenderRole.source());
+				connection.subscribeSender(this, vmq, dataDescription, SenderRole.source());
 			} catch (final OneSubscriptionPerSendData e) {
 				Debug.getLogger().error(vmq + ": " + e.getLocalizedMessage());
 			}
@@ -545,15 +476,14 @@ public abstract class AbstractAggregationsVmq implements
 	}
 
 	/**
-	 * ermittelt zu versendende Daten und versendet diese gegebenenfalls.
+	 * Ermittelt zu versendende Daten und versendet diese gegebenenfalls.
 	 * 
-	 * @return das Ergebnis, <code>true</code>, ween Daten versendet wurden
+	 * @return das Ergebnis, <code>true</code>, wenn Daten versendet wurden
 	 */
 	public boolean sendNextCompletedResult() {
 
 		boolean result = false;
-		for (final Aspect aspect : VMqAggregator.getInstance()
-				.getSupportedAspects()) {
+		for (final Aspect aspect : VMqAggregator.getInstance().getSupportedAspects()) {
 
 			long currentTime = 0;
 			final Map<SystemObject, ResultData> dataList = new HashMap<SystemObject, ResultData>();
@@ -587,16 +517,13 @@ public abstract class AbstractAggregationsVmq implements
 					result = true;
 					letztesErgebnis = resultData;
 					try {
-						Debug.getLogger().finer(
-								vmq + "(" + aspect + ") Sende Daten: "
-										+ resultData);
+						Debug.getLogger()
+								.finer(vmq + "(" + aspect + ") Sende Daten: " + resultData);
 						dav.sendData(resultData);
-					} catch (final DataNotSubscribedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (final SendSubscriptionNotConfirmed e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (final DataNotSubscribedException ex) {
+						logger.warning("Ein Datum konnte nicht versendet werden: " + resultData, ex);
+					} catch (final SendSubscriptionNotConfirmed ex) {
+						logger.warning("Ein Datum konnte nicht versendet werden: " + resultData, ex);
 					}
 				}
 				clearData(currentTime, aspect);
@@ -612,8 +539,7 @@ public abstract class AbstractAggregationsVmq implements
 		boolean check = false;
 		for (final ResultData result : results) {
 
-			if (result.getDataDescription().getAttributeGroup()
-					.equals(paramAtg)) {
+			if (result.getDataDescription().getAttributeGroup().equals(paramAtg)) {
 				paramData = result.getData();
 			} else {
 				final SystemObject object = result.getObject();
