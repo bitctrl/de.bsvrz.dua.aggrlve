@@ -9,3 +9,4 @@ Require-Bundle: de.bsvrz.dua.guete,
 Export-Package: de.bsvrz.dua.aggrlve,
  de.bsvrz.dua.aggrlve.dtv,
  de.bsvrz.dua.aggrlve.kalk
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
