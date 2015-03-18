@@ -112,58 +112,58 @@ public final class TestErgebnisAnalyseImporter extends CSVImporter {
 		if (datensatz != null) {
 			if (zeile != null) {
 				try {
-					final int QKfz = Integer.parseInt(zeile[84]);
-					final String QKfzStatus = zeile[85];
-					final int QLkw = Integer.parseInt(zeile[86]);
-					final String QLkwStatus = zeile[87];
-					final int QPkw = Integer.parseInt(zeile[88]);
-					final String QPkwStatus = zeile[89];
-					final int VKfz = Integer.parseInt(zeile[90]);
-					final String VKfzStatus = zeile[91];
-					final int VLkw = Integer.parseInt(zeile[92]);
-					final String VLkwStatus = zeile[93];
-					final int VPkw = Integer.parseInt(zeile[94]);
-					final String VPkwStatus = zeile[95];
-					final int VgKfz = Integer.parseInt(zeile[96]);
-					final String VgKfzStatus = zeile[97];
-					final int B = Integer.parseInt(zeile[98]);
-					final String BStatus = zeile[99];
-					final int BMax = Integer.parseInt(zeile[100]);
-					final String BMaxStatus = zeile[101];
-					final int SKfz = Integer.parseInt(zeile[100]);
-					final String SKfzStatus = zeile[101];
-					final int ALkw = Integer.parseInt(zeile[102]);
-					final String ALkwStatus = zeile[103];
-					final int KKfz = Integer.parseInt(zeile[104]);
-					final String KKfzStatus = zeile[105];
-					final int KLkw = Integer.parseInt(zeile[106]);
-					final String KLkwStatus = zeile[107];
-					final int KPkw = Integer.parseInt(zeile[108]);
-					final String KPkwStatus = zeile[109];
-					final int QB = Integer.parseInt(zeile[110]);
-					final String QBStatus = zeile[111];
-					final int KB = Integer.parseInt(zeile[112]);
-					final String KBStatus = zeile[113];
-					final int VDelta = Integer.parseInt(zeile[114]);
-					final String VDeltaStatus = zeile[115];
+					final int qKfz = Integer.parseInt(zeile[84]);
+					final String qKfzStatus = zeile[85];
+					final int qLkw = Integer.parseInt(zeile[86]);
+					final String qLkwStatus = zeile[87];
+					final int qPkw = Integer.parseInt(zeile[88]);
+					final String qPkwStatus = zeile[89];
+					final int vKfz = Integer.parseInt(zeile[90]);
+					final String vKfzStatus = zeile[91];
+					final int vLkw = Integer.parseInt(zeile[92]);
+					final String vLkwStatus = zeile[93];
+					final int vPkw = Integer.parseInt(zeile[94]);
+					final String vPkwStatus = zeile[95];
+					final int vgKfz = Integer.parseInt(zeile[96]);
+					final String vgKfzStatus = zeile[97];
+					final int belegung = Integer.parseInt(zeile[98]);
+					final String bStatus = zeile[99];
+					final int bMax = Integer.parseInt(zeile[100]);
+					final String bMaxStatus = zeile[101];
+					final int sKfz = Integer.parseInt(zeile[100]);
+					final String sKfzStatus = zeile[101];
+					final int aLkw = Integer.parseInt(zeile[102]);
+					final String aLkwStatus = zeile[103];
+					final int kKfz = Integer.parseInt(zeile[104]);
+					final String kKfzStatus = zeile[105];
+					final int kLkw = Integer.parseInt(zeile[106]);
+					final String kLkwStatus = zeile[107];
+					final int kPkw = Integer.parseInt(zeile[108]);
+					final String kPkwStatus = zeile[109];
+					final int qb = Integer.parseInt(zeile[110]);
+					final String qbStatus = zeile[111];
+					final int kb = Integer.parseInt(zeile[112]);
+					final String kbStatus = zeile[113];
+					final int vDelta = Integer.parseInt(zeile[114]);
+					final String vDeltaStatus = zeile[115];
 
-					datensatz = setAttribut("QKfz", QKfz, QKfzStatus, datensatz);
-					datensatz = setAttribut("QLkw", QLkw, QLkwStatus, datensatz);
-					datensatz = setAttribut("QPkw", QPkw, QPkwStatus, datensatz);
-					datensatz = setAttribut("VKfz", VKfz, VKfzStatus, datensatz);
-					datensatz = setAttribut("VLkw", VLkw, VLkwStatus, datensatz);
-					datensatz = setAttribut("VPkw", VPkw, VPkwStatus, datensatz);
-					datensatz = setAttribut("VgKfz", VgKfz, VgKfzStatus, datensatz);
-					datensatz = setAttribut("B", B, BStatus, datensatz);
-					datensatz = setAttribut("BMax", BMax, BMaxStatus, datensatz);
-					datensatz = setAttribut("SKfz", SKfz, SKfzStatus, datensatz);
-					datensatz = setAttribut("ALkw", ALkw, ALkwStatus, datensatz);
-					datensatz = setAttribut("KKfz", KKfz, KKfzStatus, datensatz);
-					datensatz = setAttribut("KLkw", KLkw, KLkwStatus, datensatz);
-					datensatz = setAttribut("KPkw", KPkw, KPkwStatus, datensatz);
-					datensatz = setAttribut("QB", QB, QBStatus, datensatz);
-					datensatz = setAttribut("KB", KB, KBStatus, datensatz);
-					datensatz = setAttribut("VDelta", VDelta, VDeltaStatus, datensatz);
+					datensatz = setAttribut("QKfz", qKfz, qKfzStatus, datensatz);
+					datensatz = setAttribut("QLkw", qLkw, qLkwStatus, datensatz);
+					datensatz = setAttribut("QPkw", qPkw, qPkwStatus, datensatz);
+					datensatz = setAttribut("VKfz", vKfz, vKfzStatus, datensatz);
+					datensatz = setAttribut("VLkw", vLkw, vLkwStatus, datensatz);
+					datensatz = setAttribut("VPkw", vPkw, vPkwStatus, datensatz);
+					datensatz = setAttribut("VgKfz", vgKfz, vgKfzStatus, datensatz);
+					datensatz = setAttribut("B", belegung, bStatus, datensatz);
+					datensatz = setAttribut("BMax", bMax, bMaxStatus, datensatz);
+					datensatz = setAttribut("SKfz", sKfz, sKfzStatus, datensatz);
+					datensatz = setAttribut("ALkw", aLkw, aLkwStatus, datensatz);
+					datensatz = setAttribut("KKfz", kKfz, kKfzStatus, datensatz);
+					datensatz = setAttribut("KLkw", kLkw, kLkwStatus, datensatz);
+					datensatz = setAttribut("KPkw", kPkw, kPkwStatus, datensatz);
+					datensatz = setAttribut("QB", qb, qbStatus, datensatz);
+					datensatz = setAttribut("KB", kb, kbStatus, datensatz);
+					datensatz = setAttribut("VDelta", vDelta, vDeltaStatus, datensatz);
 
 				} catch (final ArrayIndexOutOfBoundsException ex) {
 					datensatz = null;
@@ -347,25 +347,25 @@ public final class TestErgebnisAnalyseImporter extends CSVImporter {
 
 		DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.Erfassung.NichtErfasst", data)
-				.asUnscaledValue().set(nErf);
+		.asUnscaledValue().set(nErf);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMax", data)
-				.asUnscaledValue().set(wMax);
+		.asUnscaledValue().set(wMax);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMin", data)
-				.asUnscaledValue().set(wMin);
+		.asUnscaledValue().set(wMin);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMaxLogisch", data)
-				.asUnscaledValue().set(wMaL);
+		.asUnscaledValue().set(wMaL);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMinLogisch", data)
-				.asUnscaledValue().set(wMiL);
+		.asUnscaledValue().set(wMiL);
 		DUAUtensilien
 		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
-				.asUnscaledValue().set(impl);
+		.asUnscaledValue().set(impl);
 		DUAUtensilien
 		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
-				.asUnscaledValue().set(intp);
+		.asUnscaledValue().set(intp);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Index", data).asScaledValue()
-				.set(guete);
+		.set(guete);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Verfahren", data).asUnscaledValue()
-				.set(0);
+		.set(0);
 
 		return datensatz;
 	}
