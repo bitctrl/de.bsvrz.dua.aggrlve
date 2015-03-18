@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.aggrlve;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -177,8 +178,10 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>, Cloneab
 
 	@Override
 	public String toString() {
-		String s = "Datenzeit: " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(datenZeit))
-				+ " (" + datenZeit + ")";
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(
+				DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+
+		String s = "Datenzeit: " + dateFormat.format(new Date(datenZeit)) + " (" + datenZeit + ")";
 
 		s += "\nT: " + tT;
 		for (final AggregationsAttribut attribut : werte.keySet()) {

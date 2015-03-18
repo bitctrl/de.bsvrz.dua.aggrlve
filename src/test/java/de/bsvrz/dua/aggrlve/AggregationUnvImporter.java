@@ -51,7 +51,7 @@ public class AggregationUnvImporter extends CSVImporter {
 	/**
 	 * Hält aktuelle Daten des FS 1-3
 	 */
-	protected String ZEILE[];
+	protected String[] ZEILE;
 
 	/**
 	 * T
@@ -397,25 +397,25 @@ public class AggregationUnvImporter extends CSVImporter {
 
 		DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.Erfassung.NichtErfasst", data)
-				.asUnscaledValue().set(nErf);
+		.asUnscaledValue().set(nErf);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMax", data)
-				.asUnscaledValue().set(wMax);
+		.asUnscaledValue().set(wMax);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMin", data)
-				.asUnscaledValue().set(wMin);
+		.asUnscaledValue().set(wMin);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMaxLogisch", data)
-				.asUnscaledValue().set(wMaL);
+		.asUnscaledValue().set(wMaL);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMinLogisch", data)
-				.asUnscaledValue().set(wMiL);
+		.asUnscaledValue().set(wMiL);
 		DUAUtensilien
-		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
-				.asUnscaledValue().set(impl);
+				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
+		.asUnscaledValue().set(impl);
 		DUAUtensilien
-		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
-				.asUnscaledValue().set(intp);
+				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
+		.asUnscaledValue().set(intp);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Index", data).asScaledValue()
-				.set(guete);
+		.set(guete);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Verfahren", data).asUnscaledValue()
-				.set(0);
+		.set(0);
 
 		return datensatz;
 	}
