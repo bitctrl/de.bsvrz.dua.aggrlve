@@ -46,6 +46,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public final class VMqAggregator extends Thread {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/** globale Instanz des Aggregators. */
 	private static final VMqAggregator INSTANCE = new VMqAggregator();
 
@@ -152,7 +154,7 @@ public final class VMqAggregator extends Thread {
 
 			if (nextVmq != null) {
 				while (nextVmq.sendNextCompletedResult()) {
-					Debug.getLogger().finest("Daten publiziert");
+					LOGGER.finest("Daten publiziert");
 				}
 			}
 
@@ -161,7 +163,7 @@ public final class VMqAggregator extends Thread {
 					try {
 						locker.wait(30000);
 					} catch (final InterruptedException e) {
-						Debug.getLogger().warning(e.getLocalizedMessage());
+						LOGGER.warning(e.getLocalizedMessage());
 					}
 				}
 			}

@@ -55,6 +55,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public abstract class AbstraktAggregationsObjekt {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * die restlichen auszufuellenden Attribute der Attributgruppen
 	 * <code>atg.verkehrsDatenKurzZeitFs</code> bzw <code>atg.verkehrsDatenKurzZeitMq</code>, die
@@ -304,7 +306,7 @@ public abstract class AbstraktAggregationsObjekt {
 				}
 			}
 		} else {
-			Debug.getLogger().warning(
+			LOGGER.warning(
 					"Die Anzahl der benoetigten Intervalle sollte nicht kleiner 0 sein");
 		}
 
@@ -406,7 +408,7 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (final GueteException e) {
-				Debug.getLogger().error(
+				LOGGER.error(
 						"Guete von " + objekt + " fuer " + attribut
 						+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
@@ -474,7 +476,7 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (final GueteException e) {
-				Debug.getLogger().warning(
+				LOGGER.warning(
 						"Guete von " + objekt + " fuer " + attribut
 						+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();

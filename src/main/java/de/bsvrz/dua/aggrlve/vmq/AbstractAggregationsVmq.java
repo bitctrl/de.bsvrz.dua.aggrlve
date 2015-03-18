@@ -62,7 +62,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public abstract class AbstractAggregationsVmq implements ClientReceiverInterface,
 ClientSenderInterface {
 
-	private static Debug logger = Debug.getLogger();
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/** das VMQ-Objekt. */
 	private final SystemObject vmq;
@@ -146,7 +146,7 @@ ClientSenderInterface {
 							kbGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QB"),
 									new GWert(analyseDatum, "VKfz"));
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
+							LOGGER.error(
 									"Guete-Index fuer KB nicht berechenbar in " + analyseDatum, e);
 							e.printStackTrace();
 						}
@@ -235,7 +235,7 @@ ClientSenderInterface {
 							qbGuete = GueteVerfahren.summe(qPkwGuete,
 									GueteVerfahren.gewichte(qLkwGuete, fL));
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
+							LOGGER.error(
 									"Guete-Index fuer QB nicht berechenbar in " + analyseDatum, e);
 							e.printStackTrace();
 						}
@@ -331,8 +331,7 @@ ClientSenderInterface {
 									new GWert(analyseDatum, "Q" + attName), new GWert(analyseDatum,
 											"V" + attName));
 						} catch (final GueteException e) {
-							Debug.getLogger().error(
-									"Guete-Index fuer K" + attName + " nicht berechenbar", e);
+							LOGGER.error("Guete-Index fuer K" + attName + " nicht berechenbar", e);
 							e.printStackTrace();
 						}
 
@@ -379,8 +378,7 @@ ClientSenderInterface {
 					aLkwGuete = GueteVerfahren.quotient(new GWert(analyseDatum, "QLkw"), new GWert(
 							analyseDatum, "QKfz"));
 				} catch (final GueteException e) {
-					Debug.getLogger().error(
-							"Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e);
+					LOGGER.error("Guete-Index fuer ALkw nicht berechenbar in " + analyseDatum, e);
 					e.printStackTrace();
 				}
 
@@ -425,7 +423,7 @@ ClientSenderInterface {
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
-		Debug.getLogger().finest("Sendesteuerung wird nicht unterstützt");
+		LOGGER.finest("Sendesteuerung wird nicht unterstützt");
 	}
 
 	/**
@@ -488,7 +486,7 @@ ClientSenderInterface {
 			try {
 				connection.subscribeSender(this, vmq, dataDescription, SenderRole.source());
 			} catch (final OneSubscriptionPerSendData e) {
-				Debug.getLogger().error(vmq + ": " + e.getLocalizedMessage());
+				LOGGER.error(vmq + ": " + e.getLocalizedMessage());
 			}
 		}
 	}
@@ -496,7 +494,7 @@ ClientSenderInterface {
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {
-		Debug.getLogger().finest("Sendesteuerung wird nicht unterstützt");
+		LOGGER.finest("Sendesteuerung wird nicht unterstützt");
 		return false;
 	}
 
@@ -542,13 +540,12 @@ ClientSenderInterface {
 					result = true;
 					letztesErgebnis = resultData;
 					try {
-						Debug.getLogger()
-						.finer(vmq + "(" + aspect + ") Sende Daten: " + resultData);
+						LOGGER.finer(vmq + "(" + aspect + ") Sende Daten: " + resultData);
 						dav.sendData(resultData);
 					} catch (final DataNotSubscribedException ex) {
-						logger.warning("Ein Datum konnte nicht versendet werden: " + resultData, ex);
+						LOGGER.warning("Ein Datum konnte nicht versendet werden: " + resultData, ex);
 					} catch (final SendSubscriptionNotConfirmed ex) {
-						logger.warning("Ein Datum konnte nicht versendet werden: " + resultData, ex);
+						LOGGER.warning("Ein Datum konnte nicht versendet werden: " + resultData, ex);
 					}
 				}
 				clearData(currentTime, aspect);

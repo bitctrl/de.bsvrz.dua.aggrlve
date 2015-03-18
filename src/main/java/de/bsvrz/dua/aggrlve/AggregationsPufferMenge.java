@@ -47,6 +47,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class AggregationsPufferMenge {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Alle Aspekte, deren Daten in diesem Objekt gespeichert werden in aufsteigender Reihenfolge.
 	 */
@@ -108,7 +110,7 @@ public class AggregationsPufferMenge {
 		if (puffer != null) {
 			puffer.aktualisiere(resultat);
 		} else {
-			Debug.getLogger().fine(
+			LOGGER.fine(
 					"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt "
 					+ resultat.getDataDescription().getAspect() + " existiert nicht");
 		}

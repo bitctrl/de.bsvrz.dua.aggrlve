@@ -75,6 +75,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete implements
 		IObjektWeckerListener {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	private static final int OFFSET_MIN = 5;
 
 	private static final int OFFSET_MAX = 55;
@@ -166,12 +168,12 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 		}
 		if (berechnungsOffset < OFFSET_MIN) {
 			berechnungsOffset = OFFSET_MIN;
-			Debug.getLogger().warning(
+			LOGGER.warning(
 					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
 							+ "] liegen! Korrigiere auf " + OFFSET_MIN + "s.");
 		} else if (berechnungsOffset > OFFSET_MAX) {
 			berechnungsOffset = OFFSET_MAX;
-			Debug.getLogger().warning(
+			LOGGER.warning(
 					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
 							+ "] liegen! Korrigiere auf " + OFFSET_MAX + "s.");
 		}
@@ -259,7 +261,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 	 */
 	public void testStart(final ClientDavInterface dav, final String gueteFaktor) throws Exception {
 		AggregationLVE.zeitRaffer = true;
-		Debug.getLogger().config("Applikation fuer Testzwecke gestartet");
+		LOGGER.config("Applikation fuer Testzwecke gestartet");
 		komArgumente = new ArrayList<String>();
 		komArgumente.add("-KonfigurationsBereichsPid=" + "kb.duaTestObjekte");
 		komArgumente.add("-gueteFaktor=" + gueteFaktor);

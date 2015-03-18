@@ -48,6 +48,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 
+	private static final Debug LOGGER = Debug.getLogger();
 	/**
 	 * der MQ zur Bestimmung der Geschwindigkeit.
 	 *
@@ -134,7 +135,7 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 				new MesswertUnskaliert(attName, ersetzung.getData())
 				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
-				Debug.getLogger().error(
+				LOGGER.error(
 						"Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
 								+ attName + " ermittelt werden");
 				final MesswertUnskaliert mw = new MesswertUnskaliert(attName);

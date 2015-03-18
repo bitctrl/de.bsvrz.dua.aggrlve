@@ -60,6 +60,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt implements
 ClientReceiverInterface {
 
+	private static final Debug LOGGER = Debug.getLogger();
 	/**
 	 * der hier betrachtete Fahrstreifen.
 	 */
@@ -186,7 +187,7 @@ ClientReceiverInterface {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (final GueteException e) {
-				Debug.getLogger().error(
+				LOGGER.error(
 						"Guete von " + objekt + " fuer " + attribut
 								+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
@@ -217,7 +218,7 @@ ClientReceiverInterface {
 
 	@Override
 	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der FS " + fs + " wird nicht mehr aggregiert");
+		LOGGER.warning("Der FS " + fs + " wird nicht mehr aggregiert");
 		super.finalize();
 	}
 

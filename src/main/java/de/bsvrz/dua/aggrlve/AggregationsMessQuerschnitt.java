@@ -62,6 +62,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/** der hier betrachtete Messquerschnitt. */
 	private final MessQuerschnitt mq;
 
@@ -150,7 +152,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 						}
 					}
 				} else {
-					Debug.getLogger()
+					LOGGER
 							.warning(
 									intervall
 											+ " fuer "
@@ -275,7 +277,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					try {
 						gueteWerte.add(GueteVerfahren.summe(gueteWerteInFs.toArray(new GWert[0])));
 					} catch (final GueteException e) {
-						Debug.getLogger().error(
+						LOGGER.error(
 								"Guete von " + fahrStreifen.getObjekt() + " fuer " + attribut
 										+ " konnte nicht berechnet werden", e);
 						e.printStackTrace();
@@ -319,7 +321,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 				try {
 					exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 				} catch (final GueteException e) {
-					Debug.getLogger().error(
+					LOGGER.error(
 							"Guete von " + objekt + " fuer " + attribut
 									+ " konnte nicht berechnet werden", e);
 					e.printStackTrace();
@@ -332,7 +334,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 
 	@Override
 	protected void finalize() throws Throwable {
-		Debug.getLogger().warning("Der MQ " + mq + " wird nicht mehr aggregiert");
+		LOGGER.warning("Der MQ " + mq + " wird nicht mehr aggregiert");
 		super.finalize();
 	}
 

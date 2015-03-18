@@ -45,6 +45,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
+	private static final Debug LOGGER = Debug.getLogger();
 	/** Konstante für die MQ-Lage: DAVOR. */
 	private static final int VOR = 0;
 	/** Konstante für die MQ-Lage: MITTE. */
@@ -162,11 +163,10 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-				.kopiereInhaltNachModifiziereIndex(analyseDatum);
+						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
-				Debug.getLogger().error(
-						"Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
-								+ attName + " ermittelt werden");
+				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
+						+ attName + " ermittelt werden");
 				final MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
