@@ -1,6 +1,6 @@
-/**
- * Segment 4 Datenübernahme und Aufbereitung (DUA)
- * Copyright (C) 2007 BitCtrl Systems GmbH
+/*
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -326,25 +326,25 @@ public class AnalysewerteImporter extends CSVImporter {
 
 		DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.Erfassung.NichtErfasst", data)
-		.asUnscaledValue().set(nErf);
+				.asUnscaledValue().set(nErf);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMax", data)
-		.asUnscaledValue().set(wMax);
+				.asUnscaledValue().set(wMax);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMin", data)
-		.asUnscaledValue().set(wMin);
+				.asUnscaledValue().set(wMin);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMaxLogisch", data)
-		.asUnscaledValue().set(wMaL);
+				.asUnscaledValue().set(wMaL);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMinLogisch", data)
-		.asUnscaledValue().set(wMiL);
+				.asUnscaledValue().set(wMiL);
 		DUAUtensilien
-				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
-		.asUnscaledValue().set(impl);
+		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
+				.asUnscaledValue().set(impl);
 		DUAUtensilien
-				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
-		.asUnscaledValue().set(intp);
+		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
+				.asUnscaledValue().set(intp);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Index", data).asScaledValue()
-		.set(guete);
+				.set(guete);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Verfahren", data).asUnscaledValue()
-		.set(0);
+				.set(0);
 
 		return datensatz;
 	}

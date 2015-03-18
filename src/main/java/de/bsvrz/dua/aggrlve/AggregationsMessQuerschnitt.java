@@ -1,6 +1,6 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -151,12 +151,12 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					}
 				} else {
 					Debug.getLogger()
-					.warning(
-							intervall
-							+ " fuer "
-							+ objekt
-							+ " kann nicht berechnet werden, da keine Basisdaten (Intervall: "
-							+ intervall.getVorgaenger() + ") zur Verfuegung stehen");
+							.warning(
+									intervall
+											+ " fuer "
+											+ objekt
+											+ " kann nicht berechnet werden, da keine Basisdaten (Intervall: "
+											+ intervall.getVorgaenger() + ") zur Verfuegung stehen");
 				}
 			} else {
 				if (mqDaten.isEmpty()) {
@@ -277,7 +277,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					} catch (final GueteException e) {
 						Debug.getLogger().error(
 								"Guete von " + fahrStreifen.getObjekt() + " fuer " + attribut
-								+ " konnte nicht berechnet werden", e);
+										+ " konnte nicht berechnet werden", e);
 						e.printStackTrace();
 					}
 				}
@@ -321,7 +321,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 				} catch (final GueteException e) {
 					Debug.getLogger().error(
 							"Guete von " + objekt + " fuer " + attribut
-							+ " konnte nicht berechnet werden", e);
+									+ " konnte nicht berechnet werden", e);
 					e.printStackTrace();
 				}
 			}

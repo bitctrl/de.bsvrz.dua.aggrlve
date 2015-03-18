@@ -1,6 +1,6 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -58,7 +58,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DTVAggregationsPuffer extends AggregationsPuffer implements
-ArchiveAvailabilityListener {
+		ArchiveAvailabilityListener {
 
 	/**
 	 * Standardkonstruktor.
@@ -122,8 +122,8 @@ ArchiveAvailabilityListener {
 
 				final ArchiveDataSpecification archivDatenBeschreibung = new ArchiveDataSpecification(
 						zeit, new ArchiveDataKindCombination(ArchiveDataKind.ONLINE),
-								ArchiveOrder.BY_DATA_TIME, ArchiveRequestOption.NORMAL,
-								aggregationsIntervall.getDatenBeschreibung(false), objekt);
+						ArchiveOrder.BY_DATA_TIME, ArchiveRequestOption.NORMAL,
+						aggregationsIntervall.getDatenBeschreibung(false), objekt);
 
 				try {
 					final ArchiveDataQueryResult result = archiv.request(

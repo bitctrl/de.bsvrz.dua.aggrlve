@@ -1,3 +1,28 @@
+/*
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
 package de.bsvrz.dua.aggrlve.vmq;
 
 import java.util.HashMap;
@@ -30,12 +55,12 @@ import de.bsvrz.sys.funclib.debug.Debug;
 /**
  * Abstrakte Implementierung zur Verwaltung der Daten eines virtuellen Messquerschnitts, dessen
  * Aggregationsdaten gebildet werden sollen.
- * 
+ *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  * @version $Id$
  */
 public abstract class AbstractAggregationsVmq implements ClientReceiverInterface,
-		ClientSenderInterface {
+ClientSenderInterface {
 
 	private static Debug logger = Debug.getLogger();
 
@@ -59,7 +84,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * Konstruktor, erzeugt eine Instanz für das übergebene MQ-Objekt.
-	 * 
+	 *
 	 * @param obj
 	 *            das Objekt
 	 */
@@ -69,7 +94,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * Berechnet die Bemessungsdichte (<code>KB</code>) analog SE-02.00.00.00.00-AFo-4.0 S.120f.
-	 * 
+	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
@@ -145,7 +170,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	/**
 	 * Berechnet die Bemessungsverkehrsstaerke (<code>QB</code>) analog SE-02.00.00.00.00-AFo-4.0
 	 * S.120f.
-	 * 
+	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
@@ -237,7 +262,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * Berechnet die Verkehrsstärken (<code>Kxxx</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f.
-	 * 
+	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 * @param attName
@@ -329,7 +354,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * Berechnet (<code>ALkw</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f.
-	 * 
+	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
 	 */
@@ -376,7 +401,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	/**
 	 * berechnet den zusammengefassten Datensatz für einen virtuellen MQ aus den übergebenen
 	 * aktuellen Daten.
-	 * 
+	 *
 	 * @param dataList
 	 *            die aktuellen Daten
 	 * @return der Datensatz oder null, wenn keiner gebildet werden konnte
@@ -385,7 +410,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * löscht alle zwischengespeicherten Daten die nicht jünger als der übergebene Zeitpunkt sind.
-	 * 
+	 *
 	 * @param dataTime
 	 *            der Zeitpunkt
 	 * @param aspect
@@ -405,7 +430,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * liefert die verwendete Datenverteilerverbindung.
-	 * 
+	 *
 	 * @return die Verbindung
 	 */
 	protected ClientDavInterface getDav() {
@@ -414,7 +439,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * liefert das letzte publizierte Ergebnis.
-	 * 
+	 *
 	 * @return das Ergebnis oder <code>null</code>, wenn noch keines publiziert wurde
 	 */
 	protected ResultData getLetztesErgebnis() {
@@ -423,7 +448,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * liefert die Bestandteile des virtuellen MQ.
-	 * 
+	 *
 	 * @return die Betsandteile
 	 */
 	protected Map<SystemObject, VmqDataPart> getMqParts() {
@@ -432,7 +457,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * liefert das VMQ-Objekt.
-	 * 
+	 *
 	 * @return das Objekt
 	 */
 	public SystemObject getVmq() {
@@ -442,7 +467,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	/**
 	 * initialisiert die Datenverteilerverbindung (Anmeldung der erforderlichen
 	 * Datenspezifikationen.
-	 * 
+	 *
 	 * @param connection
 	 *            die Datenverteilerverbindung
 	 */
@@ -477,7 +502,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 
 	/**
 	 * Ermittelt zu versendende Daten und versendet diese gegebenenfalls.
-	 * 
+	 *
 	 * @return das Ergebnis, <code>true</code>, wenn Daten versendet wurden
 	 */
 	public boolean sendNextCompletedResult() {
@@ -518,7 +543,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 					letztesErgebnis = resultData;
 					try {
 						Debug.getLogger()
-								.finer(vmq + "(" + aspect + ") Sende Daten: " + resultData);
+						.finer(vmq + "(" + aspect + ") Sende Daten: " + resultData);
 						dav.sendData(resultData);
 					} catch (final DataNotSubscribedException ex) {
 						logger.warning("Ein Datum konnte nicht versendet werden: " + resultData, ex);

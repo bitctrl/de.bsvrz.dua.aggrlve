@@ -1,6 +1,6 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -48,8 +48,8 @@ public final class Verbindung {
 	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] { "-datenverteiler=localhost:8083",
-			"-benutzer=Tester", "-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
-			"-debugLevelFileText=WARNING" };
+		"-benutzer=Tester", "-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
+	"-debugLevelFileText=WARNING" };
 
 	// /**
 	// * Verbindungsdaten fuer Eclipse

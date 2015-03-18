@@ -1,6 +1,6 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -65,7 +65,7 @@ public class AggregationsIntervallTest {
 		final ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 		AggregationsIntervall.initialisiere(dav);
 		final AggregationsIntervall[] instanzen = new AggregationsIntervall[AggregationsIntervall
-		                                                                    .getInstanzen().size()];
+				.getInstanzen().size()];
 		instanzen[0] = AggregationsIntervall.aGG1MINUTE;
 		instanzen[1] = AggregationsIntervall.aGG5MINUTE;
 		instanzen[2] = AggregationsIntervall.aGG15MINUTE;

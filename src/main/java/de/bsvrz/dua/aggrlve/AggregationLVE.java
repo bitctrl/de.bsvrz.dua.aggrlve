@@ -1,6 +1,6 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -73,7 +73,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete implements
-IObjektWeckerListener {
+		IObjektWeckerListener {
 
 	private static final int OFFSET_MIN = 5;
 
@@ -168,12 +168,12 @@ IObjektWeckerListener {
 			berechnungsOffset = OFFSET_MIN;
 			Debug.getLogger().warning(
 					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
-					+ "] liegen! Korrigiere auf " + OFFSET_MIN + "s.");
+							+ "] liegen! Korrigiere auf " + OFFSET_MIN + "s.");
 		} else if (berechnungsOffset > OFFSET_MAX) {
 			berechnungsOffset = OFFSET_MAX;
 			Debug.getLogger().warning(
 					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
-					+ "] liegen! Korrigiere auf " + OFFSET_MAX + "s.");
+							+ "] liegen! Korrigiere auf " + OFFSET_MAX + "s.");
 		}
 
 		final ArgumentList argumentList = new ArgumentList(

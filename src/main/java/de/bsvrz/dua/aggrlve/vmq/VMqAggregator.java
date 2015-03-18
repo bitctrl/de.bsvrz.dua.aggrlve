@@ -1,3 +1,28 @@
+/*
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
 package de.bsvrz.dua.aggrlve.vmq;
 
 import java.util.Collection;
@@ -13,9 +38,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Managerklasse, in der virtuelle Messquerschnitte verwaltet werden, dren
- * Aggregationswerte aus den beteiligten realen MQ kombiniert werden.
- * 
+ * Managerklasse, in der virtuelle Messquerschnitte verwaltet werden, dren Aggregationswerte aus den
+ * beteiligten realen MQ kombiniert werden.
+ *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  * @version $Id$
  */
@@ -26,7 +51,7 @@ public final class VMqAggregator extends Thread {
 
 	/**
 	 * liefert die globale Instanz des Aggregators.
-	 * 
+	 *
 	 * @return die Instanz
 	 */
 	public static VMqAggregator getInstance() {
@@ -55,7 +80,7 @@ public final class VMqAggregator extends Thread {
 
 	/**
 	 * liefert die Attributgruppe der Quelldaten.
-	 * 
+	 *
 	 * @return die Attributgruppe
 	 */
 	public AttributeGroup getSrcAtg() {
@@ -64,7 +89,7 @@ public final class VMqAggregator extends Thread {
 
 	/**
 	 * liefert die Menge der behandelten Aspekte.
-	 * 
+	 *
 	 * @return die Menge
 	 */
 	public Set<Aspect> getSupportedAspects() {
@@ -73,18 +98,17 @@ public final class VMqAggregator extends Thread {
 
 	/**
 	 * initialisiert den Aggregator.
-	 * 
-	 * Für alle virtuellen Messquerschnitte erfolgt eine Anmeldung auf die
-	 * Aggregationsdaten der beteiligten MQ. Die Daten werden von den
-	 * entsprechenden Vertreterobjekten empfangen und zusammengefasst.
-	 * 
+	 *
+	 * Für alle virtuellen Messquerschnitte erfolgt eine Anmeldung auf die Aggregationsdaten der
+	 * beteiligten MQ. Die Daten werden von den entsprechenden Vertreterobjekten empfangen und
+	 * zusammengefasst.
+	 *
 	 * @param connection
 	 *            die verwendete Datenverteilerverbindung
 	 */
 	public void init(final ClientDavInterface connection) {
 
-		srcAtg = connection.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_MQ);
+		srcAtg = connection.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ);
 		final Collection<Aspect> aspects = srcAtg.getAspects();
 		for (final Aspect asp : aspects) {
 			if (asp.getPid().startsWith("asp.agre")) {
@@ -94,8 +118,7 @@ public final class VMqAggregator extends Thread {
 
 		for (final SystemObject obj : connection.getDataModel()
 				.getType(DUAKonstanten.TYP_MQ_VIRTUELL).getObjects()) {
-			final AbstractAggregationsVmq vmq = AggregationsVmqFactory
-					.create(obj);
+			final AbstractAggregationsVmq vmq = AggregationsVmqFactory.create(obj);
 			if (vmq != null) {
 				vmq.init(connection);
 			}
@@ -103,9 +126,8 @@ public final class VMqAggregator extends Thread {
 	}
 
 	/**
-	 * markiert einen VMQ zur potentiellen Ergebnis-Publikation in der
-	 * Auftragswarteschlange.
-	 * 
+	 * markiert einen VMQ zur potentiellen Ergebnis-Publikation in der Auftragswarteschlange.
+	 *
 	 * @param aggregationsVmq
 	 *            der MQ
 	 */
@@ -121,8 +143,7 @@ public final class VMqAggregator extends Thread {
 		while (true) {
 			AbstractAggregationsVmq nextVmq = null;
 			synchronized (locker) {
-				final Iterator<AbstractAggregationsVmq> iterator = reqSet
-						.iterator();
+				final Iterator<AbstractAggregationsVmq> iterator = reqSet.iterator();
 				if (iterator.hasNext()) {
 					nextVmq = iterator.next();
 					reqSet.remove(nextVmq);

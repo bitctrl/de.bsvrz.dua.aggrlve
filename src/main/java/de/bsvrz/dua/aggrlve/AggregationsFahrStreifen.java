@@ -1,6 +1,6 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -58,7 +58,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt implements
-		ClientReceiverInterface {
+ClientReceiverInterface {
 
 	/**
 	 * der hier betrachtete Fahrstreifen.
@@ -97,7 +97,7 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt impleme
 		dav.subscribeReceiver(this, fs.getSystemObject(),
 				new DataDescription(dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 						dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)),
-								ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt impleme
 			} catch (final GueteException e) {
 				Debug.getLogger().error(
 						"Guete von " + objekt + " fuer " + attribut
-						+ " konnte nicht berechnet werden", e);
+								+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
 			}
 		}

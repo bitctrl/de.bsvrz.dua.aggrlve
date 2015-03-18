@@ -1,6 +1,6 @@
-/**
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.7 Datenaufbereitung LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+/*
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -233,7 +233,7 @@ public class QWert {
 					|| summand2.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(summand1.getWert().getName());
 				ergebnis.getWert()
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((summand1.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (summand2.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 				ergebnis = new QWert(summand1.getWert().getName());
@@ -262,7 +262,7 @@ public class QWert {
 
 					final GWert gueteGesamt = GueteVerfahren.summe(
 							GueteVerfahren.gewichte(gueteSummand1, Math.abs(summand1.getAnteil())),
-									GueteVerfahren.gewichte(gueteSummand2, Math.abs(summand2.getAnteil())));
+							GueteVerfahren.gewichte(gueteSummand2, Math.abs(summand2.getAnteil())));
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (final GueteException e) {
@@ -298,7 +298,7 @@ public class QWert {
 					|| subtrahend.getWert().isFehlerhaftBzwImplausibel()) {
 				ergebnis = new QWert(minuend.getWert().getName());
 				ergebnis.getWert()
-						.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else if ((minuend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)
 					|| (subtrahend.getWert().getWertUnskaliert() == DUAKonstanten.NICHT_ERMITTELBAR)) {
 				ergebnis = new QWert(minuend.getWert().getName());
@@ -313,9 +313,9 @@ public class QWert {
 				ergebnis.getWert().setWertUnskaliert(Math.round(ergebnisSkaliert));
 
 				ergebnis.getWert()
-						.setInterpoliert(
-								minuend.getWert().isInterpoliert()
-										|| subtrahend.getWert().isInterpoliert());
+				.setInterpoliert(
+						minuend.getWert().isInterpoliert()
+						|| subtrahend.getWert().isInterpoliert());
 
 				/**
 				 * Gueteberechnung
@@ -329,7 +329,7 @@ public class QWert {
 
 					final GWert gueteGesamt = GueteVerfahren.differenz(GueteVerfahren.gewichte(
 							gueteSummand1, Math.abs(minuend.getAnteil())), GueteVerfahren.gewichte(
-							gueteSummand2, Math.abs(subtrahend.getAnteil())));
+									gueteSummand2, Math.abs(subtrahend.getAnteil())));
 					ergebnis.getWert().getGueteIndex().setWert(gueteGesamt.getIndexUnskaliert());
 					ergebnis.getWert().setVerfahren(gueteGesamt.getVerfahren().getCode());
 				} catch (final GueteException e) {

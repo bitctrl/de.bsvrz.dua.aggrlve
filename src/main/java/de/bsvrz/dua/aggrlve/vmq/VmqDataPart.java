@@ -1,3 +1,28 @@
+/*
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
 package de.bsvrz.dua.aggrlve.vmq;
 
 import java.util.HashMap;
@@ -10,7 +35,7 @@ import de.bsvrz.dav.daf.main.config.Aspect;
 
 /**
  * Klasse zum Speichern der Daten eines MQ, der ein Bestandteil eines VMQ ist.
- * 
+ *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  * @version $Id$
  */
@@ -23,7 +48,7 @@ public class VmqDataPart {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param anteil
 	 *            der Anteil des MQ am VMQ
 	 */
@@ -38,7 +63,7 @@ public class VmqDataPart {
 
 	/**
 	 * fügt einen Ergebnisdatensatz hinzu.
-	 * 
+	 *
 	 * @param result
 	 *            der Datensatz
 	 */
@@ -51,7 +76,7 @@ public class VmqDataPart {
 					map = new TreeMap<Long, ResultData>();
 					dataList.put(aspect, map);
 				}
-				if(map.size() > 3) {
+				if (map.size() > 3) {
 					map.clear();
 				}
 				map.put(result.getDataTime(), result);
@@ -60,9 +85,8 @@ public class VmqDataPart {
 	}
 
 	/**
-	 * liefert den nächsten verfügbaren noch nicht verarbeiteten Wert ( nach
-	 * Zeit geordnet).
-	 * 
+	 * liefert den nächsten verfügbaren noch nicht verarbeiteten Wert ( nach Zeit geordnet).
+	 *
 	 * @param aspect
 	 *            der Aspekt für den ein Wert bestimmt werden soll
 	 * @return der Wert oder <code>null</code>
@@ -79,9 +103,9 @@ public class VmqDataPart {
 	}
 
 	/**
-	 * löscht für den angegebenen Aspekte alle Werte, die nicht jünger als der
-	 * angebene Zeitstempel sind.
-	 * 
+	 * löscht für den angegebenen Aspekte alle Werte, die nicht jünger als der angebene Zeitstempel
+	 * sind.
+	 *
 	 * @param dataTime
 	 *            der Zeitstempel
 	 * @param aspect
@@ -106,7 +130,7 @@ public class VmqDataPart {
 
 	/**
 	 * liefert den Anteil des MQ am VMQ.
-	 * 
+	 *
 	 * @return der Anteil
 	 */
 	public double getAnteil() {

@@ -1,3 +1,28 @@
+/*
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
 package de.bsvrz.dua.aggrlve.vmq;
 
 import java.util.Map;
@@ -14,7 +39,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Repräsentation eines virtuellen MQ im Standardverfahren zur Berechnung der Aggregationswerte.
- * 
+ *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  * @version $Id: StandardAggregationsVmq.java 36992 2012-09-13 13:38:37Z peuker$
  */
@@ -45,7 +70,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	/**
 	 * Konstruktor, erzeugt eine Instanz der Klasse für das übergebene Systemobjekt mit den
 	 * angegebenen Konfigurationsdaten.
-	 * 
+	 *
 	 * @param obj
 	 *            das MQ-Objekt
 	 * @param data
@@ -110,14 +135,14 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	/**
 	 * Diese Methode geht davon aus, dass keine weiteren Werte zur Berechnung des Analysedatums
 	 * eintreffen werden und berechnet mit allen im Moment gepufferten Daten das Analysedatum.
-	 * 
+	 *
 	 * @param dataList
 	 *            die Liste mi den aktuellen Daten
 	 * @param time
 	 *            der Zeitpunkt für den Zieldatensatz
 	 * @param desc
 	 *            die Datenbeschreibung
-	 * 
+	 *
 	 * @return ein Analysedatum
 	 */
 	private synchronized ResultData getErgebnisAufBasisAktuellerDaten(final DataDescription desc,
@@ -137,7 +162,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-						.kopiereInhaltNachModifiziereIndex(analyseDatum);
+				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				Debug.getLogger().error(
 						"Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
@@ -174,7 +199,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	/**
 	 * Erfragt das Ersatzdatum für diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und <code>VDelta</code>.
-	 * 
+	 *
 	 * @param attName
 	 *            der Name des Attributs, für das ein Ersatzdatum gefunden werden soll
 	 * @param dataList
@@ -244,7 +269,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	/**
 	 * liefert für den übergebenen MQ den Datensatz aus der aktuellen Datenliste. Wenn keine
 	 * entsprechenden Daten verfügbar sind wird <code>null</code> geliefert.
-	 * 
+	 *
 	 * @param dataList
 	 *            die Liste mit den aktuellen Daten
 	 * @param mq
@@ -263,7 +288,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	/**
 	 * liefert einen QWert für das übergebene Attribut und den defnierten MQ aus den aktuellen
 	 * Daten. Wenn kein Wert ermittelt werden kann, wird <code>null</code> geliefert.
-	 * 
+	 *
 	 * @param dataList
 	 *            die Liste mit den aktuellen Daten
 	 * @param mq
@@ -284,7 +309,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	/**
 	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>QKfz, QLkw</code> und <code>QPkw</code>.
-	 * 
+	 *
 	 * @param analyseDatum
 	 *            das Zeil für den Ergebniswert
 	 * @param attName
@@ -411,7 +436,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	 * Erfragt, ob das übergebene Datum im Sinne der Wertersetzung brauchbar ist. Dies ist dann der
 	 * Fall, wenn das Datum Nutzdaten enthält und dessen Datenzeit echt älter als die des letzten
 	 * publizierten Analysedatums ist.
-	 * 
+	 *
 	 * @param datum
 	 *            ein Analysedatum eines MQ
 	 * @return ob das übergebene Datum im Sinne der Wertersetzung brauchbar ist
@@ -431,7 +456,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	/**
 	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte >= 0
 	 * hat).
-	 * 
+	 *
 	 * @param datum
 	 *            ein Analysedatum
 	 * @param attName

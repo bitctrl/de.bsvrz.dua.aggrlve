@@ -1,6 +1,6 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -159,37 +159,37 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 		AggregationsIntervall.aGG1MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-				"asp.agregation1Minute"), Constants.MILLIS_PER_MINUTE, 5);
+						"asp.agregation1Minute"), Constants.MILLIS_PER_MINUTE, 5);
 
 		AggregationsIntervall.aGG5MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-				"asp.agregation5Minuten"), 5 * Constants.MILLIS_PER_MINUTE, 3);
+						"asp.agregation5Minuten"), 5 * Constants.MILLIS_PER_MINUTE, 3);
 		AggregationsIntervall.aGG15MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-				"asp.agregation15Minuten"), 15 * Constants.MILLIS_PER_MINUTE, 2);
+						"asp.agregation15Minuten"), 15 * Constants.MILLIS_PER_MINUTE, 2);
 		AggregationsIntervall.aGG30MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-				"asp.agregation30Minuten"), 30 * Constants.MILLIS_PER_MINUTE, 2);
+						"asp.agregation30Minuten"), 30 * Constants.MILLIS_PER_MINUTE, 2);
 		AggregationsIntervall.aGG60MINUTE = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-				"asp.agregation60Minuten"), 60 * Constants.MILLIS_PER_MINUTE, 40);
+						"asp.agregation60Minuten"), 60 * Constants.MILLIS_PER_MINUTE, 40);
 
 		AggregationsIntervall.aGGDTVTAG = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvTag"),
-				60 * 24 * Constants.MILLIS_PER_MINUTE, 50);
+						DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvTag"),
+						60 * 24 * Constants.MILLIS_PER_MINUTE, 50);
 		AggregationsIntervall.aGGDTVMONAT = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvMonat"),
-				61 * 24 * Constants.MILLIS_PER_MINUTE, 15);
+						DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvMonat"),
+						61 * 24 * Constants.MILLIS_PER_MINUTE, 15);
 		AggregationsIntervall.aGGDTVJAHR = new AggregationsIntervall(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvJahr"),
-				62 * 24 * Constants.MILLIS_PER_MINUTE, 0);
+						DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvJahr"),
+						62 * 24 * Constants.MILLIS_PER_MINUTE, 0);
 	}
 
 	/**
