@@ -33,7 +33,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Factory zum Anlegen von Instanzen für die Verwaltung der Aggregationsdaten von virtuellen MQ.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public final class AggregationsVmqFactory {
 

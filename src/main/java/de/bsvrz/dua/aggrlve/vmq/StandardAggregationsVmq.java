@@ -41,7 +41,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Repräsentation eines virtuellen MQ im Standardverfahren zur Berechnung der Aggregationswerte.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id: StandardAggregationsVmq.java 36992 2012-09-13 13:38:37Z peuker$
  */
 public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
@@ -163,7 +162,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-						.kopiereInhaltNachModifiziereIndex(analyseDatum);
+				.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
 						+ attName + " ermittelt werden");

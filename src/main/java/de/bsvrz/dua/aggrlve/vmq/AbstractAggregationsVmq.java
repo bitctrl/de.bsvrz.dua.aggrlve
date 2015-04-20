@@ -57,10 +57,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Aggregationsdaten gebildet werden sollen.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public abstract class AbstractAggregationsVmq implements ClientReceiverInterface,
-ClientSenderInterface {
+		ClientSenderInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
