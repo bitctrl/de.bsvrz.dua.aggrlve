@@ -162,7 +162,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 			if (ersetzung != null) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-				.kopiereInhaltNachModifiziereIndex(analyseDatum);
+						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
 				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
 						+ attName + " ermittelt werden");
@@ -453,7 +453,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte >= 0
+	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte &gt;= 0
 	 * hat).
 	 *
 	 * @param datum
