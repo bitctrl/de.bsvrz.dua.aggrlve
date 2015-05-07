@@ -38,8 +38,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein
  *
  * @author BitCtrl Systems GmbH, Görlitz
- *
- * @verison $Id$
  */
 public class AnalysewerteImporter extends CSVImporter {
 
@@ -106,8 +104,8 @@ public class AnalysewerteImporter extends CSVImporter {
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getMQAnalyseDatensatz() {
-		Data datensatz = dav.createData(dav.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitMq"));
+		Data datensatz = dav
+				.createData(dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"));
 
 		if (datensatz != null) {
 			if (zeile != null) {
@@ -185,8 +183,8 @@ public class AnalysewerteImporter extends CSVImporter {
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getFSAnalyseDatensatz(final int fahrStreifen) {
-		Data datensatz = dav.createData(dav.getDataModel().getAttributeGroup(
-				"atg.verkehrsDatenKurzZeitIntervall"));
+		Data datensatz = dav.createData(
+				dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall"));
 
 		final int fsMulti = fahrStreifen - 1;
 
@@ -326,25 +324,24 @@ public class AnalysewerteImporter extends CSVImporter {
 
 		DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.Erfassung.NichtErfasst", data)
-				.asUnscaledValue().set(nErf);
+		.asUnscaledValue().set(nErf);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMax", data)
-				.asUnscaledValue().set(wMax);
+		.asUnscaledValue().set(wMax);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMin", data)
-				.asUnscaledValue().set(wMin);
+		.asUnscaledValue().set(wMin);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMaxLogisch", data)
-				.asUnscaledValue().set(wMaL);
+		.asUnscaledValue().set(wMaL);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMinLogisch", data)
-				.asUnscaledValue().set(wMiL);
+		.asUnscaledValue().set(wMiL);
+		DUAUtensilien.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
+		.asUnscaledValue().set(impl);
 		DUAUtensilien
-		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
-				.asUnscaledValue().set(impl);
-		DUAUtensilien
-		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
-				.asUnscaledValue().set(intp);
+				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
+		.asUnscaledValue().set(intp);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Index", data).asScaledValue()
-				.set(guete);
+		.set(guete);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Verfahren", data).asUnscaledValue()
-				.set(0);
+		.set(0);
 
 		return datensatz;
 	}
