@@ -160,7 +160,7 @@ public class QWert {
 		ergebnis.getWert().setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 
 		double ergebnisSkaliertBisJetzt = 0;
-		final List<GWert> gueteListe = new ArrayList<GWert>();
+		final List<GWert> gueteListe = new ArrayList<>();
 		boolean interpoliert = false;
 
 		for (final QWert summand : summanden) {

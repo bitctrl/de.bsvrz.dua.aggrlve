@@ -44,8 +44,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * Konsolenausgabe nachgeprueft werden).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 @Ignore("Testsystemverbindung prüfen")
 public class AggregationsIntervallTest {
@@ -64,7 +62,7 @@ public class AggregationsIntervallTest {
 		final ClientDavInterface dav = DAVTest.getDav(Verbindung.getConData());
 		AggregationsIntervall.initialisiere(dav);
 		final AggregationsIntervall[] instanzen = new AggregationsIntervall[AggregationsIntervall
-				.getInstanzen().size()];
+		                                                                    .getInstanzen().size()];
 		instanzen[0] = AggregationsIntervall.aGG1MINUTE;
 		instanzen[1] = AggregationsIntervall.aGG5MINUTE;
 		instanzen[2] = AggregationsIntervall.aGG15MINUTE;
@@ -92,8 +90,10 @@ public class AggregationsIntervallTest {
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 
-			for (long zeitpunkt = cal.getTimeInMillis() + (30 * Constants.MILLIS_PER_SECOND); zeitpunkt < (cal
-					.getTimeInMillis() + (Constants.MILLIS_PER_HOUR * 2)); zeitpunkt += Constants.MILLIS_PER_MINUTE) {
+			for (long zeitpunkt = cal.getTimeInMillis()
+					+ (30 * Constants.MILLIS_PER_SECOND); zeitpunkt < (cal.getTimeInMillis()
+							+ (Constants.MILLIS_PER_HOUR
+									* 2)); zeitpunkt += Constants.MILLIS_PER_MINUTE) {
 				if (intervall.isAggregationErforderlich(zeitpunkt)) {
 					// System.out
 					// .println(DUAKonstanten.ZEIT_FORMAT_GENAU
@@ -119,8 +119,10 @@ public class AggregationsIntervallTest {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		final AggregationsIntervall intervall = AggregationsIntervall.aGGDTVTAG;
-		for (long zeitpunkt = cal.getTimeInMillis() + (30 * Constants.MILLIS_PER_SECOND); zeitpunkt < (cal
-				.getTimeInMillis() + (Constants.MILLIS_PER_HOUR * 60)); zeitpunkt += Constants.MILLIS_PER_MINUTE) {
+		for (long zeitpunkt = cal.getTimeInMillis()
+				+ (30 * Constants.MILLIS_PER_SECOND); zeitpunkt < (cal.getTimeInMillis()
+						+ (Constants.MILLIS_PER_HOUR
+								* 60)); zeitpunkt += Constants.MILLIS_PER_MINUTE) {
 			if (intervall.isAggregationErforderlich(zeitpunkt)) {
 				// System.out
 				// .println(DUAKonstanten.ZEIT_FORMAT_GENAU

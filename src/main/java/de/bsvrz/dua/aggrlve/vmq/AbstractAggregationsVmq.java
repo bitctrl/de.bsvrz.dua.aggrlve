@@ -66,7 +66,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	/** das VMQ-Objekt. */
 	private final SystemObject vmq;
 	/** die Menge der Bestandteile des virtuellen MQ. */
-	private final Map<SystemObject, VmqDataPart> mqParts = new HashMap<SystemObject, VmqDataPart>();
+	private final Map<SystemObject, VmqDataPart> mqParts = new HashMap<>();
 
 	/** die verwendete Datenverteilerverbindung. */
 	private ClientDavInterface dav;
@@ -508,7 +508,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 		for (final Aspect aspect : VMqAggregator.getInstance().getSupportedAspects()) {
 
 			long currentTime = 0;
-			final Map<SystemObject, ResultData> dataList = new HashMap<SystemObject, ResultData>();
+			final Map<SystemObject, ResultData> dataList = new HashMap<>();
 			boolean nextTime = false;
 
 			for (final VmqDataPart part : getMqParts().values()) {

@@ -50,8 +50,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Abstraktes Objekt zur Aggregation von LVE-Daten fuer Fahrstreifen und Messquerschnitte.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public abstract class AbstraktAggregationsObjekt {
 
@@ -63,12 +61,12 @@ public abstract class AbstraktAggregationsObjekt {
 	 * innerhalb der FG1-Aggregation nicht erfasst werden.
 	 */
 	private static final String[][] REST_ATTRIBUTE_AGGR = new String[][] {
-		new String[] { null, "BMax" }, new String[] { null, "VDelta" },
-		new String[] { "vgKfz", "VgKfz" }, new String[] { "sKfz", "SKfz" },
-		new String[] { "b", "B" }, new String[] { "aLkw", "ALkw" },
-		new String[] { "kKfz", "KKfz" }, new String[] { "kLkw", "KLkw" },
-		new String[] { "kPkw", "KPkw" }, new String[] { "qB", "QB" },
-		new String[] { "kB", "KB" } };
+			new String[] { null, "BMax" }, new String[] { null, "VDelta" },
+			new String[] { "vgKfz", "VgKfz" }, new String[] { "sKfz", "SKfz" },
+			new String[] { "b", "B" }, new String[] { "aLkw", "ALkw" },
+			new String[] { "kKfz", "KKfz" }, new String[] { "kLkw", "KLkw" },
+			new String[] { "kPkw", "KPkw" }, new String[] { "qB", "QB" },
+			new String[] { "kB", "KB" } };
 
 	/**
 	 * die restlichen auszufuellenden Attribute der Attributgruppen
@@ -76,13 +74,13 @@ public abstract class AbstraktAggregationsObjekt {
 	 * innerhalb der DTV-Berechnung nicht erfasst werden.
 	 */
 	private static final String[][] REST_ATTRIBUTE_DTV = new String[][] {
-		new String[] { null, "BMax" }, new String[] { null, "VDelta" },
-		new String[] { "vKfz", "VKfz" }, new String[] { "vPkw", "VPkw" },
-		new String[] { "vLkw", "VLkw" }, new String[] { "vgKfz", "VgKfz" },
-		new String[] { "sKfz", "SKfz" }, new String[] { "b", "B" },
-		new String[] { "aLkw", "ALkw" }, new String[] { "kKfz", "KKfz" },
-		new String[] { "kLkw", "KLkw" }, new String[] { "kPkw", "KPkw" },
-		new String[] { "qB", "QB" }, new String[] { "kB", "KB" } };
+			new String[] { null, "BMax" }, new String[] { null, "VDelta" },
+			new String[] { "vKfz", "VKfz" }, new String[] { "vPkw", "VPkw" },
+			new String[] { "vLkw", "VLkw" }, new String[] { "vgKfz", "VgKfz" },
+			new String[] { "sKfz", "SKfz" }, new String[] { "b", "B" },
+			new String[] { "aLkw", "ALkw" }, new String[] { "kKfz", "KKfz" },
+			new String[] { "kLkw", "KLkw" }, new String[] { "kPkw", "KPkw" },
+			new String[] { "qB", "QB" }, new String[] { "kB", "KB" } };
 
 	/** statische Verbindung zum Datenverteiler. */
 	protected ClientDavInterface dav;
@@ -94,7 +92,7 @@ public abstract class AbstraktAggregationsObjekt {
 	protected SystemObject objekt;
 
 	/** Mapt ein Systemobjekt auf sein letztes von hier aus publiziertes Datum. */
-	protected Map<SystemObject, ResultData> letzteDaten = new HashMap<SystemObject, ResultData>();
+	protected Map<SystemObject, ResultData> letzteDaten = new HashMap<>();
 
 	/**
 	 * speichert alle historischen Daten dieses Aggregationsobjektes aller Aggregationsintervalle.
@@ -145,7 +143,8 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @param intervall
 	 *            der Aggregationsintervall
 	 */
-	protected final void fuelleRest(final ResultData resultat, final AggregationsIntervall intervall) {
+	protected final void fuelleRest(final ResultData resultat,
+			final AggregationsIntervall intervall) {
 		String[][] restAttribute = AbstraktAggregationsObjekt.REST_ATTRIBUTE_AGGR;
 
 		if (intervall.isDTVorTV()) {
@@ -164,29 +163,29 @@ public abstract class AbstraktAggregationsObjekt {
 
 			if (attributName != null) {
 				resultat.getData().getItem(attributName).getUnscaledValue("Wert")
-				.set(DUAKonstanten.NICHT_ERMITTELBAR);
+						.set(DUAKonstanten.NICHT_ERMITTELBAR);
 				resultat.getData().getItem(attributName).getItem("Status").getItem("Erfassung")
-						.getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN);
+				.getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status")
-				.getItem("MessWertErsetzung").getUnscaledValue("Implausibel")
-				.set(DUAKonstanten.NEIN);
+						.getItem("MessWertErsetzung").getUnscaledValue("Implausibel")
+						.set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status")
-				.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
-				.set(DUAKonstanten.NEIN);
+						.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
+						.set(DUAKonstanten.NEIN);
 
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlFormal")
-						.getUnscaledValue("WertMax").set(DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMax").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlFormal")
-						.getUnscaledValue("WertMin").set(DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMin").set(DUAKonstanten.NEIN);
 
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch")
-				.getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN);
+						.getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch")
-				.getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN);
+						.getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Güte").getUnscaledValue("Index")
-				.set(DUAKonstanten.NICHT_ERMITTELBAR);
+						.set(DUAKonstanten.NICHT_ERMITTELBAR);
 				resultat.getData().getItem(attributName).getItem("Güte")
-				.getUnscaledValue("Verfahren").set(GueteVerfahren.STANDARD.getCode());
+						.getUnscaledValue("Verfahren").set(GueteVerfahren.STANDARD.getCode());
 			}
 		}
 	}
@@ -226,7 +225,7 @@ public abstract class AbstraktAggregationsObjekt {
 	protected final Collection<AggregationsAttributWert> ersetzteAusgefalleneWerte(
 			final AggregationsAttribut attribut, final Collection<AggregationsDatum> quellDaten,
 			final AggregationsIntervall intervall, final long zeitStempel) {
-		final Collection<AggregationsAttributWert> zielDaten = new ArrayList<AggregationsAttributWert>();
+		final Collection<AggregationsAttributWert> zielDaten = new ArrayList<>();
 
 		double anzahlSoll = -1;
 		if (intervall.equals(AggregationsIntervall.aGG1MINUTE)
@@ -254,11 +253,11 @@ public abstract class AbstraktAggregationsObjekt {
 			for (final AggregationsDatum quellDatum : quellDaten) {
 				final AggregationsAttributWert wert = quellDatum.getWert(attribut);
 				if ((wert != null) && (wert.getWert() >= 0)) {
-					gueteSumme += wert.getGuete().getIndexUnskaliert() >= 0 ? wert.getGuete()
-							.getIndex() : 0;
-							wertSumme += wert.getWert();
-							wertAnzahl++;
-							zielDaten.add(wert);
+					gueteSumme += wert.getGuete().getIndexUnskaliert() >= 0
+							? wert.getGuete().getIndex() : 0;
+					wertSumme += wert.getWert();
+					wertAnzahl++;
+					zielDaten.add(wert);
 				}
 			}
 
@@ -289,10 +288,10 @@ public abstract class AbstraktAggregationsObjekt {
 							 * Minuten ausgerechnet werden soll.
 							 */
 							if (first) {
-								final long teilMittelWert = Math.round(mittelWert
-										* (anzahlSoll - (long) anzahlSoll));
-								zielDaten.add(new AggregationsAttributWert(attribut,
-										teilMittelWert, AggregationLVE.guete * mittelWertGuete));
+								final long teilMittelWert = Math
+										.round(mittelWert * (anzahlSoll - (long) anzahlSoll));
+								zielDaten.add(new AggregationsAttributWert(attribut, teilMittelWert,
+										AggregationLVE.guete * mittelWertGuete));
 							} else {
 								zielDaten.add(new AggregationsAttributWert(attribut, mittelWert,
 										AggregationLVE.guete * mittelWertGuete));
@@ -306,8 +305,7 @@ public abstract class AbstraktAggregationsObjekt {
 				}
 			}
 		} else {
-			LOGGER.warning(
-					"Die Anzahl der benoetigten Intervalle sollte nicht kleiner 0 sein");
+			LOGGER.warning("Die Anzahl der benoetigten Intervalle sollte nicht kleiner 0 sein");
 		}
 
 		return zielDaten;
@@ -364,9 +362,9 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @param intervall
 	 *            das gewuenschte Aggregationsintervall
 	 */
-	protected final void aggregiereMittel(final AggregationsAttribut attribut,
-			final Data nutzDatum, final Collection<AggregationsDatum> basisDaten,
-			final long zeitStempel, final AggregationsIntervall intervall) {
+	protected final void aggregiereMittel(final AggregationsAttribut attribut, final Data nutzDatum,
+			final Collection<AggregationsDatum> basisDaten, final long zeitStempel,
+			final AggregationsIntervall intervall) {
 		/**
 		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
 		 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
@@ -385,7 +383,7 @@ public abstract class AbstraktAggregationsObjekt {
 		boolean nichtErfasst = false;
 		long anzahl = 0;
 		long summe = 0;
-		final Collection<GWert> gueteWerte = new ArrayList<GWert>();
+		final Collection<GWert> gueteWerte = new ArrayList<>();
 		for (final AggregationsAttributWert basisWert : werte) {
 
 			if (basisWert.getWert() >= 0) {
@@ -408,8 +406,7 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (final GueteException e) {
-				LOGGER.error(
-						"Guete von " + objekt + " fuer " + attribut
+				LOGGER.error("Guete von " + objekt + " fuer " + attribut
 						+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
 			}
@@ -454,7 +451,7 @@ public abstract class AbstraktAggregationsObjekt {
 		boolean nichtErfasst = false;
 		long summe = 0;
 
-		final Collection<GWert> gueteWerte = new ArrayList<GWert>();
+		final Collection<GWert> gueteWerte = new ArrayList<>();
 		for (final AggregationsAttributWert basisWert : werte) {
 
 			if (basisWert.getWert() >= 0) {
@@ -476,8 +473,7 @@ public abstract class AbstraktAggregationsObjekt {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (final GueteException e) {
-				LOGGER.warning(
-						"Guete von " + objekt + " fuer " + attribut
+				LOGGER.warning("Guete von " + objekt + " fuer " + attribut
 						+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
 			}

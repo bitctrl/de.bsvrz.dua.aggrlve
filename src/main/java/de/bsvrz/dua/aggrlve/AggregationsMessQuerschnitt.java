@@ -57,8 +57,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * messwertersetzten Fahrstreifendaten fuer die Basisstufe
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
 
@@ -70,7 +68,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 	/**
 	 * Menge der Fahrstreifen, die an diesem Messquerschnitt konfiguriert sind.
 	 */
-	private final Map<SystemObject, AggregationsFahrStreifen> fsMenge = new HashMap<SystemObject, AggregationsFahrStreifen>();
+	private final Map<SystemObject, AggregationsFahrStreifen> fsMenge = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
@@ -89,14 +87,14 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 		this.mq = mq;
 
 		datenPuffer = new AggregationsPufferMenge(dav, mq.getSystemObject());
-		final Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		final Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<>();
 		for (final AggregationsIntervall intervall : AggregationsIntervall.getInstanzen()) {
 			try {
-				anmeldungen.add(new DAVObjektAnmeldung(mq.getSystemObject(), intervall
-						.getDatenBeschreibung(false)));
+				anmeldungen.add(new DAVObjektAnmeldung(mq.getSystemObject(),
+						intervall.getDatenBeschreibung(false)));
 			} catch (final Exception e) {
-				throw new DUAInitialisierungsException("Messquerschnitt " + mq
-						+ " konnte nicht initialisiert werden", e);
+				throw new DUAInitialisierungsException(
+						"Messquerschnitt " + mq + " konnte nicht initialisiert werden", e);
 			}
 		}
 		sender.modifiziereObjektAnmeldung(anmeldungen);
@@ -144,21 +142,18 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					/**
 					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
 					 */
-					nutzDatum = dav.createData(intervall.getDatenBeschreibung(false)
-							.getAttributeGroup());
-					for (final AggregationsAttribut attribut : AggregationsAttribut.getInstanzen()) {
+					nutzDatum = dav
+							.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
+					for (final AggregationsAttribut attribut : AggregationsAttribut
+							.getInstanzen()) {
 						if (!attribut.isGeschwindigkeitsAttribut()) {
 							aggregiereSumme(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
 						}
 					}
 				} else {
-					LOGGER
-							.warning(
-									intervall
-											+ " fuer "
-											+ objekt
-											+ " kann nicht berechnet werden, da keine Basisdaten (Intervall: "
-											+ intervall.getVorgaenger() + ") zur Verfuegung stehen");
+					LOGGER.warning(intervall + " fuer " + objekt
+							+ " kann nicht berechnet werden, da keine Basisdaten (Intervall: "
+							+ intervall.getVorgaenger() + ") zur Verfuegung stehen");
 				}
 			} else {
 				if (mqDaten.isEmpty()) {
@@ -166,7 +161,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 						/**
 						 * Aggregiere Basisintervall aus messwertersetzten Fahrstreifendaten
 						 */
-						final Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten = new HashMap<AggregationsFahrStreifen, Collection<AggregationsDatum>>();
+						final Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten = new HashMap<>();
 
 						for (final AggregationsFahrStreifen fs : fsMenge.values()) {
 							final Collection<AggregationsDatum> daten = fs.getPuffer()
@@ -183,8 +178,8 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 						}
 
 						if (kannBasisIntervallBerechnen) {
-							nutzDatum = dav.createData(intervall.getDatenBeschreibung(false)
-									.getAttributeGroup());
+							nutzDatum = dav.createData(
+									intervall.getDatenBeschreibung(false).getAttributeGroup());
 							aggregiereBasisDatum(nutzDatum, fsDaten, zeitStempel, intervall);
 						}
 
@@ -193,9 +188,10 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					/**
 					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
 					 */
-					nutzDatum = dav.createData(intervall.getDatenBeschreibung(false)
-							.getAttributeGroup());
-					for (final AggregationsAttribut attribut : AggregationsAttribut.getInstanzen()) {
+					nutzDatum = dav
+							.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
+					for (final AggregationsAttribut attribut : AggregationsAttribut
+							.getInstanzen()) {
 						aggregiereMittel(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
 					}
 				}
@@ -247,7 +243,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 			boolean nichtErfasst = false;
 			final AggregationsAttributWert exportWert = new AggregationsAttributWert(attribut,
 					DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-			final Collection<GWert> gueteWerte = new ArrayList<GWert>();
+			final Collection<GWert> gueteWerte = new ArrayList<>();
 
 			if (attribut.isGeschwindigkeitsAttribut()) {
 				long summe = 0;
@@ -258,7 +254,7 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 
 					long summeInFs = 0;
 					long anzahlInFs = 0;
-					final Collection<GWert> gueteWerteInFs = new ArrayList<GWert>();
+					final Collection<GWert> gueteWerteInFs = new ArrayList<>();
 					for (final AggregationsDatum basisDatum : fsQuellDatum) {
 						final AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
 						if ((basisWert != null) && (basisWert.getWert() >= 0)) {
@@ -277,9 +273,8 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 					try {
 						gueteWerte.add(GueteVerfahren.summe(gueteWerteInFs.toArray(new GWert[0])));
 					} catch (final GueteException e) {
-						LOGGER.error(
-								"Guete von " + fahrStreifen.getObjekt() + " fuer " + attribut
-										+ " konnte nicht berechnet werden", e);
+						LOGGER.error("Guete von " + fahrStreifen.getObjekt() + " fuer " + attribut
+								+ " konnte nicht berechnet werden", e);
 						e.printStackTrace();
 					}
 				}
@@ -321,9 +316,8 @@ public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjek
 				try {
 					exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 				} catch (final GueteException e) {
-					LOGGER.error(
-							"Guete von " + objekt + " fuer " + attribut
-									+ " konnte nicht berechnet werden", e);
+					LOGGER.error("Guete von " + objekt + " fuer " + attribut
+							+ " konnte nicht berechnet werden", e);
 					e.printStackTrace();
 				}
 			}

@@ -42,7 +42,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * beteiligten realen MQ kombiniert werden.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public final class VMqAggregator extends Thread {
 
@@ -67,7 +66,7 @@ public final class VMqAggregator extends Thread {
 	private final Object locker = new Object();
 
 	/** die Liste der Aspekte für die Daten übertragen werden. */
-	private final Set<Aspect> supportedAspects = new HashSet<Aspect>();
+	private final Set<Aspect> supportedAspects = new HashSet<>();
 
 	/** die Attributgruppe für die Quelldaten. */
 	private AttributeGroup srcAtg;

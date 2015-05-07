@@ -40,15 +40,13 @@ import java.util.Set;
  * <code>vPkw</code> bzw. <code>VPkw</code>
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class AggregationsAttribut {
 
 	/**
 	 * Wertebereich.
 	 */
-	private static final Set<AggregationsAttribut> WERTE_BEREICH = new HashSet<AggregationsAttribut>();
+	private static final Set<AggregationsAttribut> WERTE_BEREICH = new HashSet<>();
 
 	/**
 	 * Attribut <code>qKfz</code> bzw. <code>QKfz</code>

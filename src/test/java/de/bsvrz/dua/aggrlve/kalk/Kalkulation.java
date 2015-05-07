@@ -38,8 +38,6 @@ import de.bsvrz.dua.aggrlve.Verbindung;
  * Prüfspezifikation V 2.0 auf Basis der Tabelle <code>Messwert_Aggregation_unv</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class Kalkulation {
 
@@ -48,24 +46,24 @@ public final class Kalkulation {
 	 * der Mittelwert gebildet wurde).
 	 */
 	private static final RechenVorschrift[] ATTRIBUTE = new RechenVorschrift[] {
-		new RechenVorschrift("qKfz(t)(1)", false, null),
-			new RechenVorschrift("qKfz(t)(2)", false, null),
-			new RechenVorschrift("QKfz(Mq)", true, new String[] { "qKfz(t)(1)", "qKfz(t)(2)" }),
-			new RechenVorschrift("qPkw(t)(1)", false, null),
-			new RechenVorschrift("qPkw(t)(2)", false, null),
-			new RechenVorschrift("QPkw(Mq)", true, new String[] { "qPkw(t)(1)", "qPkw(t)(2)" }),
-			new RechenVorschrift("qLkw(t)(1)", false, null),
-			new RechenVorschrift("qLkw(t)(2)", false, null),
-			new RechenVorschrift("QLkw(Mq)", true, new String[] { "qLkw(t)(1)", "qLkw(t)(2)" }),
-			new RechenVorschrift("vKfz(t)(1)", false, null),
-			new RechenVorschrift("vKfz(t)(2)", false, null),
-			new RechenVorschrift("VKfz(Mq)", false, new String[] { "vKfz(t)(1)", "vKfz(t)(2)" }),
-			new RechenVorschrift("vPkw(t)(1)", false, null),
-			new RechenVorschrift("vPkw(t)(2)", false, null),
-			new RechenVorschrift("VPkw(Mq)", false, new String[] { "vPkw(t)(1)", "vPkw(t)(2)" }),
-			new RechenVorschrift("vLkw(t)(1)", false, null),
-			new RechenVorschrift("vLkw(t)(2)", false, null),
-			new RechenVorschrift("VLkw(Mq)", false, new String[] { "vLkw(t)(1)", "vLkw(t)(2)" }) };
+			new RechenVorschrift("qKfz(t)(1)", false, null),
+		new RechenVorschrift("qKfz(t)(2)", false, null),
+		new RechenVorschrift("QKfz(Mq)", true, new String[] { "qKfz(t)(1)", "qKfz(t)(2)" }),
+		new RechenVorschrift("qPkw(t)(1)", false, null),
+		new RechenVorschrift("qPkw(t)(2)", false, null),
+		new RechenVorschrift("QPkw(Mq)", true, new String[] { "qPkw(t)(1)", "qPkw(t)(2)" }),
+		new RechenVorschrift("qLkw(t)(1)", false, null),
+		new RechenVorschrift("qLkw(t)(2)", false, null),
+		new RechenVorschrift("QLkw(Mq)", true, new String[] { "qLkw(t)(1)", "qLkw(t)(2)" }),
+		new RechenVorschrift("vKfz(t)(1)", false, null),
+		new RechenVorschrift("vKfz(t)(2)", false, null),
+		new RechenVorschrift("VKfz(Mq)", false, new String[] { "vKfz(t)(1)", "vKfz(t)(2)" }),
+		new RechenVorschrift("vPkw(t)(1)", false, null),
+		new RechenVorschrift("vPkw(t)(2)", false, null),
+		new RechenVorschrift("VPkw(Mq)", false, new String[] { "vPkw(t)(1)", "vPkw(t)(2)" }),
+		new RechenVorschrift("vLkw(t)(1)", false, null),
+		new RechenVorschrift("vLkw(t)(2)", false, null),
+		new RechenVorschrift("VLkw(Mq)", false, new String[] { "vLkw(t)(1)", "vLkw(t)(2)" }) };
 
 	/**
 	 * Datenimporter.
@@ -144,7 +142,7 @@ public final class Kalkulation {
 						/**
 						 * Fahrstreifendaten
 						 */
-						final List<PruefTabImporter.Element> elemente = new ArrayList<PruefTabImporter.Element>();
+						final List<PruefTabImporter.Element> elemente = new ArrayList<>();
 						for (int j = 0 + offset; j < (offset + anzahlDatenSaetze); j++) {
 							try {
 								elemente.add(importer.getElement(rv.name, j));
@@ -161,33 +159,33 @@ public final class Kalkulation {
 						stream.write(durchschnitt.getStatus().getBytes());
 						stream.write(";".getBytes());
 					} else {
-						final List<PruefTabImporter.Element> elementeMQ = new ArrayList<PruefTabImporter.Element>();
+						final List<PruefTabImporter.Element> elementeMQ = new ArrayList<>();
 						/**
 						 * Fahrstreifendaten #1
 						 */
-						final List<PruefTabImporter.Element> elementeFS1 = new ArrayList<PruefTabImporter.Element>();
+						final List<PruefTabImporter.Element> elementeFS1 = new ArrayList<>();
 						for (int j = 0 + offset; j < (offset + anzahlDatenSaetze); j++) {
 							elementeFS1.add(importer.getElement(rv.quellen[0], j));
 						}
-						elementeMQ.add(PruefTabImporter.durchschnitt(elementeFS1
-								.toArray(new PruefTabImporter.Element[0])));
-						/**
-						 * Fahrstreifendaten #2
-						 */
-						final List<PruefTabImporter.Element> elementeFS2 = new ArrayList<PruefTabImporter.Element>();
+						elementeMQ.add(PruefTabImporter.durchschnitt(
+								elementeFS1.toArray(new PruefTabImporter.Element[0])));
+								/**
+								 * Fahrstreifendaten #2
+								 */
+								final List<PruefTabImporter.Element> elementeFS2 = new ArrayList<>();
 						for (int j = 0 + offset; j < (offset + anzahlDatenSaetze); j++) {
 							elementeFS2.add(importer.getElement(rv.quellen[1], j));
 						}
-						elementeMQ.add(PruefTabImporter.durchschnitt(elementeFS2
-								.toArray(new PruefTabImporter.Element[0])));
+						elementeMQ.add(PruefTabImporter.durchschnitt(
+								elementeFS2.toArray(new PruefTabImporter.Element[0])));
 
 						PruefTabImporter.Element ergebnis = null;
 						if (rv.summe) {
-							ergebnis = PruefTabImporter.summe(elementeMQ
-									.toArray(new PruefTabImporter.Element[0]));
+							ergebnis = PruefTabImporter
+									.summe(elementeMQ.toArray(new PruefTabImporter.Element[0]));
 						} else {
-							ergebnis = PruefTabImporter.durchschnitt(elementeMQ
-									.toArray(new PruefTabImporter.Element[0]));
+							ergebnis = PruefTabImporter.durchschnitt(
+									elementeMQ.toArray(new PruefTabImporter.Element[0]));
 						}
 
 						stream.write(ergebnis.getWert().getBytes());
@@ -200,8 +198,8 @@ public final class Kalkulation {
 				offset += anzahlDatenSaetze;
 			}
 		} else {
-			throw new Exception("Konnte Datei " + (Verbindung.WURZEL + dateiName)
-					+ " nicht anlegen");
+			throw new Exception(
+					"Konnte Datei " + (Verbindung.WURZEL + dateiName) + " nicht anlegen");
 		}
 	}
 

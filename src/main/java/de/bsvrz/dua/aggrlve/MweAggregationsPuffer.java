@@ -38,8 +38,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
  * einem Ringpuffer.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class MweAggregationsPuffer extends AbstraktAggregationsPuffer {
 

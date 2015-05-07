@@ -69,11 +69,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Fahrstreifen initialisiert
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete implements
-		IObjektWeckerListener {
+public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
+		implements IObjektWeckerListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -94,16 +92,16 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 	/**
 	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehören.
 	 */
-	private final Map<SystemObject, SystemObject> fsMq = new HashMap<SystemObject, SystemObject>();
+	private final Map<SystemObject, SystemObject> fsMq = new HashMap<>();
 	/**
 	 * alle Messquerschnitte, mit den Fahrstreifen, zu denen sie gehören.
 	 */
-	private final Map<SystemObject, Set<SystemObject>> mqFs = new HashMap<SystemObject, Set<SystemObject>>();
+	private final Map<SystemObject, Set<SystemObject>> mqFs = new HashMap<>();
 
 	/**
 	 * Letztes Fahrstreifendatum pro Fahrstreifen.
 	 */
-	private final Map<SystemObject, ResultData> fsDataHist = new HashMap<SystemObject, ResultData>();
+	private final Map<SystemObject, ResultData> fsDataHist = new HashMap<>();
 
 	/**
 	 * Zweite Datenverteiler-Verbindung fuer Testzwecke.
@@ -150,7 +148,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 	/**
 	 * alle Messquerschnitte, fuer die Daten aggregiert werden sollen.
 	 */
-	private final Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = new HashMap<SystemObject, AggregationsMessQuerschnitt>();
+	private final Map<SystemObject, AggregationsMessQuerschnitt> messQuerschnitte = new HashMap<>();
 
 	private int berechnungsOffset = 30;
 
@@ -168,14 +166,12 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 		}
 		if (berechnungsOffset < OFFSET_MIN) {
 			berechnungsOffset = OFFSET_MIN;
-			LOGGER.warning(
-					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
-							+ "] liegen! Korrigiere auf " + OFFSET_MIN + "s.");
+			LOGGER.warning("Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
+					+ "] liegen! Korrigiere auf " + OFFSET_MIN + "s.");
 		} else if (berechnungsOffset > OFFSET_MAX) {
 			berechnungsOffset = OFFSET_MAX;
-			LOGGER.warning(
-					"Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
-							+ "] liegen! Korrigiere auf " + OFFSET_MAX + "s.");
+			LOGGER.warning("Berechnungsoffset muss im Bereich [" + OFFSET_MIN + ", " + OFFSET_MAX
+					+ "] liegen! Korrigiere auf " + OFFSET_MAX + "s.");
 		}
 
 		final ArgumentList argumentList = new ArgumentList(
@@ -198,13 +194,13 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 		}
 
 		AggregationLVE.guete = getGueteFaktor();
-		AggregationLVE.typFahrstreifen = verbindung.getDataModel().getType(
-				DUAKonstanten.TYP_FAHRSTREIFEN);
-		AggregationLVE.mwe = verbindung.getDataModel().getAspect(
-				DUAKonstanten.ASP_MESSWERTERSETZUNG);
+		AggregationLVE.typFahrstreifen = verbindung.getDataModel()
+				.getType(DUAKonstanten.TYP_FAHRSTREIFEN);
+		AggregationLVE.mwe = verbindung.getDataModel()
+				.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG);
 
-		final Collection<SystemObject> alleMqObjImKB = DUAUtensilien.getBasisInstanzen(verbindung
-				.getDataModel().getType(DUAKonstanten.TYP_MQ), verbindung,
+		final Collection<SystemObject> alleMqObjImKB = DUAUtensilien.getBasisInstanzen(
+				verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ), verbindung,
 				getKonfigurationsBereiche());
 
 		for (final SystemObject mqObjekt : alleMqObjImKB) {
@@ -215,7 +211,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 			} else {
 				messQuerschnitte.put(mqObjekt, new AggregationsMessQuerschnitt(verbindung, mq));
 
-				final Set<SystemObject> fsList = new HashSet<SystemObject>();
+				final Set<SystemObject> fsList = new HashSet<>();
 				for (final FahrStreifen fs : mq.getFahrStreifen()) {
 					fsMq.put(fs.getSystemObject(), mq.getSystemObject());
 					fsList.add(fs.getSystemObject());
@@ -237,10 +233,12 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 				dav2.login();
 
 				for (final SystemObject fs : fsMq.keySet()) {
-					dav2.subscribeReceiver(this, fs, new DataDescription(dav2.getDataModel()
-							.getAttributeGroup(DUAKonstanten.ATG_KZD), dav2.getDataModel()
-							.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)), ReceiveOptions
-							.normal(), ReceiverRole.receiver());
+					dav2.subscribeReceiver(this, fs,
+							new DataDescription(
+									dav2.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
+									dav2.getDataModel()
+											.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)),
+							ReceiveOptions.normal(), ReceiverRole.receiver());
 				}
 			} catch (final Exception e) {
 				throw new DUAInitialisierungsException(
@@ -262,7 +260,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete imp
 	public void testStart(final ClientDavInterface dav, final String gueteFaktor) throws Exception {
 		AggregationLVE.zeitRaffer = true;
 		LOGGER.config("Applikation fuer Testzwecke gestartet");
-		komArgumente = new ArrayList<String>();
+		komArgumente = new ArrayList<>();
 		komArgumente.add("-KonfigurationsBereichsPid=" + "kb.duaTestObjekte");
 		komArgumente.add("-gueteFaktor=" + gueteFaktor);
 

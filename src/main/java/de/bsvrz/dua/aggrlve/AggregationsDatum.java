@@ -42,8 +42,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * enthalten sind (inkl. Zeitstempel)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AggregationsDatum implements Comparable<AggregationsDatum>, Cloneable {
 
@@ -65,7 +63,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>, Cloneab
 	/**
 	 * die Werte aller innerhalb der Messwertaggregation betrachteten Attribute.
 	 */
-	private final Map<AggregationsAttribut, AggregationsAttributWert> werte = new HashMap<AggregationsAttribut, AggregationsAttributWert>();
+	private final Map<AggregationsAttribut, AggregationsAttributWert> werte = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
@@ -99,8 +97,8 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>, Cloneab
 			}
 		}
 		for (final AggregationsAttribut attribut : AggregationsAttribut.getInstanzen()) {
-			werte.put(attribut, resultat.getData() != null ? new AggregationsAttributWert(attribut,
-					resultat) : null);
+			werte.put(attribut, resultat.getData() != null
+					? new AggregationsAttributWert(attribut, resultat) : null);
 		}
 	}
 

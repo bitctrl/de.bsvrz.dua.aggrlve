@@ -49,8 +49,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * Testet die Aggregation von DTV-Jahreswerten.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AggregationLVEDTVJahr extends AbstraktDTVTest {
 
@@ -67,8 +65,9 @@ public class AggregationLVEDTVJahr extends AbstraktDTVTest {
 
 		final SystemObject mq = dav.getDataModel().getObject("mq.a100.0000");
 
-		final DataDescription dd = new DataDescription(dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_MQ), AggregationsIntervall.aGGDTVMONAT.getAspekt());
+		final DataDescription dd = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				AggregationsIntervall.aGGDTVMONAT.getAspekt());
 
 		final GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, 2000);

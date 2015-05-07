@@ -54,11 +54,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * initial aus dem Archiv ein
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public class DTVAggregationsPuffer extends AggregationsPuffer implements
-		ArchiveAvailabilityListener {
+public class DTVAggregationsPuffer extends AggregationsPuffer
+		implements ArchiveAvailabilityListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -103,17 +101,15 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze der letzten 50 Tage
 				 * bereitstehen
 				 */
-				beginArchivAnfrage = jetzt
-						- (Constants.MILLIS_PER_HOUR * 24L * aggregationsIntervall
-								.getMaxPufferGroesse());
+				beginArchivAnfrage = jetzt - (Constants.MILLIS_PER_HOUR * 24L
+						* aggregationsIntervall.getMaxPufferGroesse());
 			} else if (aggregationsIntervall.equals(AggregationsIntervall.aGGDTVMONAT)) {
 				/**
 				 * Zum Start der Applikation sollen moeglichst die Datensaetze der letzten 15 Monate
 				 * bereitstehen
 				 */
-				beginArchivAnfrage = jetzt
-						- (Constants.MILLIS_PER_HOUR * 24L * 31L * aggregationsIntervall
-								.getMaxPufferGroesse());
+				beginArchivAnfrage = jetzt - (Constants.MILLIS_PER_HOUR * 24L * 31L
+						* aggregationsIntervall.getMaxPufferGroesse());
 			} else {
 				beginArchivAnfrage = jetzt - (Constants.MILLIS_PER_HOUR * 24L * 370L);
 			}
@@ -128,8 +124,8 @@ public class DTVAggregationsPuffer extends AggregationsPuffer implements
 						aggregationsIntervall.getDatenBeschreibung(false), objekt);
 
 				try {
-					final ArchiveDataQueryResult result = archiv.request(
-							ArchiveQueryPriority.MEDIUM, archivDatenBeschreibung);
+					final ArchiveDataQueryResult result = archiv
+							.request(ArchiveQueryPriority.MEDIUM, archivDatenBeschreibung);
 					final ArchiveDataStream[] streams = result.getStreams();
 					synchronized (this) {
 						for (final ArchiveDataStream stream : streams) {

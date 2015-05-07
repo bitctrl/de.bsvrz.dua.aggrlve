@@ -38,15 +38,13 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  * wahrfreihen Zugriff auf alle Elemente der Tabelle
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class PruefTabImporter {
 
 	/**
 	 * Tabelleninhalt.
 	 */
-	private final Map<String, Element[]> tabContent = new HashMap<String, Element[]>();
+	private final Map<String, Element[]> tabContent = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
@@ -70,7 +68,7 @@ public final class PruefTabImporter {
 
 		csvImporter.reset();
 
-		final Map<Integer, String> spalteZuName = new HashMap<Integer, String>();
+		final Map<Integer, String> spalteZuName = new HashMap<>();
 		final String[] tabellenKopf = csvImporter.getNaechsteZeile();
 		for (int i = 0; i < tabellenKopf.length; i += 2) {
 			tabContent.put(tabellenKopf[i], new Element[zeilen]);

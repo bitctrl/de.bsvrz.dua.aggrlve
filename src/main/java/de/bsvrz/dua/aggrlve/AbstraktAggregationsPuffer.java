@@ -40,8 +40,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
  * speichert, die zur Berechnung des naechstgroesseren Intervalls notwendig sind.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public abstract class AbstraktAggregationsPuffer {
 
@@ -59,7 +57,7 @@ public abstract class AbstraktAggregationsPuffer {
 	/**
 	 * Ringpuffer mit den zeitlich aktuellsten Daten.
 	 */
-	protected final LinkedList<AggregationsDatum> ringPuffer = new LinkedList<AggregationsDatum>();
+	protected final LinkedList<AggregationsDatum> ringPuffer = new LinkedList<>();
 
 	/**
 	 * das Systemobjekt, dessen Daten hier gespeichert werden.
@@ -119,7 +117,7 @@ public abstract class AbstraktAggregationsPuffer {
 	 */
 	public final Collection<AggregationsDatum> getDatenFuerZeitraum(final long begin,
 			final long ende) {
-		final Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
+		final Collection<AggregationsDatum> daten = new ArrayList<>();
 
 		synchronized (ringPuffer) {
 			for (final AggregationsDatum einzelDatum : ringPuffer) {

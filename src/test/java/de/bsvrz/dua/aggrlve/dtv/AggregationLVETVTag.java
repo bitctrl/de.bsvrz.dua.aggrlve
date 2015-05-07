@@ -51,8 +51,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * Testet die Aggregation von TV-Tagesdaten.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AggregationLVETVTag extends AbstraktDTVTest {
 
@@ -70,8 +68,9 @@ public class AggregationLVETVTag extends AbstraktDTVTest {
 
 		final SystemObject mq = dav.getDataModel().getObject("mq.a100.0000");
 
-		final DataDescription dd = new DataDescription(dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_MQ), AggregationsIntervall.aGG60MINUTE.getAspekt());
+		final DataDescription dd = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				AggregationsIntervall.aGG60MINUTE.getAspekt());
 
 		final GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, 2000);

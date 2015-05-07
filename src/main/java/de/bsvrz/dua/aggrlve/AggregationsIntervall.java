@@ -53,8 +53,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Klasse initialisiert werden
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class AggregationsIntervall implements Comparable<AggregationsIntervall> {
 
@@ -101,7 +99,7 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	/**
 	 * der Wertebereich dieses Typs.
 	 */
-	private static SortedSet<AggregationsIntervall> werteBereich = new TreeSet<AggregationsIntervall>();
+	private static SortedSet<AggregationsIntervall> werteBereich = new TreeSet<>();
 
 	/**
 	 * die Datenbeschreibung der Publikationsdaten dieses Aggregations- Intervalls (fuer FS).
@@ -156,40 +154,48 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 *            Verbindung zum Datenverteiler
 	 */
 	public static void initialisiere(final ClientDavInterface dav) {
-		AggregationsIntervall.aGG1MINUTE = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-						"asp.agregation1Minute"), Constants.MILLIS_PER_MINUTE, 5);
+		AggregationsIntervall.aGG1MINUTE = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect("asp.agregation1Minute"), Constants.MILLIS_PER_MINUTE,
+				5);
 
-		AggregationsIntervall.aGG5MINUTE = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-						"asp.agregation5Minuten"), 5 * Constants.MILLIS_PER_MINUTE, 3);
-		AggregationsIntervall.aGG15MINUTE = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-						"asp.agregation15Minuten"), 15 * Constants.MILLIS_PER_MINUTE, 2);
-		AggregationsIntervall.aGG30MINUTE = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-						"asp.agregation30Minuten"), 30 * Constants.MILLIS_PER_MINUTE, 2);
-		AggregationsIntervall.aGG60MINUTE = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS), dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel().getAspect(
-						"asp.agregation60Minuten"), 60 * Constants.MILLIS_PER_MINUTE, 40);
+		AggregationsIntervall.aGG5MINUTE = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect("asp.agregation5Minuten"),
+				5 * Constants.MILLIS_PER_MINUTE, 3);
+		AggregationsIntervall.aGG15MINUTE = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect("asp.agregation15Minuten"),
+				15 * Constants.MILLIS_PER_MINUTE, 2);
+		AggregationsIntervall.aGG30MINUTE = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect("asp.agregation30Minuten"),
+				30 * Constants.MILLIS_PER_MINUTE, 2);
+		AggregationsIntervall.aGG60MINUTE = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect("asp.agregation60Minuten"),
+				60 * Constants.MILLIS_PER_MINUTE, 40);
 
-		AggregationsIntervall.aGGDTVTAG = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvTag"),
-						60 * 24 * Constants.MILLIS_PER_MINUTE, 50);
-		AggregationsIntervall.aGGDTVMONAT = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvMonat"),
-						61 * 24 * Constants.MILLIS_PER_MINUTE, 15);
-		AggregationsIntervall.aGGDTVJAHR = new AggregationsIntervall(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_DTV_FS), dav.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_DTV_MQ), dav.getDataModel().getAspect("asp.agregationDtvJahr"),
-						62 * 24 * Constants.MILLIS_PER_MINUTE, 0);
+		AggregationsIntervall.aGGDTVTAG = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
+				dav.getDataModel().getAspect("asp.agregationDtvTag"),
+				60 * 24 * Constants.MILLIS_PER_MINUTE, 50);
+		AggregationsIntervall.aGGDTVMONAT = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
+				dav.getDataModel().getAspect("asp.agregationDtvMonat"),
+				61 * 24 * Constants.MILLIS_PER_MINUTE, 15);
+		AggregationsIntervall.aGGDTVJAHR = new AggregationsIntervall(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DTV_MQ),
+				dav.getDataModel().getAspect("asp.agregationDtvJahr"),
+				62 * 24 * Constants.MILLIS_PER_MINUTE, 0);
 	}
 
 	/**
@@ -343,8 +349,7 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 	 * @return ob es sich bei diesem Intervall um ein DTV- bzw. TV-Intervall handelt
 	 */
 	public boolean isDTVorTV() {
-		return equals(AggregationsIntervall.aGGDTVJAHR)
-				|| equals(AggregationsIntervall.aGGDTVMONAT)
+		return equals(AggregationsIntervall.aGGDTVJAHR) || equals(AggregationsIntervall.aGGDTVMONAT)
 				|| equals(AggregationsIntervall.aGGDTVTAG);
 	}
 
@@ -380,10 +385,10 @@ public final class AggregationsIntervall implements Comparable<AggregationsInter
 		if ((obj != null) && (obj instanceof AggregationsIntervall)) {
 			final AggregationsIntervall that = (AggregationsIntervall) obj;
 
-			ergebnis = getDatenBeschreibung(true).getAspect().equals(
-					that.getDatenBeschreibung(true).getAspect())
-					&& getDatenBeschreibung(true).getAttributeGroup().equals(
-							that.getDatenBeschreibung(true).getAttributeGroup());
+			ergebnis = getDatenBeschreibung(true).getAspect()
+					.equals(that.getDatenBeschreibung(true).getAspect())
+					&& getDatenBeschreibung(true).getAttributeGroup()
+							.equals(that.getDatenBeschreibung(true).getAttributeGroup());
 		}
 
 		return ergebnis;

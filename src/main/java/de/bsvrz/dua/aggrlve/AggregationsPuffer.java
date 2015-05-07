@@ -35,8 +35,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
  * Ringpuffer die zur Errechnung des jeweils nächsthoeheren Intervalls notwendig sind
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AggregationsPuffer extends AbstraktAggregationsPuffer {
 

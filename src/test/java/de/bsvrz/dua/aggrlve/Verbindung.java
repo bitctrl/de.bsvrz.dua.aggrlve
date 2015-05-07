@@ -32,8 +32,6 @@ import java.io.File;
  * Speichert die Verbindungsdaten.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class Verbindung {
 
@@ -48,8 +46,8 @@ public final class Verbindung {
 	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] { "-datenverteiler=localhost:8083",
-		"-benutzer=Tester", "-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
-	"-debugLevelFileText=WARNING" };
+			"-benutzer=Tester", "-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
+			"-debugLevelFileText=WARNING" };
 
 	// /**
 	// * Verbindungsdaten fuer Eclipse

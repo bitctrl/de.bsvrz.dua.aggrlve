@@ -40,11 +40,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertMarkierung;
  * Aggregationsdatums
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public class AggregationsAttributWert extends MesswertMarkierung implements
-Comparable<AggregationsAttributWert>, Cloneable {
+public class AggregationsAttributWert extends MesswertMarkierung
+		implements Comparable<AggregationsAttributWert>, Cloneable {
 
 	/**
 	 * das Attribut.
@@ -78,17 +76,18 @@ Comparable<AggregationsAttributWert>, Cloneable {
 			throw new NullPointerException("Datensatz ist <<null>>");
 		}
 
-		final String attributName = attr.getAttributName(resultat.getObject().isOfType(
-				AggregationLVE.typFahrstreifen));
+		final String attributName = attr
+				.getAttributName(resultat.getObject().isOfType(AggregationLVE.typFahrstreifen));
 
 		this.attr = attr;
 		wert = datenSatz.getItem(attributName).getUnscaledValue("Wert").longValue();
 		nichtErfasst = datenSatz.getItem(attributName).getItem("Status").getItem("Erfassung")
 				.getUnscaledValue("NichtErfasst").intValue() == DUAKonstanten.JA;
-		implausibel = datenSatz.getItem(attributName).getItem("Status")
-				.getItem("MessWertErsetzung").getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA;
+		implausibel = datenSatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
+				.getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA;
 		interpoliert = datenSatz.getItem(attributName).getItem("Status")
-				.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert").intValue() == DUAKonstanten.JA;
+				.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
+				.intValue() == DUAKonstanten.JA;
 
 		formalMax = datenSatz.getItem(attributName).getItem("Status").getItem("PlFormal")
 				.getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA;
@@ -156,32 +155,32 @@ Comparable<AggregationsAttributWert>, Cloneable {
 			nutzDatum.getItem(attributName).getUnscaledValue("Wert").set(wert);
 		} else {
 			nutzDatum.getItem(attributName).getUnscaledValue("Wert")
-			.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}
 
 		nutzDatum.getItem(attributName).getItem("Status").getItem("Erfassung")
-		.getUnscaledValue("NichtErfasst")
-		.set(isNichtErfasst() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.getUnscaledValue("NichtErfasst")
+				.set(isNichtErfasst() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
-		.getUnscaledValue("Implausibel")
-		.set(isImplausibel() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.getUnscaledValue("Implausibel")
+				.set(isImplausibel() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
-		.getUnscaledValue("Interpoliert")
-		.set(isInterpoliert() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.getUnscaledValue("Interpoliert")
+				.set(isInterpoliert() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal")
-		.getUnscaledValue("WertMax")
-		.set(isFormalMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMax")
+				.set(isFormalMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal")
-		.getUnscaledValue("WertMin")
-		.set(isFormalMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMin")
+				.set(isFormalMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch")
-		.getUnscaledValue("WertMaxLogisch")
-		.set(isLogischMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMaxLogisch")
+				.set(isLogischMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch")
-		.getUnscaledValue("WertMinLogisch")
-		.set(isLogischMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMinLogisch")
+				.set(isLogischMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 
 		guete.exportiere(nutzDatum, attributName);
 	}

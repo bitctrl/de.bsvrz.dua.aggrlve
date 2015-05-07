@@ -44,7 +44,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * übernommen werden sollen.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 
@@ -133,11 +132,10 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 		for (final String attName : new String[] { "VKfz", "VLkw", "VPkw", "VgKfz" }) {
 			if ((ersetzung != null) && (ersetzung.getData() != null)) {
 				new MesswertUnskaliert(attName, ersetzung.getData())
-				.kopiereInhaltNachModifiziereIndex(analyseDatum);
+						.kopiereInhaltNachModifiziereIndex(analyseDatum);
 			} else {
-				LOGGER.error(
-						"Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
-								+ attName + " ermittelt werden");
+				LOGGER.error("Es konnte kein Ersetzungsdatum fuer " + getVmq() + " im Attribut "
+						+ attName + " ermittelt werden");
 				final MesswertUnskaliert mw = new MesswertUnskaliert(attName);
 				mw.setWertUnskaliert(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				mw.kopiereInhaltNachModifiziereIndex(analyseDatum);
@@ -187,7 +185,7 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 	 */
 	private void setBilanzDatum(final Data analyseDatum, final String attName,
 			final Map<SystemObject, ResultData> dataList) {
-		final List<QWert> qWerte = new ArrayList<QWert>();
+		final List<QWert> qWerte = new ArrayList<>();
 
 		for (final SystemObject mq : getMqParts().keySet()) {
 			final ResultData data = dataList.get(mq);

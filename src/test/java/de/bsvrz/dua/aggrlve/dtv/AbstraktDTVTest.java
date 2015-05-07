@@ -44,15 +44,13 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest;
  * Soll-Erwartet: extra/testDaten/[Version]/Messwert_Aggregation_TV_DTV_Soll.csv
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AbstraktDTVTest {
 
 	/**
 	 * Mappt Attribut auf relative Posisition in Tabelle.
 	 */
-	protected final HashMap<AggregationsAttribut, Integer> agrMap = new HashMap<AggregationsAttribut, Integer>();
+	protected final HashMap<AggregationsAttribut, Integer> agrMap = new HashMap<>();
 
 	/**
 	 * Aggregations-Applikation.
@@ -87,10 +85,11 @@ public class AbstraktDTVTest {
 		agrMap.put(AggregationsAttribut.Q_PKW, 1);
 		agrMap.put(AggregationsAttribut.Q_LKW, 2);
 
-		inputImporter = new AggregationUnvImporter(dav, Verbindung.WURZEL
-				+ "Messwert_Aggregation_unv.csv");
+		inputImporter = new AggregationUnvImporter(dav,
+				Verbindung.WURZEL + "Messwert_Aggregation_unv.csv");
 
-		outputImporter = new CSVImporter(Verbindung.WURZEL + "Messwert_Aggregation_TV_DTV_Soll.csv");
+		outputImporter = new CSVImporter(
+				Verbindung.WURZEL + "Messwert_Aggregation_TV_DTV_Soll.csv");
 	}
 
 	/**

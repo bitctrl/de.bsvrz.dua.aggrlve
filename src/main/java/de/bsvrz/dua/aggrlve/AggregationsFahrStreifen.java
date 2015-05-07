@@ -54,11 +54,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Aggregationsstufen aus der jeweils darunterliegenden Stufe.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt implements
-ClientReceiverInterface {
+public class AggregationsFahrStreifen extends AbstraktAggregationsObjekt
+		implements ClientReceiverInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 	/**
@@ -83,14 +81,14 @@ ClientReceiverInterface {
 		this.fs = fs;
 
 		datenPuffer = new AggregationsPufferMenge(dav, fs.getSystemObject());
-		final Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		final Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<>();
 		for (final AggregationsIntervall intervall : AggregationsIntervall.getInstanzen()) {
 			try {
-				anmeldungen.add(new DAVObjektAnmeldung(fs.getSystemObject(), intervall
-						.getDatenBeschreibung(true)));
+				anmeldungen.add(new DAVObjektAnmeldung(fs.getSystemObject(),
+						intervall.getDatenBeschreibung(true)));
 			} catch (final Exception e) {
-				throw new DUAInitialisierungsException("Fahrstreifen " + fs
-						+ " konnte nicht initialisiert werden", e);
+				throw new DUAInitialisierungsException(
+						"Fahrstreifen " + fs + " konnte nicht initialisiert werden", e);
 			}
 		}
 		sender.modifiziereObjektAnmeldung(anmeldungen);
@@ -98,7 +96,7 @@ ClientReceiverInterface {
 		dav.subscribeReceiver(this, fs.getSystemObject(),
 				new DataDescription(dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KZD),
 						dav.getDataModel().getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	@Override
@@ -160,7 +158,7 @@ ClientReceiverInterface {
 		boolean nichtErfasst = false;
 		double elementZaehler = 0;
 		long summe = 0;
-		final Collection<GWert> gueteWerte = new ArrayList<GWert>();
+		final Collection<GWert> gueteWerte = new ArrayList<>();
 		for (final AggregationsDatum basisDatum : basisDaten) {
 			final AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
 			if ((basisWert != null) && (basisWert.getWert() >= 0)) {
@@ -187,9 +185,8 @@ ClientReceiverInterface {
 			try {
 				exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
 			} catch (final GueteException e) {
-				LOGGER.error(
-						"Guete von " + objekt + " fuer " + attribut
-								+ " konnte nicht berechnet werden", e);
+				LOGGER.error("Guete von " + objekt + " fuer " + attribut
+						+ " konnte nicht berechnet werden", e);
 				e.printStackTrace();
 			}
 		}

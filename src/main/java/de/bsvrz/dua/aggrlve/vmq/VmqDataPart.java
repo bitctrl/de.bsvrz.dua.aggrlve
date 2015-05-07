@@ -37,14 +37,13 @@ import de.bsvrz.dav.daf.main.config.Aspect;
  * Klasse zum Speichern der Daten eines MQ, der ein Bestandteil eines VMQ ist.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public class VmqDataPart {
 
 	/** der Anteil des MQ am virtuellen Messquerschnitt. */
 	private final double anteil;
 	/** die Liste der für den MQ empfangenen Daten nach Aspekten geordnet. */
-	private final Map<Aspect, SortedMap<Long, ResultData>> dataList = new HashMap<Aspect, SortedMap<Long, ResultData>>();
+	private final Map<Aspect, SortedMap<Long, ResultData>> dataList = new HashMap<>();
 
 	/**
 	 * Konstruktor.
@@ -73,7 +72,7 @@ public class VmqDataPart {
 				final Aspect aspect = result.getDataDescription().getAspect();
 				SortedMap<Long, ResultData> map = dataList.get(aspect);
 				if (map == null) {
-					map = new TreeMap<Long, ResultData>();
+					map = new TreeMap<>();
 					dataList.put(aspect, map);
 				}
 				if (map.size() > 3) {

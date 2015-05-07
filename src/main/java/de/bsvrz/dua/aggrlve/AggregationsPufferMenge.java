@@ -42,8 +42,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Speichert alle historischen Daten eines Aggregationsobjektes aller Aggregationsintervalle.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AggregationsPufferMenge {
 
@@ -57,7 +55,7 @@ public class AggregationsPufferMenge {
 	/**
 	 * Menge aller Puffer mit Aggregationsdaten (vom Aspekt aus betrachtet).
 	 */
-	private final Map<Aspect, AbstraktAggregationsPuffer> pufferMenge = new HashMap<Aspect, AbstraktAggregationsPuffer>();
+	private final Map<Aspect, AbstraktAggregationsPuffer> pufferMenge = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
@@ -73,7 +71,7 @@ public class AggregationsPufferMenge {
 			throws DUAInitialisierungsException {
 		if (AggregationsPufferMenge.aspekteSortiert == null) {
 			AggregationsPufferMenge.aspekteSortiert = new Aspect[AggregationsIntervall
-			                                                     .getInstanzen().size() + 1];
+					.getInstanzen().size() + 1];
 			AggregationsPufferMenge.aspekteSortiert[0] = AggregationLVE.mwe;
 			int i = 1;
 			for (final AggregationsIntervall intervall : AggregationsIntervall.getInstanzen()) {
@@ -88,8 +86,8 @@ public class AggregationsPufferMenge {
 					|| intervall.equals(AggregationsIntervall.aGGDTVMONAT)
 					|| intervall.equals(AggregationsIntervall.aGGDTVJAHR)) {
 				if (!obj.getType().equals(AggregationLVE.typFahrstreifen)) {
-					pufferMenge.put(intervall.getAspekt(), new DTVAggregationsPuffer(dav, obj,
-							intervall));
+					pufferMenge.put(intervall.getAspekt(),
+							new DTVAggregationsPuffer(dav, obj, intervall));
 				}
 			} else {
 				pufferMenge.put(intervall.getAspekt(), new AggregationsPuffer(dav, obj, intervall));
@@ -105,14 +103,13 @@ public class AggregationsPufferMenge {
 	 *            ein aktuelles Datum mit Aggregations- oder messwertersetzten Fahrstreifendaten
 	 */
 	public void aktualisiere(final ResultData resultat) {
-		final AbstraktAggregationsPuffer puffer = pufferMenge.get(resultat.getDataDescription()
-				.getAspect());
+		final AbstraktAggregationsPuffer puffer = pufferMenge
+				.get(resultat.getDataDescription().getAspect());
 		if (puffer != null) {
 			puffer.aktualisiere(resultat);
 		} else {
-			LOGGER.fine(
-					"Puffer fuer Objekt " + resultat.getObject() + " und Aspekt "
-					+ resultat.getDataDescription().getAspect() + " existiert nicht");
+			LOGGER.fine("Puffer fuer Objekt " + resultat.getObject() + " und Aspekt "
+							+ resultat.getDataDescription().getAspect() + " existiert nicht");
 		}
 	}
 
@@ -132,7 +129,7 @@ public class AggregationsPufferMenge {
 	 */
 	public final Collection<AggregationsDatum> getDatenFuerZeitraum(final long begin,
 			final long ende, final AggregationsIntervall aggregationsIntervall) {
-		Collection<AggregationsDatum> daten = new ArrayList<AggregationsDatum>();
+		Collection<AggregationsDatum> daten = new ArrayList<>();
 
 		final AggregationsIntervall ausgangsIntervall = aggregationsIntervall.getVorgaenger();
 		if (ausgangsIntervall == null) {
@@ -140,8 +137,8 @@ public class AggregationsPufferMenge {
 		} else {
 			int start = 0;
 			for (int i = 0; i < AggregationsPufferMenge.aspekteSortiert.length; i++) {
-				if (AggregationsPufferMenge.aspekteSortiert[i].equals(ausgangsIntervall
-						.getDatenBeschreibung(true).getAspect())) {
+				if (AggregationsPufferMenge.aspekteSortiert[i]
+						.equals(ausgangsIntervall.getDatenBeschreibung(true).getAspect())) {
 					start = i;
 				}
 			}
