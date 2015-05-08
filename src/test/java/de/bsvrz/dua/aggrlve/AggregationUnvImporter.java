@@ -180,8 +180,8 @@ public class AggregationUnvImporter extends CSVImporter {
 					datensatz = setAttribut((mq ? "V" : "v") + "gKfz", -1, "0", datensatz);
 					datensatz = setAttribut((mq ? "B" : "b"), -1, "0", datensatz);
 					if (mq) {
-						datensatz = setAttribut((mq ? "B" : "b") + "Max", -1, "0", datensatz);
-						datensatz = setAttribut((mq ? "V" : "v") + "Delta", -1, "0", datensatz);
+						datensatz = setAttribut("BMax", -1, "0", datensatz);
+						datensatz = setAttribut("VDelta", -1, "0", datensatz);
 					}
 					datensatz = setAttribut((mq ? "S" : "s") + "Kfz", -1, "0", datensatz);
 					datensatz = setAttribut((mq ? "A" : "a") + "Lkw", -1, "0", datensatz);
@@ -395,24 +395,24 @@ public class AggregationUnvImporter extends CSVImporter {
 
 		DUAUtensilien.getAttributDatum(attributName + ".Wert", data).asUnscaledValue().set(wert);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.Erfassung.NichtErfasst", data)
-				.asUnscaledValue().set(nErf);
+		.asUnscaledValue().set(nErf);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMax", data)
-				.asUnscaledValue().set(wMax);
+		.asUnscaledValue().set(wMax);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlFormal.WertMin", data)
-				.asUnscaledValue().set(wMin);
+		.asUnscaledValue().set(wMin);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMaxLogisch", data)
-				.asUnscaledValue().set(wMaL);
+		.asUnscaledValue().set(wMaL);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.PlLogisch.WertMinLogisch", data)
-				.asUnscaledValue().set(wMiL);
+		.asUnscaledValue().set(wMiL);
 		DUAUtensilien.getAttributDatum(attributName + ".Status.MessWertErsetzung.Implausibel", data)
-				.asUnscaledValue().set(impl);
+		.asUnscaledValue().set(impl);
 		DUAUtensilien
-		.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
-				.asUnscaledValue().set(intp);
+				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
+		.asUnscaledValue().set(intp);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Index", data).asScaledValue()
-				.set(guete);
+		.set(guete);
 		DUAUtensilien.getAttributDatum(attributName + ".Güte.Verfahren", data).asUnscaledValue()
-				.set(0);
+		.set(0);
 
 		return datensatz;
 	}
