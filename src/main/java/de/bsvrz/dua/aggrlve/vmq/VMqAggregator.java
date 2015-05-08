@@ -60,7 +60,7 @@ public final class VMqAggregator extends Thread {
 	}
 
 	/** MQ mit neuen Daten zur Überprüfung und Zussammenfassung. */
-	private final Set<AbstractAggregationsVmq> reqSet = new HashSet<AbstractAggregationsVmq>();
+	private final Set<AbstractAggregationsVmq> reqSet = new HashSet<>();
 
 	/** Objekt zur Synchronisation der Auftragswarteschlange. */
 	private final Object locker = new Object();

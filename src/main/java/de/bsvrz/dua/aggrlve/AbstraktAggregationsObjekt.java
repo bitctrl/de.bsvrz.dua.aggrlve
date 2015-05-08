@@ -61,12 +61,12 @@ public abstract class AbstraktAggregationsObjekt {
 	 * innerhalb der FG1-Aggregation nicht erfasst werden.
 	 */
 	private static final String[][] REST_ATTRIBUTE_AGGR = new String[][] {
-			new String[] { null, "BMax" }, new String[] { null, "VDelta" },
-			new String[] { "vgKfz", "VgKfz" }, new String[] { "sKfz", "SKfz" },
-			new String[] { "b", "B" }, new String[] { "aLkw", "ALkw" },
-			new String[] { "kKfz", "KKfz" }, new String[] { "kLkw", "KLkw" },
-			new String[] { "kPkw", "KPkw" }, new String[] { "qB", "QB" },
-			new String[] { "kB", "KB" } };
+		new String[] { null, "BMax" }, new String[] { null, "VDelta" },
+		new String[] { "vgKfz", "VgKfz" }, new String[] { "sKfz", "SKfz" },
+		new String[] { "b", "B" }, new String[] { "aLkw", "ALkw" },
+		new String[] { "kKfz", "KKfz" }, new String[] { "kLkw", "KLkw" },
+		new String[] { "kPkw", "KPkw" }, new String[] { "qB", "QB" },
+		new String[] { "kB", "KB" } };
 
 	/**
 	 * die restlichen auszufuellenden Attribute der Attributgruppen
@@ -74,13 +74,13 @@ public abstract class AbstraktAggregationsObjekt {
 	 * innerhalb der DTV-Berechnung nicht erfasst werden.
 	 */
 	private static final String[][] REST_ATTRIBUTE_DTV = new String[][] {
-			new String[] { null, "BMax" }, new String[] { null, "VDelta" },
-			new String[] { "vKfz", "VKfz" }, new String[] { "vPkw", "VPkw" },
-			new String[] { "vLkw", "VLkw" }, new String[] { "vgKfz", "VgKfz" },
-			new String[] { "sKfz", "SKfz" }, new String[] { "b", "B" },
-			new String[] { "aLkw", "ALkw" }, new String[] { "kKfz", "KKfz" },
-			new String[] { "kLkw", "KLkw" }, new String[] { "kPkw", "KPkw" },
-			new String[] { "qB", "QB" }, new String[] { "kB", "KB" } };
+		new String[] { null, "BMax" }, new String[] { null, "VDelta" },
+		new String[] { "vKfz", "VKfz" }, new String[] { "vPkw", "VPkw" },
+		new String[] { "vLkw", "VLkw" }, new String[] { "vgKfz", "VgKfz" },
+		new String[] { "sKfz", "SKfz" }, new String[] { "b", "B" },
+		new String[] { "aLkw", "ALkw" }, new String[] { "kKfz", "KKfz" },
+		new String[] { "kLkw", "KLkw" }, new String[] { "kPkw", "KPkw" },
+		new String[] { "qB", "QB" }, new String[] { "kB", "KB" } };
 
 	/** statische Verbindung zum Datenverteiler. */
 	protected ClientDavInterface dav;
@@ -163,29 +163,29 @@ public abstract class AbstraktAggregationsObjekt {
 
 			if (attributName != null) {
 				resultat.getData().getItem(attributName).getUnscaledValue("Wert")
-						.set(DUAKonstanten.NICHT_ERMITTELBAR);
+				.set(DUAKonstanten.NICHT_ERMITTELBAR);
 				resultat.getData().getItem(attributName).getItem("Status").getItem("Erfassung")
-				.getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN);
+						.getUnscaledValue("NichtErfasst").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status")
-						.getItem("MessWertErsetzung").getUnscaledValue("Implausibel")
-						.set(DUAKonstanten.NEIN);
+				.getItem("MessWertErsetzung").getUnscaledValue("Implausibel")
+				.set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status")
-						.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
-						.set(DUAKonstanten.NEIN);
+				.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
+				.set(DUAKonstanten.NEIN);
 
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlFormal")
-				.getUnscaledValue("WertMax").set(DUAKonstanten.NEIN);
+						.getUnscaledValue("WertMax").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlFormal")
-				.getUnscaledValue("WertMin").set(DUAKonstanten.NEIN);
+						.getUnscaledValue("WertMin").set(DUAKonstanten.NEIN);
 
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch")
-						.getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch")
-						.getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN);
+				.getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Güte").getUnscaledValue("Index")
-						.set(DUAKonstanten.NICHT_ERMITTELBAR);
+				.set(DUAKonstanten.NICHT_ERMITTELBAR);
 				resultat.getData().getItem(attributName).getItem("Güte")
-						.getUnscaledValue("Verfahren").set(GueteVerfahren.STANDARD.getCode());
+				.getUnscaledValue("Verfahren").set(GueteVerfahren.STANDARD.getCode());
 			}
 		}
 	}
@@ -241,7 +241,7 @@ public abstract class AbstraktAggregationsObjekt {
 			final Calendar c = new GregorianCalendar();
 			c.setTimeInMillis(zeitStempel);
 			anzahlSoll = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-			;
+
 		} else if (intervall.equals(AggregationsIntervall.aGGDTVJAHR)) {
 			anzahlSoll = 12;
 		}
@@ -255,9 +255,9 @@ public abstract class AbstraktAggregationsObjekt {
 				if ((wert != null) && (wert.getWert() >= 0)) {
 					gueteSumme += wert.getGuete().getIndexUnskaliert() >= 0
 							? wert.getGuete().getIndex() : 0;
-					wertSumme += wert.getWert();
-					wertAnzahl++;
-					zielDaten.add(wert);
+							wertSumme += wert.getWert();
+							wertAnzahl++;
+							zielDaten.add(wert);
 				}
 			}
 
