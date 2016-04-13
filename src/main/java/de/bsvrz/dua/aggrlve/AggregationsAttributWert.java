@@ -81,23 +81,24 @@ public class AggregationsAttributWert extends MesswertMarkierung
 
 		this.attr = attr;
 		wert = datenSatz.getItem(attributName).getUnscaledValue("Wert").longValue();
-		nichtErfasst = datenSatz.getItem(attributName).getItem("Status").getItem("Erfassung")
-				.getUnscaledValue("NichtErfasst").intValue() == DUAKonstanten.JA;
-		implausibel = datenSatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
-				.getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA;
-		interpoliert = datenSatz.getItem(attributName).getItem("Status")
-				.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
-				.intValue() == DUAKonstanten.JA;
+		setNichtErfasst(datenSatz.getItem(attributName).getItem("Status").getItem("Erfassung")
+				.getUnscaledValue("NichtErfasst").intValue() == DUAKonstanten.JA);
+		setImplausibel(
+				datenSatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
+						.getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA);
+		setInterpoliert(
+				datenSatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
+						.getUnscaledValue("Interpoliert").intValue() == DUAKonstanten.JA);
 
-		formalMax = datenSatz.getItem(attributName).getItem("Status").getItem("PlFormal")
-				.getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA;
-		formalMin = datenSatz.getItem(attributName).getItem("Status").getItem("PlFormal")
-				.getUnscaledValue("WertMin").intValue() == DUAKonstanten.JA;
+		setFormalMax(datenSatz.getItem(attributName).getItem("Status").getItem("PlFormal")
+				.getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA);
+		setFormalMin(datenSatz.getItem(attributName).getItem("Status").getItem("PlFormal")
+				.getUnscaledValue("WertMin").intValue() == DUAKonstanten.JA);
 
-		logischMax = datenSatz.getItem(attributName).getItem("Status").getItem("PlLogisch")
-				.getUnscaledValue("WertMaxLogisch").intValue() == DUAKonstanten.JA;
-		logischMin = datenSatz.getItem(attributName).getItem("Status").getItem("PlLogisch")
-				.getUnscaledValue("WertMinLogisch").intValue() == DUAKonstanten.JA;
+		setLogischMax(datenSatz.getItem(attributName).getItem("Status").getItem("PlLogisch")
+				.getUnscaledValue("WertMaxLogisch").intValue() == DUAKonstanten.JA);
+		setLogischMin(datenSatz.getItem(attributName).getItem("Status").getItem("PlLogisch")
+				.getUnscaledValue("WertMinLogisch").intValue() == DUAKonstanten.JA);
 
 		guete = new GWert(datenSatz, attributName);
 	}
@@ -201,7 +202,7 @@ public class AggregationsAttributWert extends MesswertMarkierung
 	 *            der Wert dieses Attributs
 	 */
 	public final void setWert(final long wert) {
-		veraendert = true;
+		setVeraendert(true);
 		this.wert = wert;
 	}
 
@@ -230,7 +231,7 @@ public class AggregationsAttributWert extends MesswertMarkierung
 	 *            die Guete dieses Attributwertes
 	 */
 	public final void setGuete(final GWert guete) {
-		veraendert = true;
+		setVeraendert(true);
 		this.guete = guete;
 	}
 
@@ -258,6 +259,6 @@ public class AggregationsAttributWert extends MesswertMarkierung
 	@Override
 	public String toString() {
 		return "Attribut: " + attr + "\nWert: " + wert + "\nGuete: " + guete + "\nVeraendert: "
-				+ (veraendert ? "Ja" : "Nein") + "\n" + super.toString();
+				+ (isVeraendert() ? "Ja" : "Nein") + "\n" + super.toString();
 	}
 }

@@ -26,7 +26,6 @@
 
 package de.bsvrz.dua.aggrlve;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -156,7 +155,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
 
-		final String timeoutString = DUAUtensilien.getArgument("offset", komArgumente);
+		final String timeoutString = DUAUtensilien.getArgument("offset", getKomArgumente());
 		if (timeoutString != null) {
 			try {
 				berechnungsOffset = Integer.parseInt(timeoutString);
@@ -175,32 +174,32 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		}
 
 		final ArgumentList argumentList = new ArgumentList(
-				komArgumente.toArray(new String[komArgumente.size()]));
+				getKomArgumente().toArray(new String[getKomArgumente().size()]));
 		final boolean ignoreVmq = argumentList.fetchArgument("-ignoreVMQ=false").booleanValue();
 
 		/**
 		 * DUA-Verkehrs-Netz initialisieren
 		 */
-		DuaVerkehrsNetz.initialisiere(verbindung);
+		DuaVerkehrsNetz.initialisiere(getVerbindung());
 
 		/**
 		 * Aggregationsintervalle initialisieren
 		 */
-		AggregationsIntervall.initialisiere(verbindung);
+		AggregationsIntervall.initialisiere(getVerbindung());
 
 		/** Aggregation für virtuelle MQ initialisieren. */
 		if (!ignoreVmq) {
-			VMqAggregator.getInstance().init(verbindung);
+			VMqAggregator.getInstance().init(getVerbindung());
 		}
 
 		AggregationLVE.guete = getGueteFaktor();
-		AggregationLVE.typFahrstreifen = verbindung.getDataModel()
+		AggregationLVE.typFahrstreifen = getVerbindung().getDataModel()
 				.getType(DUAKonstanten.TYP_FAHRSTREIFEN);
-		AggregationLVE.mwe = verbindung.getDataModel()
+		AggregationLVE.mwe = getVerbindung().getDataModel()
 				.getAspect(DUAKonstanten.ASP_MESSWERTERSETZUNG);
 
 		final Collection<SystemObject> alleMqObjImKB = DUAUtensilien.getBasisInstanzen(
-				verbindung.getDataModel().getType(DUAKonstanten.TYP_MQ), verbindung,
+				getVerbindung().getDataModel().getType(DUAKonstanten.TYP_MQ), getVerbindung(),
 				getKonfigurationsBereiche());
 
 		for (final SystemObject mqObjekt : alleMqObjImKB) {
@@ -209,7 +208,8 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 				throw new DUAInitialisierungsException("Konfiguration von Messquerschnitt " + mq
 						+ " konnte nicht vollstaendig ausgelesen werden");
 			} else {
-				messQuerschnitte.put(mqObjekt, new AggregationsMessQuerschnitt(verbindung, mq));
+				messQuerschnitte.put(mqObjekt,
+						new AggregationsMessQuerschnitt(getVerbindung(), mq));
 
 				final Set<SystemObject> fsList = new HashSet<>();
 				for (final FahrStreifen fs : mq.getFahrStreifen()) {
@@ -260,9 +260,9 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	public void testStart(final ClientDavInterface dav, final String gueteFaktor) throws Exception {
 		AggregationLVE.zeitRaffer = true;
 		LOGGER.config("Applikation fuer Testzwecke gestartet");
-		komArgumente = new ArrayList<>();
-		komArgumente.add("-KonfigurationsBereichsPid=" + "kb.duaTestObjekte");
-		komArgumente.add("-gueteFaktor=" + gueteFaktor);
+		clearKomArguments();
+		addKomArgument("-KonfigurationsBereichsPid=" + "kb.duaTestObjekte");
+		addKomArgument("-gueteFaktor=" + gueteFaktor);
 
 		initialize(dav);
 	}
