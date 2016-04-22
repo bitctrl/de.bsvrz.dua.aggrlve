@@ -18,6 +18,9 @@ siehe [AFo] bzw. [MARZ]).
 Versionsgeschichte
 ==================
 
+1.3.1
+- Kompatibilität zu DuA-2.0 hergestellt
+
 1.3.0
 - Umstellung auf Funclib-Bitctrl-Dua
 
