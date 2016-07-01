@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -59,16 +59,16 @@ public final class VMqAggregator extends Thread {
 		return VMqAggregator.INSTANCE;
 	}
 
-	/** MQ mit neuen Daten zur Überprüfung und Zussammenfassung. */
+	/** MQ mit neuen Daten zur ÃœberprÃ¼fung und Zussammenfassung. */
 	private final Set<AbstractAggregationsVmq> reqSet = new HashSet<>();
 
 	/** Objekt zur Synchronisation der Auftragswarteschlange. */
 	private final Object locker = new Object();
 
-	/** die Liste der Aspekte für die Daten übertragen werden. */
+	/** die Liste der Aspekte fÃ¼r die Daten Ã¼bertragen werden. */
 	private final Set<Aspect> supportedAspects = new HashSet<>();
 
-	/** die Attributgruppe für die Quelldaten. */
+	/** die Attributgruppe fÃ¼r die Quelldaten. */
 	private AttributeGroup srcAtg;
 
 	/** privater Konstruktor. */
@@ -100,7 +100,7 @@ public final class VMqAggregator extends Thread {
 	/**
 	 * initialisiert den Aggregator.
 	 *
-	 * Für alle virtuellen Messquerschnitte erfolgt eine Anmeldung auf die Aggregationsdaten der
+	 * FÃ¼r alle virtuellen Messquerschnitte erfolgt eine Anmeldung auf die Aggregationsdaten der
 	 * beteiligten MQ. Die Daten werden von den entsprechenden Vertreterobjekten empfangen und
 	 * zusammengefasst.
 	 *

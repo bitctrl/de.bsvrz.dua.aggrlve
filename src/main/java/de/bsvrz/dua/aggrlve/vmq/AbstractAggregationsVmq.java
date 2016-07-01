@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -71,18 +71,18 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	/** die verwendete Datenverteilerverbindung. */
 	private ClientDavInterface dav;
 
-	/** die Parameterattributgruppe für die Grenzwerte der Aggregation. */
+	/** die Parameterattributgruppe fÃ¼r die Grenzwerte der Aggregation. */
 	private AttributeGroup paramAtg;
-	/** die Parameterdaten für die Grenzwerte der Aggregation. */
+	/** die Parameterdaten fÃ¼r die Grenzwerte der Aggregation. */
 	private Data paramData;
 
 	/**
-	 * das letzte veröffentlichte Datum (wird zur Ersatzwertbildung herangezogen).
+	 * das letzte verÃ¶ffentlichte Datum (wird zur Ersatzwertbildung herangezogen).
 	 */
 	private ResultData letztesErgebnis;
 
 	/**
-	 * Konstruktor, erzeugt eine Instanz für das übergebene MQ-Objekt.
+	 * Konstruktor, erzeugt eine Instanz fÃ¼r das Ã¼bergebene MQ-Objekt.
 	 *
 	 * @param obj
 	 *            das Objekt
@@ -260,7 +260,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	}
 
 	/**
-	 * Berechnet die Verkehrsstärken (<code>Kxxx</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f.
+	 * Berechnet die VerkehrsstÃ¤rken (<code>Kxxx</code>) analog SE-02.00.00.00.00-AFo-4.0 S.119f.
 	 *
 	 * @param analyseDatum
 	 *            das Datum in das die Daten eingetragen werden sollen
@@ -396,7 +396,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	}
 
 	/**
-	 * berechnet den zusammengefassten Datensatz für einen virtuellen MQ aus den übergebenen
+	 * berechnet den zusammengefassten Datensatz fÃ¼r einen virtuellen MQ aus den Ã¼bergebenen
 	 * aktuellen Daten.
 	 *
 	 * @param dataList
@@ -406,12 +406,12 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	protected abstract ResultData calculateResultData(Map<SystemObject, ResultData> dataList);
 
 	/**
-	 * löscht alle zwischengespeicherten Daten die nicht jünger als der übergebene Zeitpunkt sind.
+	 * lÃ¶scht alle zwischengespeicherten Daten die nicht jÃ¼nger als der Ã¼bergebene Zeitpunkt sind.
 	 *
 	 * @param dataTime
 	 *            der Zeitpunkt
 	 * @param aspect
-	 *            der Aspekt für den die daten gelöscht werden sollen
+	 *            der Aspekt fÃ¼r den die daten gelÃ¶scht werden sollen
 	 */
 	private void clearData(final long dataTime, final Aspect aspect) {
 		for (final VmqDataPart part : getMqParts().values()) {
@@ -422,7 +422,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription,
 			final byte state) {
-		LOGGER.finest("Sendesteuerung wird nicht unterstützt");
+		LOGGER.finest("Sendesteuerung wird nicht unterstÃ¼tzt");
 	}
 
 	/**
@@ -493,7 +493,7 @@ public abstract class AbstractAggregationsVmq implements ClientReceiverInterface
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {
-		LOGGER.finest("Sendesteuerung wird nicht unterstützt");
+		LOGGER.finest("Sendesteuerung wird nicht unterstÃ¼tzt");
 		return false;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -182,9 +182,9 @@ public abstract class AbstraktAggregationsObjekt {
 				.getUnscaledValue("WertMaxLogisch").set(DUAKonstanten.NEIN);
 				resultat.getData().getItem(attributName).getItem("Status").getItem("PlLogisch")
 				.getUnscaledValue("WertMinLogisch").set(DUAKonstanten.NEIN);
-				resultat.getData().getItem(attributName).getItem("Güte").getUnscaledValue("Index")
+				resultat.getData().getItem(attributName).getItem("GÃ¼te").getUnscaledValue("Index")
 				.set(DUAKonstanten.NICHT_ERMITTELBAR);
-				resultat.getData().getItem(attributName).getItem("Güte")
+				resultat.getData().getItem(attributName).getItem("GÃ¼te")
 				.getUnscaledValue("Verfahren").set(GueteVerfahren.STANDARD.getCode());
 			}
 		}
@@ -201,9 +201,9 @@ public abstract class AbstraktAggregationsObjekt {
 
 	/**
 	 * Ausgefallene Werte werden hier durch den Mittelwert der vorhandenen Werte ersetzt. Um die
-	 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit einem
-	 * Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der Güteindizes
-	 * der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen Werten ergibt sich
+	 * ZuverlÃ¤ssigkeit der Daten nachvollziehen zu kÃ¶nnen, ist jeder aggregierte Wert mit einem
+	 * GÃ¼teindex in % anzugeben. Der GÃ¼teindex wird durch arithmetische Mittelung der GÃ¼teindizes
+	 * der zu aggregierenden Daten bestimmt. Der GÃ¼teindex von ausgefallenen Werten ergibt sich
 	 * dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit einem parametrierbaren
 	 * Faktor. Des weiteren ist jeder aggregierte Wert mit einer Kennung zu versehen, ob zur
 	 * Aggregation interpolierte (durch die Messwertersetzung generierte) Werte verwendet wurden.
@@ -358,7 +358,7 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @param basisDaten
 	 *            die der Aggregation zu Grunde liegenden Daten
 	 * @param zeitStempel
-	 *            der Zeitstempel, mit dem die aggregierten Daten veröffentlicht werden sollen
+	 *            der Zeitstempel, mit dem die aggregierten Daten verÃ¶ffentlicht werden sollen
 	 * @param intervall
 	 *            das gewuenschte Aggregationsintervall
 	 */
@@ -366,11 +366,11 @@ public abstract class AbstraktAggregationsObjekt {
 			final Collection<AggregationsDatum> basisDaten, final long zeitStempel,
 			final AggregationsIntervall intervall) {
 		/**
-		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
+		 * Die Aggregation erfolgt unabhÃ¤ngig von der Anzahl der gÃ¼ltigen Kurzzeitdatenzyklen.
 		 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
-		 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit einem
-		 * Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
-		 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen Werten
+		 * ZuverlÃ¤ssigkeit der Daten nachvollziehen zu kÃ¶nnen, ist jeder aggregierte Wert mit einem
+		 * GÃ¼teindex in % anzugeben. Der GÃ¼teindex wird durch arithmetische Mittelung der
+		 * GÃ¼teindizes der zu aggregierenden Daten bestimmt. Der GÃ¼teindex von ausgefallenen Werten
 		 * ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit einem
 		 * parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer Kennung zu
 		 * versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung generierte) Werte
@@ -426,7 +426,7 @@ public abstract class AbstraktAggregationsObjekt {
 	 * @param basisDaten
 	 *            die der Aggregation zu Grunde liegenden Daten
 	 * @param zeitStempel
-	 *            der Zeitstempel, mit dem die aggregierten Daten veröffentlicht werden sollen
+	 *            der Zeitstempel, mit dem die aggregierten Daten verÃ¶ffentlicht werden sollen
 	 * @param intervall
 	 *            das gewuenschte Aggregationsintervall
 	 */
@@ -434,11 +434,11 @@ public abstract class AbstraktAggregationsObjekt {
 			final Collection<AggregationsDatum> basisDaten, final long zeitStempel,
 			final AggregationsIntervall intervall) {
 		/**
-		 * Die Aggregation erfolgt unabhängig von der Anzahl der gültigen Kurzzeitdatenzyklen.
+		 * Die Aggregation erfolgt unabhÃ¤ngig von der Anzahl der gÃ¼ltigen Kurzzeitdatenzyklen.
 		 * Ausgefallene Werte werden durch den Mittelwert der vorhandenen Werte ersetzt. Um die
-		 * Zuverlässigkeit der Daten nachvollziehen zu können, ist jeder aggregierte Wert mit einem
-		 * Güteindex in % anzugeben. Der Güteindex wird durch arithmetische Mittelung der
-		 * Güteindizes der zu aggregierenden Daten bestimmt. Der Güteindex von ausgefallenen Werten
+		 * ZuverlÃ¤ssigkeit der Daten nachvollziehen zu kÃ¶nnen, ist jeder aggregierte Wert mit einem
+		 * GÃ¼teindex in % anzugeben. Der GÃ¼teindex wird durch arithmetische Mittelung der
+		 * GÃ¼teindizes der zu aggregierenden Daten bestimmt. Der GÃ¼teindex von ausgefallenen Werten
 		 * ergibt sich dabei aus dem Mittelwert der vorhandenen Werte multipliziert mit einem
 		 * parametrierbaren Faktor. Des weiteren ist jeder aggregierte Wert mit einer Kennung zu
 		 * versehen, ob zur Aggregation interpolierte (durch die Messwertersetzung generierte) Werte
@@ -495,7 +495,7 @@ public abstract class AbstraktAggregationsObjekt {
 	 * Startet die Aggregation von Daten.
 	 *
 	 * @param zeitStempel
-	 *            der Zeitstempel, mit dem die aggregierten Daten veröffentlicht werden sollen
+	 *            der Zeitstempel, mit dem die aggregierten Daten verÃ¶ffentlicht werden sollen
 	 * @param intervall
 	 *            der Intervall der aggregierten Daten (auch der Publikationsaspekt)
 	 */

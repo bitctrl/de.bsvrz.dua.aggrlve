@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -42,7 +42,7 @@ public class VmqDataPart {
 
 	/** der Anteil des MQ am virtuellen Messquerschnitt. */
 	private final double anteil;
-	/** die Liste der für den MQ empfangenen Daten nach Aspekten geordnet. */
+	/** die Liste der fÃ¼r den MQ empfangenen Daten nach Aspekten geordnet. */
 	private final Map<Aspect, SortedMap<Long, ResultData>> dataList = new HashMap<>();
 
 	/**
@@ -61,7 +61,7 @@ public class VmqDataPart {
 	}
 
 	/**
-	 * fügt einen Ergebnisdatensatz hinzu.
+	 * fÃ¼gt einen Ergebnisdatensatz hinzu.
 	 *
 	 * @param result
 	 *            der Datensatz
@@ -84,10 +84,10 @@ public class VmqDataPart {
 	}
 
 	/**
-	 * liefert den nächsten verfügbaren noch nicht verarbeiteten Wert ( nach Zeit geordnet).
+	 * liefert den nÃ¤chsten verfÃ¼gbaren noch nicht verarbeiteten Wert ( nach Zeit geordnet).
 	 *
 	 * @param aspect
-	 *            der Aspekt für den ein Wert bestimmt werden soll
+	 *            der Aspekt fÃ¼r den ein Wert bestimmt werden soll
 	 * @return der Wert oder <code>null</code>
 	 */
 	public ResultData getNextValue(final Aspect aspect) {
@@ -102,7 +102,7 @@ public class VmqDataPart {
 	}
 
 	/**
-	 * löscht für den angegebenen Aspekte alle Werte, die nicht jünger als der angebene Zeitstempel
+	 * lÃ¶scht fÃ¼r den angegebenen Aspekte alle Werte, die nicht jÃ¼nger als der angebene Zeitstempel
 	 * sind.
 	 *
 	 * @param dataTime

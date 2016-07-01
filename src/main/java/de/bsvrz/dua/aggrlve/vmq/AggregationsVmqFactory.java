@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -30,7 +30,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Factory zum Anlegen von Instanzen für die Verwaltung der Aggregationsdaten von virtuellen MQ.
+ * Factory zum Anlegen von Instanzen fÃ¼r die Verwaltung der Aggregationsdaten von virtuellen MQ.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
@@ -38,7 +38,7 @@ public final class AggregationsVmqFactory {
 
 	/** privater Konstruktor. */
 	private AggregationsVmqFactory() {
-		// es werden keine Instanzen der Factory benötigt
+		// es werden keine Instanzen der Factory benÃ¶tigt
 	}
 
 	/**
@@ -47,7 +47,7 @@ public final class AggregationsVmqFactory {
 	 *
 	 * @param obj
 	 *            das zu Grunde liegende Systemobjekt aus der Datenverteilerkonfiguration
-	 * @return das Objekt oder null, wenn der übergebene Systemobjekttyp nicht unterstützt wird
+	 * @return das Objekt oder null, wenn der Ã¼bergebene Systemobjekttyp nicht unterstÃ¼tzt wird
 	 */
 	public static AbstractAggregationsVmq create(final SystemObject obj) {
 

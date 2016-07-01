@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -38,18 +38,18 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Repräsentation eines virtuellen MQ im Standardverfahren zur Berechnung der Aggregationswerte.
+ * ReprÃ¤sentation eines virtuellen MQ im Standardverfahren zur Berechnung der Aggregationswerte.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
 public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 
 	private static final Debug LOGGER = Debug.getLogger();
-	/** Konstante für die MQ-Lage: DAVOR. */
+	/** Konstante fÃ¼r die MQ-Lage: DAVOR. */
 	private static final int VOR = 0;
-	/** Konstante für die MQ-Lage: MITTE. */
+	/** Konstante fÃ¼r die MQ-Lage: MITTE. */
 	private static final int MITTE = 1;
-	/** Konstante für die MQ-Lage: DANACH. */
+	/** Konstante fÃ¼r die MQ-Lage: DANACH. */
 	private static final int NACH = 2;
 	// private static final int EINFAHRT = 3;
 	// private static final int AUSFAHRT = 4;
@@ -68,7 +68,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	private SystemObject mqEinfahrt;
 
 	/**
-	 * Konstruktor, erzeugt eine Instanz der Klasse für das übergebene Systemobjekt mit den
+	 * Konstruktor, erzeugt eine Instanz der Klasse fÃ¼r das Ã¼bergebene Systemobjekt mit den
 	 * angegebenen Konfigurationsdaten.
 	 *
 	 * @param obj
@@ -139,7 +139,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	 * @param dataList
 	 *            die Liste mi den aktuellen Daten
 	 * @param time
-	 *            der Zeitpunkt für den Zieldatensatz
+	 *            der Zeitpunkt fÃ¼r den Zieldatensatz
 	 * @param desc
 	 *            die Datenbeschreibung
 	 *
@@ -152,7 +152,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 		final Data analyseDatum = getDav().createData(desc.getAttributeGroup());
 
 		/**
-		 * Ermittle Werte für <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
+		 * Ermittle Werte fÃ¼r <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und
 		 * <code>VDelta</code> via Ersetzung
 		 */
 		final String[] attErsetzung = new String[] { "VKfz", "VLkw", "VPkw", "VgKfz", "B", "BMax",
@@ -173,7 +173,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 		}
 
 		/**
-		 * Ermittle Werte für <code>QKfz, QLkw</code> und <code>QPkw</code>
+		 * Ermittle Werte fÃ¼r <code>QKfz, QLkw</code> und <code>QPkw</code>
 		 */
 		final String[] attBilanz = new String[] { "QKfz", "QLkw", "QPkw" };
 		for (final String attName : attBilanz) {
@@ -181,7 +181,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 		}
 
 		/**
-		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
+		 * Berechne Werte fÃ¼r <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
 		 */
 		berechneLkwAnteil(analyseDatum);
 		berechneDichte(analyseDatum, "Kfz");
@@ -196,17 +196,17 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Erfragt das Ersatzdatum für diesen virtuellen Messquerschnitt in den Attributen
+	 * Erfragt das Ersatzdatum fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und <code>VDelta</code>.
 	 *
 	 * @param attName
-	 *            der Name des Attributs, für das ein Ersatzdatum gefunden werden soll
+	 *            der Name des Attributs, fÃ¼r das ein Ersatzdatum gefunden werden soll
 	 * @param dataList
 	 *            die Liste mit den aktuellen Daten
-	 * @return das Ersatzdatum für diesen virtuellen Messquerschnitt in den Attributen
+	 * @return das Ersatzdatum fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 *         <code>VKfz, VLkw, VPkw, VgKfz, B, Bmax, SKfz</code> und <code>VDelta</code> oder
 	 *         <code>null</code>, wenn dieses nicht ermittelt werden konnte, weil z.B. alle MQs
-	 *         erfasst sind (wäre ein Konfigurationsfehler)
+	 *         erfasst sind (wÃ¤re ein Konfigurationsfehler)
 	 */
 	private ResultData getErsatzDatum(final String attName,
 			final Map<SystemObject, ResultData> dataList) {
@@ -266,8 +266,8 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * liefert für den übergebenen MQ den Datensatz aus der aktuellen Datenliste. Wenn keine
-	 * entsprechenden Daten verfügbar sind wird <code>null</code> geliefert.
+	 * liefert fÃ¼r den Ã¼bergebenen MQ den Datensatz aus der aktuellen Datenliste. Wenn keine
+	 * entsprechenden Daten verfÃ¼gbar sind wird <code>null</code> geliefert.
 	 *
 	 * @param dataList
 	 *            die Liste mit den aktuellen Daten
@@ -285,7 +285,7 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * liefert einen QWert für das übergebene Attribut und den defnierten MQ aus den aktuellen
+	 * liefert einen QWert fÃ¼r das Ã¼bergebene Attribut und den defnierten MQ aus den aktuellen
 	 * Daten. Wenn kein Wert ermittelt werden kann, wird <code>null</code> geliefert.
 	 *
 	 * @param dataList
@@ -306,13 +306,13 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den Attributen
+	 * Setzt die VerkehrsstÃ¤rke fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>QKfz, QLkw</code> und <code>QPkw</code>.
 	 *
 	 * @param analyseDatum
-	 *            das Zeil für den Ergebniswert
+	 *            das Zeil fÃ¼r den Ergebniswert
 	 * @param attName
-	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
+	 *            der Name des Attributs, fÃ¼r das die VerkehrsstÃ¤rke gesetzt werden soll
 	 * @param dataList
 	 *            die aktuellen Daten
 	 */
@@ -432,13 +432,13 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im Sinne der Wertersetzung brauchbar ist. Dies ist dann der
-	 * Fall, wenn das Datum Nutzdaten enthält und dessen Datenzeit echt älter als die des letzten
+	 * Erfragt, ob das Ã¼bergebene Datum im Sinne der Wertersetzung brauchbar ist. Dies ist dann der
+	 * Fall, wenn das Datum Nutzdaten enthÃ¤lt und dessen Datenzeit echt Ã¤lter als die des letzten
 	 * publizierten Analysedatums ist.
 	 *
 	 * @param datum
 	 *            ein Analysedatum eines MQ
-	 * @return ob das übergebene Datum im Sinne der Wertersetzung brauchbar ist
+	 * @return ob das Ã¼bergebene Datum im Sinne der Wertersetzung brauchbar ist
 	 */
 	private boolean isDatumOk(final ResultData datum) {
 		boolean ergebnis = false;
@@ -453,14 +453,14 @@ public class StandardAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Erfragt, ob das übergebene Datum im übergebenen Attribut sinnvolle Nutzdaten (Werte &gt;= 0
+	 * Erfragt, ob das Ã¼bergebene Datum im Ã¼bergebenen Attribut sinnvolle Nutzdaten (Werte &gt;= 0
 	 * hat).
 	 *
 	 * @param datum
 	 *            ein Analysedatum
 	 * @param attName
 	 *            der Name des Attributs
-	 * @return ob das übergebene Datum im übergebenen Attribut sinnvolle Daten
+	 * @return ob das Ã¼bergebene Datum im Ã¼bergebenen Attribut sinnvolle Daten
 	 */
 	private static boolean isDatumNutzbar(final ResultData datum, final String attName) {
 		boolean ergebnis = false;

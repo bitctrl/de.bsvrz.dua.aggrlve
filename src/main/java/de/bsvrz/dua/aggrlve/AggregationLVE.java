@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -60,7 +60,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Die SWE Aggregation LVE meldet sich auf alle messwertersetzten Kurzzeitdaten an und berechnet aus
- * diesen Daten für alle parametrierten Fahrstreifen und Messquerschnitte die 1-, 5-, 15-, 30-, 60-
+ * diesen Daten fÃ¼r alle parametrierten Fahrstreifen und Messquerschnitte die 1-, 5-, 15-, 30-, 60-
  * Minutenwerte sowie Tageswerte und DTV-Werte (Durchschnittliche Tagesverkehrswerte) je Monat und
  * je Jahr (Details siehe [AFo] bzw. [MARZ]).<br>
  * Diese Applikation initialisiert nur alle in den uebergebenen Konfigurationsbereichen
@@ -89,11 +89,11 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	private static boolean zeitRaffer;
 
 	/**
-	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehören.
+	 * alle Fahrstreifen, mit den Messquerschnitten, zu denen sie gehÃ¶ren.
 	 */
 	private final Map<SystemObject, SystemObject> fsMq = new HashMap<>();
 	/**
-	 * alle Messquerschnitte, mit den Fahrstreifen, zu denen sie gehören.
+	 * alle Messquerschnitte, mit den Fahrstreifen, zu denen sie gehÃ¶ren.
 	 */
 	private final Map<SystemObject, Set<SystemObject>> mqFs = new HashMap<>();
 
@@ -139,8 +139,8 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 
 	/**
 	 * der interne Kontrollprozess dient der zeitlichen Steuerung der Aggregationsberechnungen
-	 * (1min, …, 60min). Nach dem Starten führt dieser Prozess immer 30s nach jeder vollen Minute
-	 * eine Ueberprüfung für alle Fahrstreifen bzw. Messquerschnitte.
+	 * (1min, Â…, 60min). Nach dem Starten fÃ¼hrt dieser Prozess immer 30s nach jeder vollen Minute
+	 * eine UeberprÃ¼fung fÃ¼r alle Fahrstreifen bzw. Messquerschnitte.
 	 */
 	private final ObjektWecker wecker = new ObjektWecker();
 
@@ -187,7 +187,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 		 */
 		AggregationsIntervall.initialisiere(getVerbindung());
 
-		/** Aggregation für virtuelle MQ initialisieren. */
+		/** Aggregation fÃ¼r virtuelle MQ initialisieren. */
 		if (!ignoreVmq) {
 			VMqAggregator.getInstance().init(getVerbindung());
 		}
@@ -394,7 +394,7 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapterMitGuete
 	}
 
 	/**
-	 * Löscht den aktuellen Fahrstreifen-Datenpuffer fuer einen bestimmten Messquerschnitt.
+	 * LÃ¶scht den aktuellen Fahrstreifen-Datenpuffer fuer einen bestimmten Messquerschnitt.
 	 *
 	 * @param mq
 	 *            ein Messquerschnitt

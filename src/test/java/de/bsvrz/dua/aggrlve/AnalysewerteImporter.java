@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -35,9 +35,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
- * Liest die Ausgangsdaten für die Prüfung der Datenaufbereitung LVE ein
+ * Liest die Ausgangsdaten fÃ¼r die PrÃ¼fung der Datenaufbereitung LVE ein
  *
- * @author BitCtrl Systems GmbH, Görlitz
+ * @author BitCtrl Systems GmbH, GÃ¶rlitz
  */
 public class AnalysewerteImporter extends CSVImporter {
 
@@ -47,7 +47,7 @@ public class AnalysewerteImporter extends CSVImporter {
 	protected static ClientDavInterface dav = null;
 
 	/**
-	 * Hält aktuelle Daten des FS 1-3
+	 * HÃ¤lt aktuelle Daten des FS 1-3
 	 */
 	protected String[] zeile;
 
@@ -64,7 +64,7 @@ public class AnalysewerteImporter extends CSVImporter {
 	 * @param csvQuelle
 	 *            Quelle der Daten (CSV-Datei)
 	 * @throws Exception
-	 *             falls dieses Objekt nicht vollständig initialisiert werden konnte
+	 *             falls dieses Objekt nicht vollstÃ¤ndig initialisiert werden konnte
 	 */
 	public AnalysewerteImporter(final ClientDavInterface dav, final String csvQuelle)
 			throws Exception {
@@ -74,7 +74,7 @@ public class AnalysewerteImporter extends CSVImporter {
 		}
 
 		/**
-		 * Tabellenkopf überspringen
+		 * Tabellenkopf Ã¼berspringen
 		 */
 		getNaechsteZeile();
 	}
@@ -90,7 +90,7 @@ public class AnalysewerteImporter extends CSVImporter {
 	}
 
 	/**
-	 * Importiert die nächste Zeile aus der CSV-Datei
+	 * Importiert die nÃ¤chste Zeile aus der CSV-Datei
 	 *
 	 */
 	public final void importNaechsteZeile() {
@@ -100,7 +100,7 @@ public class AnalysewerteImporter extends CSVImporter {
 	/**
 	 * Bildet einen Ausgabe-Datensatz der MQ-Analysewerte aus den Daten der aktuellen CSV-Zeile
 	 *
-	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile oder
+	 * @return ein Datensatz der Ã¼bergebenen Attributgruppe mit den Daten der nÃ¤chsten Zeile oder
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getMQAnalyseDatensatz() {
@@ -179,7 +179,7 @@ public class AnalysewerteImporter extends CSVImporter {
 	 *
 	 * @param fahrStreifen
 	 *            Fahrstreifen (1-3)
-	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile oder
+	 * @return ein Datensatz der Ã¼bergebenen Attributgruppe mit den Daten der nÃ¤chsten Zeile oder
 	 *         <code>null</code>, wenn der Dateizeiger am Ende ist
 	 */
 	public final Data getFSAnalyseDatensatz(final int fahrStreifen) {
@@ -245,7 +245,7 @@ public class AnalysewerteImporter extends CSVImporter {
 	 *            Wert des Attributs
 	 * @param datensatz
 	 *            der Datensatz
-	 * @return der veränderte Datensatz
+	 * @return der verÃ¤nderte Datensatz
 	 */
 	private final Data setAttribut(final String attributName, long wert, final String status,
 			final Data datensatz) {
@@ -338,9 +338,9 @@ public class AnalysewerteImporter extends CSVImporter {
 		DUAUtensilien
 				.getAttributDatum(attributName + ".Status.MessWertErsetzung.Interpoliert", data)
 		.asUnscaledValue().set(intp);
-		DUAUtensilien.getAttributDatum(attributName + ".Güte.Index", data).asScaledValue()
+		DUAUtensilien.getAttributDatum(attributName + ".GÃ¼te.Index", data).asScaledValue()
 		.set(guete);
-		DUAUtensilien.getAttributDatum(attributName + ".Güte.Verfahren", data).asUnscaledValue()
+		DUAUtensilien.getAttributDatum(attributName + ".GÃ¼te.Verfahren", data).asUnscaledValue()
 		.set(0);
 
 		return datensatz;

@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -40,8 +40,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Klasse, die einen virtuellen MQ mit dem Verfahren VLage beschreibt, für den Aggregationswerte
- * übernommen werden sollen.
+ * Klasse, die einen virtuellen MQ mit dem Verfahren VLage beschreibt, fÃ¼r den Aggregationswerte
+ * Ã¼bernommen werden sollen.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
@@ -52,7 +52,7 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 	 * der MQ zur Bestimmung der Geschwindigkeit.
 	 *
 	 * TODO Momentan wird davon ausgegangen, das der MQ in der Liste der MQ des VMQ enthalten ist,
-	 * die Verwendung eines zusätzlichen Ersatz-MQ wird nicht unterstützt.
+	 * die Verwendung eines zusÃ¤tzlichen Ersatz-MQ wird nicht unterstÃ¼tzt.
 	 */
 	private SystemObject geschwindigkeitMq;
 
@@ -111,11 +111,11 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 	 * eintreffen werden und berechnet mit allen im Moment gepufferten Daten das Analysedatum.
 	 *
 	 * @param time
-	 *            der Zeitstempel für den zu erstellenden Datensatz
+	 *            der Zeitstempel fÃ¼r den zu erstellenden Datensatz
 	 * @param desc
 	 *            die Datenbeschreibung der Zieldaten
 	 * @param dataList
-	 *            die aktuellen Basisdaten für die Berechnung
+	 *            die aktuellen Basisdaten fÃ¼r die Berechnung
 	 *
 	 * @return ein Analysedatum
 	 */
@@ -153,14 +153,14 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 		}
 
 		/**
-		 * Ermittle Werte für <code>QKfz, QLkw</code> und <code>QPkw</code>
+		 * Ermittle Werte fÃ¼r <code>QKfz, QLkw</code> und <code>QPkw</code>
 		 */
 		for (final String attName : new String[] { "QKfz", "QLkw", "QPkw" }) {
 			setBilanzDatum(analyseDatum, attName, dataList);
 		}
 
 		/**
-		 * Berechne Werte für <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
+		 * Berechne Werte fÃ¼r <code>ALkw, KKfz, KPkw, KLkw, QB</code> und <code>KB</code>
 		 */
 		berechneLkwAnteil(analyseDatum);
 		berechneDichte(analyseDatum, "Kfz");
@@ -173,13 +173,13 @@ public class VLageAggregationsVmq extends AbstractAggregationsVmq {
 	}
 
 	/**
-	 * Setzt die Verkehrsstärke für diesen virtuellen Messquerschnitt in den Attributen
+	 * Setzt die VerkehrsstÃ¤rke fÃ¼r diesen virtuellen Messquerschnitt in den Attributen
 	 * <code>QKfz, QLkw</code> und <code>QPkw</code>.
 	 *
 	 * @param analyseDatum
 	 *            das zu modifizierende Datum.
 	 * @param attName
-	 *            der Name des Attributs, für das die Verkehrsstärke gesetzt werden soll
+	 *            der Name des Attributs, fÃ¼r das die VerkehrsstÃ¤rke gesetzt werden soll
 	 * @param dataList
 	 *            die aktuellen Basisdaten
 	 */

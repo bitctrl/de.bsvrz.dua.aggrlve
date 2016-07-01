@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -35,7 +35,7 @@ import de.bsvrz.dua.aggrlve.Verbindung;
 
 /**
  * Dieses Programm produziert die Tabellen <code>5-6</code> und <code>5-7</code> aus der
- * Pr¸fspezifikation V 2.0 auf Basis der Tabelle <code>Messwert_Aggregation_unv</code>.
+ * Pr√ºfspezifikation V 2.0 auf Basis der Tabelle <code>Messwert_Aggregation_unv</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
