@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package name="de.bsvrz.dua.aggrlve">
+  <license name="GPL" />
+  <release name="DuA Version 2.0.0" />
+  <version number="2.0.0-201606031200" />
+  <revision number="ca80b18ff75dbf5df6a43a44d56ea3ced1478c55" />
+  <compile time="03.06.2016 12:08:43" />
+  <depends-on-compiled packages="de.bsvrz.dav.daf, de.bsvrz.dav.dav, de.bsvrz.sys.funclib.commandLineArgs, de.bsvrz.sys.funclib.debug, de.bsvrz.sys.funclib.application, de.bsvrz.sys.funclib.operatingMessage, de.bsvrz.dua.guete, de.bsvrz.dua.dalve, de.bsvrz.sys.funclib.bitctrl.dua, de.bsvrz.sys.funclib.bitctrl" />
+  <depends-on-source packages="" />
+  <depends-on-lib jars="" />
+  <jvm version="1.8" />
+</package>

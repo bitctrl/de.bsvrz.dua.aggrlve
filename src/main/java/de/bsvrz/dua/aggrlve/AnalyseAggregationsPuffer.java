@@ -32,33 +32,21 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 
 /**
- * Speichert alle Aggregationsdaten eines Fahrstreifens bzw. eines
- * Messquerschnitts in einem Ringpuffer die zur Errechnung des jeweils
- * nächsthoeheren Intervalls notwendig sind
+ * Speichert alle Daten eines Fahrstreifens oder VMQ der vergangenen Stunde in einem Ringpuffer.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class AggregationsPuffer extends AbstraktAggregationsPuffer {
-
-	private long _maxPufferGroesse;
-
-	/**
-	 * Standardkonstruktor.
-	 * 
-	 * @param dav
-	 *            Verbindung zum Datenverteiler
-	 * @param obj
-	 *            das Objekt, dessen Daten gepuffert werden sollen
-	 * @param intervall
-	 *            das Aggregationsintervall, fuer das Daten in diesem Puffer
-	 *            stehen (<code>null</code> deutet auf messwertersetzte
-	 *            Fahstreifenwerte hin)
+public class AnalyseAggregationsPuffer extends AbstraktAggregationsPuffer {
+	
+	/** 
+	 * Erstellt eine neue AnalyseAggregationsPuffer
+	 * @param dav Dav
+	 * @param obj FS oder VMQ
 	 */
-	public AggregationsPuffer(final ClientDavInterface dav, final SystemObject obj, final AggregationsIntervall intervall) {
+	public AnalyseAggregationsPuffer(final ClientDavInterface dav, final SystemObject obj) {
 		super(dav, obj);
-		_maxPufferGroesse = intervall.getMaxPufferGroesse();
 	}
 
 	/**
@@ -66,7 +54,6 @@ public class AggregationsPuffer extends AbstraktAggregationsPuffer {
 	 */
 	@Override
 	protected long getMaxPufferInhalt() {
-		return _maxPufferGroesse + 2;
+		return 61;
 	}
-
 }

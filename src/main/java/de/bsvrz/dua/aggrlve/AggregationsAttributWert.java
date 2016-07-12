@@ -1,33 +1,36 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Aggregation LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.aggrlve.
+ * 
+ * de.bsvrz.dua.aggrlve is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.aggrlve is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.aggrlve.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 
 package de.bsvrz.dua.aggrlve;
 
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.Dataset;
+import de.bsvrz.dua.dalve.analyse.lib.AnalyseAttribut;
 import de.bsvrz.dua.guete.GWert;
 import de.bsvrz.dua.guete.GueteVerfahren;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -36,18 +39,20 @@ import de.bsvrz.sys.funclib.bitctrl.dua.GanzZahl;
 import de.bsvrz.sys.funclib.bitctrl.dua.MesswertMarkierung;
 
 /**
- * Korrespondiert mit einem Attributwert eines messwertersetzten Fahrstreifendatums bzw. eines
- * Aggregationsdatums
- *
+ * Korrespondiert mit einem Attributwert eines messwertersetzten
+ * Fahrstreifendatums bzw. eines Aggregationsdatums
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
-public class AggregationsAttributWert extends MesswertMarkierung
-		implements Comparable<AggregationsAttributWert> {
+public class AggregationsAttributWert extends MesswertMarkierung implements
+		Comparable<AggregationsAttributWert> {
 
 	/**
 	 * das Attribut.
 	 */
-	private final AggregationsAttribut attr;
+	private final AnalyseAttribut attr;
 
 	/**
 	 * der Wert dieses Attributs.
@@ -61,13 +66,14 @@ public class AggregationsAttributWert extends MesswertMarkierung
 
 	/**
 	 * Standardkonstruktor.
-	 *
+	 * 
 	 * @param attr
 	 *            das Attribut
 	 * @param resultat
 	 *            der Datensatz in dem der Attributwert steht
 	 */
-	public AggregationsAttributWert(final AggregationsAttribut attr, final Dataset resultat) {
+	public AggregationsAttributWert(final AnalyseAttribut attr,
+			final Dataset resultat) {
 		if (attr == null) {
 			throw new NullPointerException("Attribut ist <<null>>");
 		}
@@ -76,36 +82,39 @@ public class AggregationsAttributWert extends MesswertMarkierung
 			throw new NullPointerException("Datensatz ist <<null>>");
 		}
 
-		final String attributName = attr
-				.getAttributName(resultat.getObject().isOfType(AggregationLVE.typFahrstreifen));
+		final String attributName = attr.getAttributName(resultat.getObject().isOfType(DUAKonstanten.TYP_FAHRSTREIFEN));
 
 		this.attr = attr;
-		wert = datenSatz.getItem(attributName).getUnscaledValue("Wert").longValue();
-		setNichtErfasst(datenSatz.getItem(attributName).getItem("Status").getItem("Erfassung")
-				.getUnscaledValue("NichtErfasst").intValue() == DUAKonstanten.JA);
-		setImplausibel(
-				datenSatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
-						.getUnscaledValue("Implausibel").intValue() == DUAKonstanten.JA);
-		setInterpoliert(
-				datenSatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
-						.getUnscaledValue("Interpoliert").intValue() == DUAKonstanten.JA);
+		this.wert = datenSatz.getItem(attributName).getUnscaledValue("Wert")
+				.longValue();
+		this.nichtErfasst = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("Erfassung").getUnscaledValue("NichtErfasst")
+				.intValue() == DUAKonstanten.JA;
+		this.implausibel = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("MessWertErsetzung").getUnscaledValue("Implausibel")
+				.intValue() == DUAKonstanten.JA;
+		this.interpoliert = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("MessWertErsetzung").getUnscaledValue("Interpoliert")
+				.intValue() == DUAKonstanten.JA;
 
-		setFormalMax(datenSatz.getItem(attributName).getItem("Status").getItem("PlFormal")
-				.getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA);
-		setFormalMin(datenSatz.getItem(attributName).getItem("Status").getItem("PlFormal")
-				.getUnscaledValue("WertMin").intValue() == DUAKonstanten.JA);
+		this.formalMax = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlFormal").getUnscaledValue("WertMax").intValue() == DUAKonstanten.JA;
+		this.formalMin = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlFormal").getUnscaledValue("WertMin").intValue() == DUAKonstanten.JA;
 
-		setLogischMax(datenSatz.getItem(attributName).getItem("Status").getItem("PlLogisch")
-				.getUnscaledValue("WertMaxLogisch").intValue() == DUAKonstanten.JA);
-		setLogischMin(datenSatz.getItem(attributName).getItem("Status").getItem("PlLogisch")
-				.getUnscaledValue("WertMinLogisch").intValue() == DUAKonstanten.JA);
+		this.logischMax = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlLogisch").getUnscaledValue("WertMaxLogisch")
+				.intValue() == DUAKonstanten.JA;
+		this.logischMin = datenSatz.getItem(attributName).getItem("Status")
+				.getItem("PlLogisch").getUnscaledValue("WertMinLogisch")
+				.intValue() == DUAKonstanten.JA;
 
-		guete = new GWert(datenSatz, attributName);
+		this.guete = new GWert(datenSatz, attributName);
 	}
 
 	/**
 	 * Konstruktor fuer Zwischenergebnisse.
-	 *
+	 * 
 	 * @param attribut
 	 *            das Attribut
 	 * @param wert
@@ -113,22 +122,25 @@ public class AggregationsAttributWert extends MesswertMarkierung
 	 * @param guete
 	 *            die Guete
 	 */
-	public AggregationsAttributWert(final AggregationsAttribut attribut, final long wert,
-			final double guete) {
-		attr = attribut;
+	public AggregationsAttributWert(final AnalyseAttribut attribut,
+			final long wert, final double guete) {
+		this.attr = attribut;
 		this.wert = wert;
 		final GanzZahl gueteGanzZahl = GanzZahl.getGueteIndex();
 		gueteGanzZahl.setSkaliertenWert(guete);
 		this.guete = new GWert(gueteGanzZahl, GueteVerfahren.STANDARD, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public AggregationsAttributWert clone() {
 		AggregationsAttributWert kopie = null;
 
 		try {
 			kopie = (AggregationsAttributWert) super.clone();
-			kopie.guete = new GWert(guete);
+			kopie.guete = new GWert(this.guete);
 		} catch (final CloneNotSupportedException e) {
 			// wird nicht geworfen
 		}
@@ -137,9 +149,10 @@ public class AggregationsAttributWert extends MesswertMarkierung
 	}
 
 	/**
-	 * Exportiert den Inhalt dieses Objektes in ein veraenderbares Nutzdatum der Attributgruppe
-	 * <code>atg.verkehrsDatenKurzZeitFs</code> oder <code>atg.verkehrsDatenKurzZeitMq</code>.
-	 *
+	 * Exportiert den Inhalt dieses Objektes in ein veraenderbares Nutzdatum der
+	 * Attributgruppe <code>atg.verkehrsDatenKurzZeitFs</code> oder
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
+	 * 
 	 * @param nutzDatum
 	 *            ein veraenderbare Instanz einer Attributgruppe
 	 *            <code>atg.verkehrsDatenKurzZeitFs</code> oder
@@ -147,118 +160,159 @@ public class AggregationsAttributWert extends MesswertMarkierung
 	 * @param isFahrstreifen
 	 *            ob es sich um ein Fahrstreifendatum handelt
 	 */
-	public final void exportiere(final Data nutzDatum, final boolean isFahrstreifen) {
+	public final void exportiere(final Data nutzDatum,
+			final boolean isFahrstreifen) {
 
 		final String attributName = attr.getAttributName(isFahrstreifen);
 
-		if (DUAUtensilien.isWertInWerteBereich(nutzDatum.getItem(attributName).getItem("Wert"),
-				wert)) {
-			nutzDatum.getItem(attributName).getUnscaledValue("Wert").set(wert);
+		if (DUAUtensilien.isWertInWerteBereich(nutzDatum.getItem(attributName)
+				.getItem("Wert"), this.wert)) {
+			nutzDatum.getItem(attributName).getUnscaledValue("Wert")
+					.set(this.wert);
 		} else {
 			nutzDatum.getItem(attributName).getUnscaledValue("Wert")
 					.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 		}
 
-		nutzDatum.getItem(attributName).getItem("Status").getItem("Erfassung")
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("Erfassung")
 				.getUnscaledValue("NichtErfasst")
-				.set(isNichtErfasst() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
-		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
+				.set(this.isNichtErfasst() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("MessWertErsetzung")
 				.getUnscaledValue("Implausibel")
-				.set(isImplausibel() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
-		nutzDatum.getItem(attributName).getItem("Status").getItem("MessWertErsetzung")
+				.set(this.isImplausibel() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("MessWertErsetzung")
 				.getUnscaledValue("Interpoliert")
-				.set(isInterpoliert() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.set(this.isInterpoliert() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
 
-		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal")
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlFormal")
 				.getUnscaledValue("WertMax")
-				.set(isFormalMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
-		nutzDatum.getItem(attributName).getItem("Status").getItem("PlFormal")
+				.set(this.isFormalMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlFormal")
 				.getUnscaledValue("WertMin")
-				.set(isFormalMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.set(this.isFormalMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
 
-		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch")
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlLogisch")
 				.getUnscaledValue("WertMaxLogisch")
-				.set(isLogischMax() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
-		nutzDatum.getItem(attributName).getItem("Status").getItem("PlLogisch")
+				.set(this.isLogischMax() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
+		nutzDatum
+				.getItem(attributName)
+				.getItem("Status")
+				.getItem("PlLogisch")
 				.getUnscaledValue("WertMinLogisch")
-				.set(isLogischMin() ? DUAKonstanten.JA : DUAKonstanten.NEIN);
+				.set(this.isLogischMin() ? DUAKonstanten.JA
+						: DUAKonstanten.NEIN);
 
-		guete.exportiere(nutzDatum, attributName);
+		this.guete.exportiere(nutzDatum, attributName);
 	}
 
 	/**
 	 * Erfragt das Attribut.
-	 *
+	 * 
 	 * @return das Attribut
 	 */
-	public final AggregationsAttribut getAttribut() {
-		return attr;
+	public final AnalyseAttribut getAttribut() {
+		return this.attr;
 	}
 
 	/**
 	 * Setzt den Wert dieses Attributs.
-	 *
+	 * 
 	 * @param wert
 	 *            der Wert dieses Attributs
 	 */
 	public final void setWert(final long wert) {
-		setVeraendert(true);
+		this.veraendert = true;
 		this.wert = wert;
 	}
 
 	/**
 	 * Erfragt den Wert dieses Attributs.
-	 *
+	 * 
 	 * @return der Wert dieses Attributs
 	 */
 	public final long getWert() {
-		return wert;
+		return this.wert;
 	}
 
 	/**
 	 * Erfragt die Guete dieses Attributwertes.
-	 *
+	 * 
 	 * @return die Guete dieses Attributwertes
 	 */
 	public final GWert getGuete() {
-		return guete;
+		return this.guete;
 	}
 
 	/**
 	 * Setzte die Guete dieses Attributwertes.
-	 *
+	 * 
 	 * @param guete
 	 *            die Guete dieses Attributwertes
 	 */
 	public final void setGuete(final GWert guete) {
-		setVeraendert(true);
+		this.veraendert = true;
 		this.guete = guete;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int compareTo(final AggregationsAttributWert that) {
-		return new Long(getWert()).compareTo(that.getWert());
+		return new Long(this.getWert()).compareTo(that.getWert());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(final Object obj) {
 		boolean ergebnis = false;
 
 		if ((obj != null) && (obj instanceof AggregationsAttributWert)) {
 			final AggregationsAttributWert that = (AggregationsAttributWert) obj;
-			ergebnis = getAttribut().equals(that.getAttribut()) && (getWert() == that.getWert())
-					&& (isNichtErfasst() == that.isNichtErfasst())
-					&& (isImplausibel() == that.isImplausibel())
-					&& (isInterpoliert() == that.isInterpoliert())
-					&& (Math.abs(getGuete().getIndex() - that.getGuete().getIndex()) < 0.001);
+			ergebnis = this.getAttribut().equals(that.getAttribut())
+					&& (this.getWert() == that.getWert())
+					&& (this.isNichtErfasst() == that.isNichtErfasst())
+					&& (this.isImplausibel() == that.isImplausibel())
+					&& (this.isInterpoliert() == that.isInterpoliert())
+					&& ((this.getGuete().getIndex() - that.getGuete()
+							.getIndex()) < 0.001);
 		}
 
 		return ergebnis;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
-		return "Attribut: " + attr + "\nWert: " + wert + "\nGuete: " + guete + "\nVeraendert: "
-				+ (isVeraendert() ? "Ja" : "Nein") + "\n" + super.toString();
+		return "Attribut: " + this.attr + "\nWert: " + this.wert + "\nGuete: "
+				+ this.guete + "\nVeraendert: "
+				+ (this.veraendert ? "Ja" : "Nein") + "\n" + super.toString();
 	}
+
 }

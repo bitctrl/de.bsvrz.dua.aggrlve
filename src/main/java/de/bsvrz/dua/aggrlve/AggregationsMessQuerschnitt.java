@@ -1,345 +1,251 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Aggregation LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.aggrlve.
+ * 
+ * de.bsvrz.dua.aggrlve is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.aggrlve is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.aggrlve.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 
 package de.bsvrz.dua.aggrlve;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import com.bitctrl.Constants;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.guete.GWert;
-import de.bsvrz.dua.guete.GueteException;
-import de.bsvrz.dua.guete.GueteVerfahren;
+import de.bsvrz.dua.dalve.analyse.lib.AnalyseAttribut;
+import de.bsvrz.dua.dalve.analyse.lib.CommonFunctions;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.debug.Debug;
 
+import java.util.*;
+import java.util.function.BiConsumer;
+
 /**
- * Aggregiert aus den fuer diesen Messquerschnitt (bzw. dessen Fahrstreifen) gespeicherten Daten die
- * Aggregationswerte aller Aggregationsstufen aus der jeweils darunterliegenden Stufe bzw. aus den
- * messwertersetzten Fahrstreifendaten fuer die Basisstufe
- *
+ * Aggregiert aus den fuer diesen Messquerschnitt (bzw. dessen Fahrstreifen)
+ * gespeicherten Daten die Aggregationswerte aller Aggregationsstufen aus der
+ * jeweils darunterliegenden Stufe bzw. aus den messwertersetzten
+ * Fahrstreifendaten fuer die Basisstufe
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
-public final class AggregationsMessQuerschnitt extends AbstraktAggregationsObjekt {
+public final class AggregationsMessQuerschnitt extends
+		AbstraktAggregationsObjekt implements BiConsumer<Long, AggregationsIntervall> {
 
-	private static final Debug LOGGER = Debug.getLogger();
-
+	private static final Debug _debug = Debug.getLogger();
+	
 	/** der hier betrachtete Messquerschnitt. */
-	private final MessQuerschnitt mq;
+	private final SystemObject mq;
 
 	/**
 	 * Menge der Fahrstreifen, die an diesem Messquerschnitt konfiguriert sind.
 	 */
-	private final Map<SystemObject, AggregationsFahrStreifen> fsMenge = new HashMap<>();
+	private final Map<SystemObject, AggregationsFsOderVmq> fsMenge;
+	
+	/**
+	 * DaLve-Funktionen zur Berechnung der abgeleiteten Werte (Verkehrsdichten usw.)
+	 */
+	private final CommonFunctions _commonfunctions;
+
+	/**
+	 * Zuletzt berechnete Daten je Intervall
+	 */
+	private final Map<AggregationsIntervall, AggregationsDatum> lastValues = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
-	 *
+	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
-	 * @param mq
-	 *            der Messquerschnitt dessen Aggregationsdaten ermittelt werden sollen
+	 * @param fsMenge    Menge der Fahrstreifen dieses MQ
+	 * 
+	 * @param systemObject MQ-Objekt
+	 *                        
 	 * @throws DUAInitialisierungsException
-	 *             wenn dieses Objekt nicht vollstaendig (mit allen Unterobjekten) initialisiert
-	 *             werden konnte
+	 *             wenn dieses Objekt nicht vollstaendig (mit allen
+	 *             Unterobjekten) initialisiert werden konnte
 	 */
-	public AggregationsMessQuerschnitt(final ClientDavInterface dav, final MessQuerschnitt mq)
+	public AggregationsMessQuerschnitt(
+			final ClientDavInterface dav,
+			final HashMap<SystemObject, AggregationsFsOderVmq> fsMenge,
+			final SystemObject systemObject)
 			throws DUAInitialisierungsException {
-		super(dav, mq.getSystemObject());
-		this.mq = mq;
+		super(dav, systemObject);
+		this.mq = systemObject;
 
-		datenPuffer = new AggregationsPufferMenge(dav, mq.getSystemObject());
 		final Set<DAVObjektAnmeldung> anmeldungen = new TreeSet<>();
-		for (final AggregationsIntervall intervall : AggregationsIntervall.getInstanzen()) {
+		for (final AggregationsIntervall intervall : AggregationsIntervall
+				.getInstanzen()) {
 			try {
-				anmeldungen.add(new DAVObjektAnmeldung(mq.getSystemObject(),
+				anmeldungen.add(new DAVObjektAnmeldung(systemObject,
 						intervall.getDatenBeschreibung(false)));
 			} catch (final Exception e) {
-				throw new DUAInitialisierungsException(
-						"Messquerschnitt " + mq + " konnte nicht initialisiert werden", e);
+				throw new DUAInitialisierungsException("Messquerschnitt " + systemObject
+						+ " konnte nicht initialisiert werden", e);
 			}
 		}
 		sender.modifiziereObjektAnmeldung(anmeldungen);
 
-		for (final FahrStreifen fs : mq.getFahrStreifen()) {
-			fsMenge.put(fs.getSystemObject(), new AggregationsFahrStreifen(dav, fs));
+		this.fsMenge = fsMenge;
+
+		_commonfunctions = new CommonFunctions(dav, systemObject);
+
+		for(AggregationsFsOderVmq aggregationsFsOderVmq : fsMenge.values()) {
+			aggregationsFsOderVmq.addListener(this);
 		}
 	}
-
-	@Override
-	public void aggregiere(final long zeitStempel, final AggregationsIntervall intervall) {
-		/**
-		 * Aggregiere alle Werte der untergeordneten Fahrstreifen
-		 */
-		for (final AggregationsFahrStreifen fs : fsMenge.values()) {
-			fs.aggregiere(zeitStempel, intervall);
-		}
-
-		if (isBerechnungNotwendig(zeitStempel, intervall)) {
-			final long begin = zeitStempel;
-			long ende = zeitStempel + intervall.getIntervall();
-			if (intervall.isDTVorTV()) {
-				final GregorianCalendar cal = new GregorianCalendar();
-				cal.setTimeInMillis(zeitStempel);
-
-				if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
-					cal.add(Calendar.DAY_OF_YEAR, 1);
-					ende = cal.getTimeInMillis();
-				} else if (intervall.equals(AggregationsIntervall.aGGDTVMONAT)) {
-					cal.add(Calendar.MONTH, 1);
-					ende = cal.getTimeInMillis();
-				} else if (intervall.equals(AggregationsIntervall.aGGDTVJAHR)) {
-					cal.add(Calendar.YEAR, 1);
-					ende = cal.getTimeInMillis();
-				}
-			}
-
-			final Collection<AggregationsDatum> mqDaten = datenPuffer.getDatenFuerZeitraum(begin,
-					ende, intervall);
-
-			Data nutzDatum = null;
-
-			if (intervall.equals(AggregationsIntervall.aGGDTVTAG)) {
-				if (!mqDaten.isEmpty()) {
-					/**
-					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
-					 */
-					nutzDatum = dav
-							.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
-					for (final AggregationsAttribut attribut : AggregationsAttribut
-							.getInstanzen()) {
-						if (!attribut.isGeschwindigkeitsAttribut()) {
-							aggregiereSumme(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
-						}
-					}
-				} else {
-					LOGGER.warning(intervall + " fuer " + objekt
-							+ " kann nicht berechnet werden, da keine Basisdaten (Intervall: "
-							+ intervall.getVorgaenger() + ") zur Verfuegung stehen");
-				}
-			} else {
-				if (mqDaten.isEmpty()) {
-					if (!intervall.isDTVorTV()) {
-						/**
-						 * Aggregiere Basisintervall aus messwertersetzten Fahrstreifendaten
-						 */
-						final Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten = new HashMap<>();
-
-						for (final AggregationsFahrStreifen fs : fsMenge.values()) {
-							final Collection<AggregationsDatum> daten = fs.getPuffer()
-									.getPuffer(null).getDatenFuerZeitraum(begin, ende);
-							fsDaten.put(fs, daten);
-						}
-
-						boolean kannBasisIntervallBerechnen = false;
-						for (final Collection<AggregationsDatum> daten : fsDaten.values()) {
-							if (!daten.isEmpty()) {
-								kannBasisIntervallBerechnen = true;
-								break;
-							}
-						}
-
-						if (kannBasisIntervallBerechnen) {
-							nutzDatum = dav.createData(
-									intervall.getDatenBeschreibung(false).getAttributeGroup());
-							aggregiereBasisDatum(nutzDatum, fsDaten, zeitStempel, intervall);
-						}
-
-					}
-				} else {
-					/**
-					 * Daten koennen aus naechstkleinerem Intervall aggregiert werden
-					 */
-					nutzDatum = dav
-							.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
-					for (final AggregationsAttribut attribut : AggregationsAttribut
-							.getInstanzen()) {
-						aggregiereMittel(attribut, nutzDatum, mqDaten, zeitStempel, intervall);
-					}
-				}
-			}
-
-			final ResultData resultat = new ResultData(mq.getSystemObject(),
-					intervall.getDatenBeschreibung(false), zeitStempel, nutzDatum);
-
-			if (resultat.getData() != null) {
-				fuelleRest(resultat, intervall);
-				datenPuffer.aktualisiere(resultat);
-			}
-
-			sende(resultat);
-		}
-	}
-
+	
 	/**
-	 * Erfragt ein Aggregationsobjekt unterhalb dieses Objektes (nur fuer Testzwecke).
-	 *
-	 * @param obj
-	 *            das assoziierte Systemobjekt
-	 * @return ein Aggregationsobjekt unterhalb dieses Objektes (nur fuer Testzwecke).
+	 * {@inheritDoc}
 	 */
-	public AggregationsFahrStreifen getAggregationsObjekt(final SystemObject obj) {
-		return fsMenge.get(obj);
-	}
-
-	/**
-	 * Aggregiert das erste Aggregationsintervall fuer diesen Messquerschnitt aus Basis der
-	 * uebergebenen messwertersetzten Fahrstreifendaten.
-	 *
-	 * @param nutzDatum
-	 *            ein veraenderbares Nutzdatum
-	 * @param fsDaten
-	 *            die Datenpuffer mit den messwertersetzten Fahrstreifendaten der mit diesem
-	 *            Messquerschnitt assoziierten Fahrstreifen
-	 * @param zeitStempel
-	 *            der Zeitstempel (Start)
-	 * @param intervall
-	 *            das Aggregationsintervall
-	 */
-	private void aggregiereBasisDatum(final Data nutzDatum,
-			final Map<AggregationsFahrStreifen, Collection<AggregationsDatum>> fsDaten,
-			final long zeitStempel, final AggregationsIntervall intervall) {
-
-		for (final AggregationsAttribut attribut : AggregationsAttribut.getInstanzen()) {
-			boolean interpoliert = false;
-			boolean nichtErfasst = false;
-			final AggregationsAttributWert exportWert = new AggregationsAttributWert(attribut,
-					DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT, 0);
-			final Collection<GWert> gueteWerte = new ArrayList<>();
-
-			if (attribut.isGeschwindigkeitsAttribut()) {
-				long summe = 0;
-				long anzahl = 0;
-
-				for (final AggregationsFahrStreifen fahrStreifen : fsDaten.keySet()) {
-					final Collection<AggregationsDatum> fsQuellDatum = fsDaten.get(fahrStreifen);
-
-					long summeInFs = 0;
-					long anzahlInFs = 0;
-					final Collection<GWert> gueteWerteInFs = new ArrayList<>();
-					for (final AggregationsDatum basisDatum : fsQuellDatum) {
-						final AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
-						if ((basisWert != null) && (basisWert.getWert() >= 0)) {
-							anzahlInFs++;
-							summeInFs += basisWert.getWert();
-							gueteWerteInFs.add(basisWert.getGuete());
-							interpoliert |= basisWert.isInterpoliert();
-							nichtErfasst |= basisWert.isNichtErfasst();
-						}
-					}
-
-					if (anzahlInFs > 0) {
-						anzahl++;
-						summe += Math.round((double) summeInFs / (double) anzahlInFs);
-					}
-					try {
-						gueteWerte.add(GueteVerfahren.summe(gueteWerteInFs.toArray(new GWert[0])));
-					} catch (final GueteException e) {
-						LOGGER.error("Guete von " + fahrStreifen.getObjekt() + " fuer " + attribut
-								+ " konnte nicht berechnet werden", e);
-						e.printStackTrace();
-					}
-				}
-
-				if (anzahl > 0) {
-					exportWert.setWert(Math.round((double) summe / (double) anzahl));
-				}
-			} else {
-				double summe = 0;
-
-				for (final Collection<AggregationsDatum> fsQuellDatum : fsDaten.values()) {
-					double erfassungsIntervall = 0;
-					double zwischenSumme = 0;
-					for (final AggregationsDatum basisDatum : fsQuellDatum) {
-						final AggregationsAttributWert basisWert = basisDatum.getWert(attribut);
-						if ((basisWert != null) && (basisWert.getWert() >= 0)) {
-							erfassungsIntervall += basisDatum.getT();
-							zwischenSumme += basisWert.getWert();
-							gueteWerte.add(basisWert.getGuete());
-							interpoliert |= basisWert.isInterpoliert();
-							nichtErfasst |= basisWert.isNichtErfasst();
-						}
-					}
-					if (erfassungsIntervall > 0) {
-						summe += (zwischenSumme * Constants.MILLIS_PER_HOUR) / erfassungsIntervall;
-					}
-				}
-
-				if (gueteWerte.size() > 0) {
-					exportWert.setWert(Math.round(summe));
-				}
-			}
-
-			if (gueteWerte.size() > 0) {
-				exportWert.setInterpoliert(interpoliert);
-				if (AggregationLVE.NICHT_ERFASST) {
-					exportWert.setNichtErfasst(nichtErfasst);
-				}
-				try {
-					exportWert.setGuete(GueteVerfahren.summe(gueteWerte.toArray(new GWert[0])));
-				} catch (final GueteException e) {
-					LOGGER.error("Guete von " + objekt + " fuer " + attribut
-							+ " konnte nicht berechnet werden", e);
-					e.printStackTrace();
-				}
-			}
-
-			exportWert.exportiere(nutzDatum, isFahrstreifen());
-		}
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		LOGGER.warning("Der MQ " + mq + " wird nicht mehr aggregiert");
-		super.finalize();
-	}
-
 	@Override
 	public String toString() {
-		return mq.toString();
+		return this.mq.toString();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected boolean isFahrstreifen() {
 		return false;
 	}
 
+	@Override
+	/**
+	 * Berechnet die MQ-Daten für ein Intervall (falls alle FS-Daten da sind), bzw. berechnet das Vorgänger-Intervall falls es noch nicht berechnet wurde.
+	 * 
+	 * Diese Methode wird jedes mal aufgerufen wenn für einen fahrstreifen ein aggregiertes Datum gebildet wurde.
+	 */
+	public void accept(Long startZeitStempel, AggregationsIntervall intervall) {
+		
+		final Map<AggregationsFsOderVmq, AggregationsDatum> fsMap = new HashMap<>();
+		
+		AggregationsDatum letzterWert = lastValues.get(intervall);
+
+		if(letzterWert != null && startZeitStempel <= letzterWert.getDatenZeit()){
+			// Zeitrücksprung ignorieren
+			return;
+		}
+		
+		if(!getFsDaten(startZeitStempel, intervall, fsMap)){
+			// ggf. Vorgänger-Intervall berechnen
+			fsMap.clear();
+
+			long zeitStempelVor = intervall.getStartZeitStempel(startZeitStempel);
+			if(letzterWert == null || letzterWert.getDatenZeit() < zeitStempelVor) {
+				// Das letzte Intervall wurde noch nicht berechnet, das also nachholen
+				getFsDaten(zeitStempelVor, intervall, fsMap);
+								
+				aggregiere(zeitStempelVor, intervall, fsMap.values());
+			}
+			// Es sind nicht alle Daten da, also warten bis entweder alle Daten da sind 
+			// oder das nächste Intervall berechnet werden soll
+			return;
+		}
+
+		// Alle Daten da, also Aggregation direkt berechnen
+		aggregiere(startZeitStempel, intervall, fsMap.values());
+	}
+
+	/**
+	 * Gibt alle vorhandenen Fahrstreifendaten im angegebenen Intervall zurück
+	 * @param zeitStempel Startzeit des Intervalls
+	 * @param intervall Intervall
+	 * @param fsMap Ziel-Map für Daten
+	 * @return true wenn alle Daten da waren, sonst false.
+	 */
+	private boolean getFsDaten(final Long zeitStempel, final AggregationsIntervall intervall, final Map<AggregationsFsOderVmq, AggregationsDatum> fsMap) {
+		boolean complete = true;
+		
+		for(AggregationsFsOderVmq fahrStreifen : fsMenge.values()) {
+			AbstraktAggregationsPuffer puffer = fahrStreifen.getPuffer().getPuffer(intervall);
+			if(puffer == null) {
+				// FS hatte noch nie Daten oder Erfassungsintervall ist zu groß
+				complete = false;
+				fsMap.put(fahrStreifen, new AggregationsDatum(zeitStempel)); // Leeren Datensatz einfügen
+				continue;
+			}
+			Collection<AggregationsDatum> datenFuerZeitraum = puffer.getDatenFuerZeitraum(zeitStempel, zeitStempel + 1);
+			if(datenFuerZeitraum.isEmpty()){
+				// Noch nicht alle Daten da
+				complete = false;
+				fsMap.put(fahrStreifen, new AggregationsDatum(zeitStempel)); // Leeren Datensatz einfügen
+				continue;
+			}
+			if(datenFuerZeitraum.size() > 1){
+				// Das sollte nicht passieren, da die FS/VMQ genau einen aggregierten Wert pro Intervall haben sollten
+				_debug.warning("Mehrere Aggregationswerte für Zeitbereich " + zeitStempel + " " + intervall, objekt);
+			}
+			
+			fsMap.put(fahrStreifen, datenFuerZeitraum.iterator().next());
+		}
+		return complete;
+	}
+
+	/**
+	 * Eigentliche Aggregationsfunktion 
+	 * @param zeitStempel Startzeitstempel
+	 * @param intervall Intervall
+	 * @param basisDaten Eingangsdaten (ein Objekt je FS), ggf. mit Markierung "keine Daten"
+	 */
+	private void aggregiere(final long zeitStempel, final AggregationsIntervall intervall, final Collection<AggregationsDatum> basisDaten) {
+		Data nutzDatum = dav.createData(intervall.getDatenBeschreibung(false).getAttributeGroup());
+
+		this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_KFZ, AnalyseAttribut.V_KFZ, nutzDatum, basisDaten);
+		this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_LKW, AnalyseAttribut.V_LKW, nutzDatum, basisDaten);
+		this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_PKW, AnalyseAttribut.V_PKW, nutzDatum, basisDaten);
+
+		this.aggregiereSumme(AnalyseAttribut.Q_KFZ, nutzDatum, basisDaten);
+		this.aggregiereSumme(AnalyseAttribut.Q_LKW, nutzDatum, basisDaten);
+		this.aggregiereSumme(AnalyseAttribut.Q_PKW, nutzDatum, basisDaten);
+
+		_commonfunctions.berechneLkwAnteil(nutzDatum);
+
+		AggregationsDatum last = lastValues.get(intervall);
+
+		_commonfunctions.berechneDichte(nutzDatum, "Kfz", () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_KFZ).getWert());
+		_commonfunctions.berechneDichte(nutzDatum, "Lkw", () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_LKW).getWert());
+		_commonfunctions.berechneDichte(nutzDatum, "Pkw", () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_PKW).getWert());
+
+		_commonfunctions.berechneBemessungsVerkehrsStaerke(nutzDatum);
+
+		_commonfunctions.berechneBemessungsDichte(nutzDatum, () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_B).getWert());
+
+		final ResultData resultat = new ResultData(
+				this.mq,
+				intervall.getDatenBeschreibung(false), 
+				zeitStempel,
+				nutzDatum);
+
+		if (resultat.getData() != null) {
+			this.fuelleRest(resultat, intervall);
+		}
+
+		this.sende(resultat);
+
+		lastValues.put(intervall, new AggregationsDatum(resultat, dav));
+	}
 }
