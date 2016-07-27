@@ -9,6 +9,7 @@
     <baseDirectory>${project.artifactId}</baseDirectory>
     <componentDescriptors>
         <componentDescriptor>assemblies/distributionspaket-bin.xml</componentDescriptor>
+        <componentDescriptor>assemblies/distributionspaket-test.xml</componentDescriptor>
     </componentDescriptors>
     <fileSets>
         <fileSet>
