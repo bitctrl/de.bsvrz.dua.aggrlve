@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.aggrlve.svg?branch=develop)](https://travis-ci.org/bitctrl/de.bsvrz.dua.aggrlve)
+[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.aggrlve.svg?branch=master)](https://travis-ci.org/bitctrl/de.bsvrz.dua.aggrlve)
 [![Build Status](https://api.bintray.com/packages/bitctrl/maven/de.bsvrz.dua.aggrlve/images/download.svg)](https://bintray.com/bitctrl/maven/de.bsvrz.dua.aggrlve)
 
 # Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.9 Aggregation LVE
