@@ -15,6 +15,12 @@ siehe [AFo] bzw. [MARZ]).
 
 ## Versionsgeschichte
 
+### Version 2.0.1
+
+Release-Datum: 22.07.2016
+
+- Umpacketierung gemäß NERZ-Konvention
+  
 ### Version 2.0.0
 
 Release-Datum: 31.05.2016
