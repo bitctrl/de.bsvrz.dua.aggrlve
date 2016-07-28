@@ -5,7 +5,7 @@
 
 		<groupId>de.bsvrz.dua</groupId>
 	<artifactId>de.bsvrz.dua.aggrlve</artifactId>
-	<version>2.0.1</version>
+	<version>2.0.2</version>
 
 	<name>Aggregation LVE (SWE 4.9)</name>
 
@@ -26,7 +26,6 @@
 		<distributionspaket.status>FREI</distributionspaket.status>
 		<distributionspaket.standDatum>2016-07-22</distributionspaket.standDatum>
 		<distributionspaket.lizenz>GPLv3.0</distributionspaket.lizenz>
-		<additionalparam>-Xdoclint:none</additionalparam>
 	</properties>
 
 	<licenses>
@@ -184,18 +183,12 @@
 		<dependency>
 			<groupId>de.bsvrz.sys</groupId>
 			<artifactId>de.bsvrz.sys.funclib.bitctrl.dua</artifactId>
-			<version>1.5.0</version>
+			<version>1.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.bsvrz.dua</groupId>
 			<artifactId>de.bsvrz.dua.tests</artifactId>
 			<version>2.0.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -423,7 +416,6 @@
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>3.0.3</version>
 				<configuration>
-					<excludeFilterFile>src/main/config/findbugs-exclude.xml</excludeFilterFile>
 					<threshold>High</threshold>
 					<includeTests>true</includeTests>
 				</configuration>

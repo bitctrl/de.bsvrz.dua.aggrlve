@@ -41,8 +41,6 @@ import java.io.IOException;
  * Datenpuffern liest dieser Puffer seine Daten initial aus dem Archiv ein
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class ArchivAggregationsPuffer extends AggregationsPuffer implements
 		ArchiveAvailabilityListener {
@@ -76,9 +74,6 @@ public final class ArchivAggregationsPuffer extends AggregationsPuffer implement
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void archiveAvailabilityChanged(final ArchiveRequestManager archiv) {
 		if (archiv.isArchiveAvailable() && ringPufferisEmpty()) {

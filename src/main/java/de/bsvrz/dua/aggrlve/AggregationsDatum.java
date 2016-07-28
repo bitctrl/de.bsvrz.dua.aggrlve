@@ -47,8 +47,6 @@ import java.util.Map;
  * , <code>vPkw</code> enthalten sind (inkl. Zeitstempel)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		Cloneable {
@@ -124,9 +122,6 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public AggregationsDatum clone() {
 		final AggregationsDatum kopie = new AggregationsDatum(datenZeit);
@@ -154,9 +149,6 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		return this.werte.get(attribut1);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int compareTo(final AggregationsDatum that) {
 		return new Long(this.datenZeit).compareTo(that.datenZeit);
@@ -189,17 +181,6 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 		return this.tT;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		return super.equals(obj);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		String s = "Datenzeit: "

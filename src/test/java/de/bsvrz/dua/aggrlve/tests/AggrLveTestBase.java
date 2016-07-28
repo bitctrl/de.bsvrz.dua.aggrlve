@@ -40,7 +40,7 @@ import org.junit.Before;
  * @author Kappich Systemberatung
  */
 public class AggrLveTestBase extends DuATestBase {
-	protected static AggregationLVE _aggregationLVE;
+	protected AggregationLVE _aggregationLVE;
 
 	protected static String[] getLveArgs() {
 		return new String[]{"-KonfigurationsBereichsPid=kb.duaTestFs"};
