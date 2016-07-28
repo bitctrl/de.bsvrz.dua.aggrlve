@@ -48,8 +48,6 @@ import java.util.function.BiConsumer;
  * Fahrstreifendaten fuer die Basisstufe
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class AggregationsMessQuerschnitt extends
 		AbstraktAggregationsObjekt implements BiConsumer<Long, AggregationsIntervall> {
@@ -117,17 +115,11 @@ public final class AggregationsMessQuerschnitt extends
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.mq.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected boolean isFahrstreifen() {
 		return false;

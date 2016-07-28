@@ -28,18 +28,19 @@
 
 package de.bsvrz.dua.aggrlve;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.DataModel;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Korrespondiert mit den Aspekten der Aggregationsintervalle:<br>
@@ -55,8 +56,6 @@ import java.util.TreeSet;
  * werden kann, muss diese Klasse initialisiert werden
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class AggregationsIntervall implements
 		Comparable<AggregationsIntervall> {
@@ -309,17 +308,11 @@ public final class AggregationsIntervall implements
 		return this.intervallLaengeInMillis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int compareTo(final AggregationsIntervall that) {
 		return new Long(this.getIntervall()).compareTo(that.getIntervall());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		boolean ergebnis = false;
@@ -338,9 +331,12 @@ public final class AggregationsIntervall implements
 		return ergebnis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public int hashCode() {
+		DataDescription datenBeschreibung = this.getDatenBeschreibung(true);
+		return Objects.hash(datenBeschreibung.getAspect(), datenBeschreibung.getAttributeGroup());
+	}
+	
 	@Override
 	public String toString() {
 		return this.datenBeschreibungFs + "\n" + this.datenBeschreibungMq;

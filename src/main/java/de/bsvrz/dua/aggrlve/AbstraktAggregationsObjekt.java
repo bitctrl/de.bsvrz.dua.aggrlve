@@ -52,8 +52,6 @@ import java.util.stream.Collectors;
  * Messquerschnitte.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public abstract class AbstraktAggregationsObjekt {
 

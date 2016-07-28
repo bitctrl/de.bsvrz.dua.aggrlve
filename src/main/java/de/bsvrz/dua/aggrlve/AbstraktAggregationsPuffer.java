@@ -42,7 +42,6 @@ import java.util.LinkedList;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
- * @version $Id$
  */
 public abstract class AbstraktAggregationsPuffer {
 

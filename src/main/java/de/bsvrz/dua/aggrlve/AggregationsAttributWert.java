@@ -43,8 +43,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertMarkierung;
  * Fahrstreifendatums bzw. eines Aggregationsdatums
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AggregationsAttributWert extends MesswertMarkierung implements
 		Comparable<AggregationsAttributWert> {
@@ -131,9 +129,6 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 		this.guete = new GWert(gueteGanzZahl, GueteVerfahren.STANDARD, false);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public AggregationsAttributWert clone() {
 		AggregationsAttributWert kopie = null;
@@ -276,17 +271,11 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 		this.guete = guete;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int compareTo(final AggregationsAttributWert that) {
 		return new Long(this.getWert()).compareTo(that.getWert());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		boolean ergebnis = false;
@@ -305,9 +294,6 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 		return ergebnis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "Attribut: " + this.attr + "\nWert: " + this.wert + "\nGuete: "

@@ -35,8 +35,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * Speichert alle Daten eines Fahrstreifens oder VMQ der vergangenen Stunde in einem Ringpuffer.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AnalyseAggregationsPuffer extends AbstraktAggregationsPuffer {
 	
@@ -49,9 +47,6 @@ public class AnalyseAggregationsPuffer extends AbstraktAggregationsPuffer {
 		super(dav, obj);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected long getMaxPufferInhalt() {
 		return 61;
