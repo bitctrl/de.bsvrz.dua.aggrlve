@@ -37,8 +37,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * nächsthoeheren Intervalls notwendig sind
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AggregationsPuffer extends AbstraktAggregationsPuffer {
 
@@ -61,9 +59,6 @@ public class AggregationsPuffer extends AbstraktAggregationsPuffer {
 		_maxPufferGroesse = intervall.getMaxPufferGroesse();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected long getMaxPufferInhalt() {
 		return _maxPufferGroesse + 2;

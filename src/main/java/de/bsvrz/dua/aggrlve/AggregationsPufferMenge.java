@@ -39,8 +39,6 @@ import java.util.*;
  * Aggregationsintervalle.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AggregationsPufferMenge {
 	/**

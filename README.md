@@ -15,6 +15,26 @@ siehe [AFo] bzw. [MARZ]).
 
 ## Versionsgeschichte
 
+### Version 2.0.2
+
+Release-Datum: 28.07.2016
+
+de.bsvrz.dua.aggrlve.AggregationsDatum
+
+- überschreibt equals und nicht hashCode. Da equals nur die Supermethode aufruft, wurde die 
+  Funktion hier entfernt
+
+de.bsvrz.dua.aggrlve.AggregationsIntervall
+
+- hashCode-Funktion entsprechend equals ergänzt
+
+de.bsvrz.dua.aggrlve.tests.AggrLveTestBase
+
+- der Member "_aggregationLVE" sollte nicht statisch sein, der er bei jedem Test neu initialisiert wird
+
+- Obsolete SVN-Tags aus Kommentaren entfernt
+- Obsolete inheritDoc-Kommentare entfernt
+
 ### Version 2.0.1
 
 Release-Datum: 22.07.2016

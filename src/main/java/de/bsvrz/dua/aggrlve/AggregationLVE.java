@@ -59,8 +59,6 @@ import java.util.Map;
  * aus werden dann auch die assoziierten Fahrstreifen initialisiert
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class AggregationLVE extends AbstraktVerwaltungsAdapter {
 
@@ -78,9 +76,6 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapter {
 
 	private static final Debug _debug = Debug.getLogger();
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 
@@ -167,9 +162,6 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapter {
 		StandardApplicationRunner.run(new AggregationLVE(), argumente);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SWETyp getSWETyp() {
 		return SWETyp.SWE_AGGREGATION_LVE;

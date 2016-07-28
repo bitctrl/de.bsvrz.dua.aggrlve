@@ -48,8 +48,6 @@ import java.util.function.BiConsumer;
  * Leitet ggf. die Daten an MQ weiter, die diesen Fahrstreifen enthalten.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AggregationsFsOderVmq extends AbstraktAggregationsObjekt
 		implements ClientReceiverInterface {
@@ -218,9 +216,6 @@ public class AggregationsFsOderVmq extends AbstraktAggregationsObjekt
 		this.sende(resultat);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData... resultate) {
 		if (resultate != null) {
@@ -302,17 +297,11 @@ public class AggregationsFsOderVmq extends AbstraktAggregationsObjekt
 		intervallEndeNormiertAlt = intervallEndeNormiertNeu;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this._systemObject.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected boolean isFahrstreifen() {
 		return this._systemObject.isOfType(DUAKonstanten.TYP_FAHRSTREIFEN);
