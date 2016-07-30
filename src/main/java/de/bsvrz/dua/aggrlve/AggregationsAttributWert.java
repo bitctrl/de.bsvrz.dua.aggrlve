@@ -277,24 +277,6 @@ public class AggregationsAttributWert extends MesswertMarkierung implements
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-		boolean ergebnis = false;
-
-		if ((obj != null) && (obj instanceof AggregationsAttributWert)) {
-			final AggregationsAttributWert that = (AggregationsAttributWert) obj;
-			ergebnis = this.getAttribut().equals(that.getAttribut())
-					&& (this.getWert() == that.getWert())
-					&& (this.isNichtErfasst() == that.isNichtErfasst())
-					&& (this.isImplausibel() == that.isImplausibel())
-					&& (this.isInterpoliert() == that.isInterpoliert())
-					&& ((this.getGuete().getIndex() - that.getGuete()
-							.getIndex()) < 0.001);
-		}
-
-		return ergebnis;
-	}
-
-	@Override
 	public String toString() {
 		return "Attribut: " + this.attr + "\nWert: " + this.wert + "\nGuete: "
 				+ this.guete + "\nVeraendert: "
