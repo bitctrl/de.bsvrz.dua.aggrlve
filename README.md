@@ -28,6 +28,11 @@ de.bsvrz.dua.aggrlve.AggregationsIntervall
 
 - hashCode-Funktion entsprechend equals ergänzt
 
+de.bsvrz.dua.aggrlve.AggregationsAttributWert:
+
+- unnötige equals-Funktion entfernt, da hashCode gefehlt hat und Daten der Klasse von
+  außen geändert werden können
+
 de.bsvrz.dua.aggrlve.tests.AggrLveTestBase
 
 - der Member "_aggregationLVE" sollte nicht statisch sein, der er bei jedem Test neu initialisiert wird
