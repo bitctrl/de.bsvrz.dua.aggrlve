@@ -28,6 +28,7 @@
 
 package de.bsvrz.dua.aggrlve;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.dalve.ErfassungsIntervallDauerMQ;
@@ -42,6 +43,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 import de.bsvrz.sys.funclib.bitctrl.modell.SystemObjekt;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -75,6 +77,13 @@ public final class AggregationLVE extends AbstraktVerwaltungsAdapter {
 	private final Map<SystemObject, AggregationsFsOderVmq> fsUndVmq = new HashMap<>();
 
 	private static final Debug _debug = Debug.getLogger();
+	
+	
+	@Override
+	public void initialize(ClientDavInterface dieVerbindung) throws Exception {
+		MessageSender.getInstance().setApplicationLabel("Aggregation LVE");
+		super.initialize(dieVerbindung);
+	}
 	
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {

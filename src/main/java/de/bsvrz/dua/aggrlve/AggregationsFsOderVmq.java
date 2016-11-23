@@ -167,13 +167,27 @@ public class AggregationsFsOderVmq extends AbstraktAggregationsObjekt
 
 		nutzDatum = dav.createData(intervall.getDatenBeschreibung(isFahrstreifen()).getAttributeGroup());
 
-		this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_KFZ, AnalyseAttribut.V_KFZ, nutzDatum, basisDaten);
-		this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_LKW, AnalyseAttribut.V_LKW, nutzDatum, basisDaten);
-		this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_PKW, AnalyseAttribut.V_PKW, nutzDatum, basisDaten);
+		if(!intervall.isDTVorTV()) {
+			this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_KFZ, AnalyseAttribut.V_KFZ, nutzDatum, basisDaten);
+			this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_LKW, AnalyseAttribut.V_LKW, nutzDatum, basisDaten);
+			this.aggregiereGeschwindigkeit(AnalyseAttribut.Q_PKW, AnalyseAttribut.V_PKW, nutzDatum, basisDaten);
+		}
 
-		this.aggregiereMittel(AnalyseAttribut.Q_KFZ, nutzDatum, basisDaten);
-		this.aggregiereMittel(AnalyseAttribut.Q_LKW, nutzDatum, basisDaten);
-		this.aggregiereMittel(AnalyseAttribut.Q_PKW, nutzDatum, basisDaten);
+		int faktor = 1;
+		if(intervall == AggregationsIntervall.aGGDTVTAG){
+			// Stundenwerte in Tageswerte umrechnen, also Faktor 24
+			// Es wird der Mittelwert genommen und mit 24 multipliziert, statt einfach die Stundenwerte zu addieren,
+			// damit ausgefallene Werte gedanklich durch den Mittelwert ersetzt werden (gemäß AFo)
+			
+			// das bedeutet auch, dass an Schalttagen ggf. 23 oder 25 Stunden berücksichtigt werden, aber die Werte trotzdem auf 24 Stunden
+			// normiert berechnet werden.
+			
+			faktor = 24;
+		}
+		
+		this.aggregiereMittel(AnalyseAttribut.Q_KFZ, nutzDatum, basisDaten, faktor);
+		this.aggregiereMittel(AnalyseAttribut.Q_LKW, nutzDatum, basisDaten, faktor);
+		this.aggregiereMittel(AnalyseAttribut.Q_PKW, nutzDatum, basisDaten, faktor);
 
 
 		AbstraktAggregationsPuffer puffer = this.datenPuffer.getPuffer(intervall);
@@ -182,13 +196,15 @@ public class AggregationsFsOderVmq extends AbstraktAggregationsObjekt
 
 		_commonFunctions.berechneLkwAnteil(nutzDatum);
 
-		_commonFunctions.berechneDichte(nutzDatum, "Kfz", () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_KFZ).getWert());
-		_commonFunctions.berechneDichte(nutzDatum, "Lkw", () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_LKW).getWert());
-		_commonFunctions.berechneDichte(nutzDatum, "Pkw", () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_PKW).getWert());
+		if(!intervall.isDTVorTV()) {
+			_commonFunctions.berechneDichte(nutzDatum, "Kfz", () -> getDatum(last, AnalyseAttribut.K_KFZ));
+			_commonFunctions.berechneDichte(nutzDatum, "Lkw", () -> getDatum(last, AnalyseAttribut.K_LKW));
+			_commonFunctions.berechneDichte(nutzDatum, "Pkw", () -> getDatum(last, AnalyseAttribut.K_PKW));
 
-		_commonFunctions.berechneBemessungsVerkehrsStaerke(nutzDatum);
+			_commonFunctions.berechneBemessungsVerkehrsStaerke(nutzDatum);
 
-		_commonFunctions.berechneBemessungsDichte(nutzDatum, () -> last == null ? 0 : last.getWert(AnalyseAttribut.K_B).getWert());
+			_commonFunctions.berechneBemessungsDichte(nutzDatum, () -> getDatum(last, AnalyseAttribut.K_B));
+		}
 
 		final ResultData resultat = new ResultData(
 				this._systemObject,
@@ -208,6 +224,19 @@ public class AggregationsFsOderVmq extends AbstraktAggregationsObjekt
 		}
 	}
 
+	public long getDatum(final AggregationsDatum last, final AnalyseAttribut analyseAttribut) {
+		if(last == null) {
+			return 0;
+		}
+		else {
+			AggregationsAttributWert wert = last.getWert(analyseAttribut);
+			if(wert == null) {
+				return 0;
+			}
+			return wert.getWert();
+		}
+	}
+
 	/**
 	 * Sendet einen Ergebnisdatensatz. Kann für Testfälle überschrieben werden
 	 * @param resultat Ergebnis
@@ -217,7 +246,7 @@ public class AggregationsFsOderVmq extends AbstraktAggregationsObjekt
 	}
 
 	@Override
-	public void update(final ResultData... resultate) {
+	public void update(final ResultData ...resultate) {
 		if (resultate != null) {
 			for (final ResultData resultat : resultate) {
 				if (resultat != null && resultat.hasData()) {

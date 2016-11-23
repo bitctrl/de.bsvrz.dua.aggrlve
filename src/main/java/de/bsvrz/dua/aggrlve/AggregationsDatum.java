@@ -34,6 +34,7 @@ import de.bsvrz.dua.dalve.ErfassungsIntervallDauerMQ;
 import de.bsvrz.dua.dalve.analyse.lib.AnalyseAttribut;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -184,7 +185,7 @@ public class AggregationsDatum implements Comparable<AggregationsDatum>,
 	@Override
 	public String toString() {
 		String s = "Datenzeit: "
-				+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+				+ new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR).format(new Date(
 						this.datenZeit)) + " (" + this.datenZeit + ")";
 
 		s += "\nT: " + tT;

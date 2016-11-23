@@ -15,6 +15,14 @@ siehe [AFo] bzw. [MARZ]).
 
 ## Versionsgeschichte
 
+### Version 2.0.3
+
+Release-Datum: 23.11.2016
+
+- Applikationsname für MessageSender entsprechend NERZ-Vorgabe gesetzt
+- Potentielle NPE in den Logausgaben
+- Korrektur der Berechnung der (D)TV-Werte
+
 ### Version 2.0.2
 
 Release-Datum: 28.07.2016
@@ -113,19 +121,19 @@ Folgende Änderungen gegenüber vorhergehenden Versionen wurden durchgeführt:
   liegen. D.h. wenn FS-Daten mit Erfassungsintervall = 2 Minuten
   empfangen werden, werden keine 1-Minuten-Aggregationswerte mehr publiziert.
 
-### 1.4.0
+### Version 1.4.0
 
 - Umstellung auf Java 8 und UTF-8
 
-### 1.3.1
+### Version 1.3.1
 
 - Kompatibilität zu DuA-2.0 hergestellt
 
-### 1.3.0
+### Version 1.3.0
 
 - Umstellung auf Funclib-Bitctrl-Dua
 
-### 1.2.0
+### Version 1.2.0
 
 - Umstellung auf Maven-Build
 
