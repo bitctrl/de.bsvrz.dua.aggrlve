@@ -204,16 +204,17 @@ public abstract class AbstraktAggregationsObjekt {
 	/**
 	 * Aggregiert einen arithmetischen Mittelwert.
 	 * 
-	 * @param attribut
+	 *  @param attribut
 	 *            das Attribut, das berechnet werden soll
 	 * @param nutzDatum
 	 *            das gesamte Aggregationsdatum (veraenderbar)
-	 * @param basisDaten
-	 *            die der Aggregation zu Grunde liegenden Daten
+	 * @param basisDaten Ausgangsdaten
+	 * @param faktor Faktor mit dem das Ergebnis multipliziert wird
 	 */
 	protected final void aggregiereMittel(final AnalyseAttribut attribut,
 			final Data nutzDatum,
-			final Collection<AggregationsDatum> basisDaten) {
+			final Collection<AggregationsDatum> basisDaten, 
+			final int faktor) {
 		final Collection<AggregationsAttributWert> werte = basisDaten.stream().map(d -> d.getWert(attribut)).collect(Collectors.toList());
 
 		boolean interpoliert = false;
@@ -256,7 +257,7 @@ public abstract class AbstraktAggregationsObjekt {
 		}
 		
 		if (!nichtErmittelbar && !nichtErmittelbarFehlerhaft && anzahl > 0) {
-			exportWert.setWert(Math.round((double) summe / (double) anzahl));
+			exportWert.setWert(Math.round((double)faktor * (double) summe / (double) anzahl));
 			
 			exportWert.setInterpoliert(interpoliert);
 			try {
@@ -288,6 +289,13 @@ public abstract class AbstraktAggregationsObjekt {
 		final Collection<GWert> gueteNenner = new ArrayList<>();
 		for (final AggregationsDatum basisWert : basisDaten) {
 
+			if(basisWert == null) {
+				interpoliert = true;
+				gueteZaehler.add(GWert.getMinGueteWert(GueteVerfahren.STANDARD));
+				gueteNenner.add(GWert.getMinGueteWert(GueteVerfahren.STANDARD));
+				continue;
+			}
+			
 			final AggregationsAttributWert qwert = basisWert.getWert(attrQ);
 			final AggregationsAttributWert vwert = basisWert.getWert(attrV);
 			if(qwert == null || vwert == null) {

@@ -5,7 +5,7 @@
 
 		<groupId>de.bsvrz.dua</groupId>
 	<artifactId>de.bsvrz.dua.aggrlve</artifactId>
-	<version>2.0.3-SNAPSHOT</version>
+	<version>2.0.3</version>
 
 	<name>Aggregation LVE (SWE 4.9)</name>
 

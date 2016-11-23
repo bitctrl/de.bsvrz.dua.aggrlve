@@ -17,7 +17,11 @@ siehe [AFo] bzw. [MARZ]).
 
 ### Version 2.0.3
 
+Release-Datum: 23.11.2016
+
 - Applikationsname für MessageSender entsprechend NERZ-Vorgabe gesetzt
+- Potentielle NPE in den Logausgaben
+- Korrektur der Berechnung der (D)TV-Werte
 
 ### Version 2.0.2
 
