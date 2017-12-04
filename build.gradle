@@ -1,0 +1,57 @@
+plugins {
+  id "de.bsvrz.gradle.nerzswe" version "0.1.7"
+  id "com.jfrog.bintray" version "1.8.0"
+}
+
+group = 'de.bsvrz.dua'
+version = '2.0.4-SNAPSHOT'
+description = 'Aggregation LVE (SWE 4.9)'
+
+nerzswe {
+   	mainClassName = 'de.bsvrz.dua.aggrlve.AggregationLVE'
+   	sweStatus = 'BETA'
+	sweDatum = '2018-12-04'
+}
+
+repositories {
+     maven { url "http://dl.bintray.com/bitctrl/maven" }
+     mavenCentral()
+}
+
+configurations {
+    compile.exclude module: 'com.bitctrl'
+}
+
+dependencies {
+    compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.daf', version:'3.8.0'
+    compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.dav', version:'3.8.0'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.commandLineArgs', version:'3.8.0'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.debug', version:'3.8.0'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.application', version:'3.8.0'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.operatingMessage', version:'3.8.0'
+    compile group: 'de.bsvrz.dua', name: 'de.bsvrz.dua.guete', version:'2.0.2'
+    compile group: 'de.bsvrz.dua', name: 'de.bsvrz.dua.dalve', version:'2.0.2'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.bitctrl.dua', version:'1.6.1'
+    testCompile group: 'de.bsvrz.dua', name: 'de.bsvrz.dua.tests', version:'2.0.0'
+}
+
+/* lokales Maven-Repositiory im build-Verzeichnis */
+publishing {
+	repositories {
+		maven {
+        	url "$buildDir/repo"         
+        }
+    }
+}
+
+/* Veröffentlichung auf bintray. */
+bintray {
+	user = project.hasProperty('user') ? property('user') : ""
+    key = project.hasProperty('key') ? property('key') : ""
+	publications = ['mavenJava']
+    pkg {
+    	userOrg = 'bitctrl'
+        repo = 'maven'
+        name = 'de.bsvrz.dua.aggrlve'
+    }
+}

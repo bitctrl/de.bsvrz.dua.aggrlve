@@ -363,7 +363,7 @@
 								org.hamcrest,
 								de.kappich,
 								com.google.guava
-							</excludeGroupIds>
+							</excludeGroupIds> 
 						</configuration>
 					</execution>
 					<execution>
